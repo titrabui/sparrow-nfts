@@ -5,14 +5,14 @@
 
 pragma solidity 0.7.3;
 
-contract SparrowMarket {
+contract NapaMarket {
 
     // You can use this hash to verify the image file containing all the punks
     string public imageHash = "ac39af4793119ee46bbff351d8cb6b5f23da60222126add4268e261199a2921b";
 
     address owner;
 
-    string public standard = 'Sparrow';
+    string public standard = 'Napa';
     string public name;
     string public symbol;
     uint8 public decimals;
@@ -67,7 +67,7 @@ contract SparrowMarket {
         owner = msg.sender;
         totalSupply = 10000;                        // Update total supply
         punksRemainingToAssign = totalSupply;
-        name = "SPARROW";                                   // Set the name for display purposes
+        name = "NAPA";                                   // Set the name for display purposes
         symbol = "C";                               // Set the symbol for display purposes
         decimals = 0;                                       // Amount of decimals for display purposes
     }

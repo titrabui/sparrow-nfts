@@ -12,7 +12,7 @@ contract NapaCryptoSpaceMarket {
 
     address owner;
 
-    string public standard = 'Napa';
+    string public standard = 'CryptoSpace';
     string public name;
     string public symbol;
     uint8 public decimals;

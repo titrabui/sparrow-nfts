@@ -4,9 +4,11 @@
 
 From a command line terminal :
 
-1. Compile smart contracts
+1. Install dependencies
+      ```cd sc && npm i```
+2. Compile smart contracts
       ```cd sc && npx hardhat compile```
-2. Test smart contracts
+3. Test smart contracts
       ```cd sc && npx hardhat test```
 
 #### Folder Structure

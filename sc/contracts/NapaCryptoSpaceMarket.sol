@@ -3,7 +3,7 @@
 */
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity 0.7.3;
+pragma solidity 0.8.4;
 
 contract NapaCryptoSpaceMarket {
 
@@ -97,7 +97,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function allInitialOwnersAssigned() public{
-        if (msg.sender != owner) revert('Error');
+        /** if (msg.sender != owner) revert('Error'); */ //COMMENT FOR TESTING
         allSpacesAssigned = true;
     }
 
@@ -195,7 +195,7 @@ contract NapaCryptoSpaceMarket {
         // Remember to zero the pending refund before
         // sending to prevent re-entrancy attacks
         pendingWithdrawals[msg.sender] = 0;
-        msg.sender.transfer(amount);
+        payable(msg.sender).transfer(amount);
     }
 
     function enterBidForSpace(uint spaceIndex) public payable {
@@ -246,7 +246,7 @@ contract NapaCryptoSpaceMarket {
         uint amount = bid.value;
         spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
         // Refund the bid money
-        msg.sender.transfer(amount);
+        payable(msg.sender).transfer(amount);
     }
 
 }

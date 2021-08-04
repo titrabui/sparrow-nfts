@@ -12,9 +12,11 @@ From a command line terminal :
       ```cd sc && npx hardhat node```
 4. Deploy contract on node 
       ```cd sc && npx hardhat run --network localhost scripts/deploy.js```
-5. Install dependencies for front end
+5. Run task to get accounts list 
+      ```cd sc && npx hardhat accounts```
+6. Install dependencies for front end
       ```cd frontend && npm i```
-6. Run front end
+7. Run front end
       ```npm start```
 #### Folder Structure
 - sc: Using **Hardhat** to write, compile, debug smart contracts.

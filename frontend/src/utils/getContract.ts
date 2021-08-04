@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import Web3 from 'web3';
 
-import contract from 'utils/contract.json';
+import contract from '../../../sc/artifacts/contracts/NapaCryptoSpaceMarket.sol/NapaCryptoSpaceMarket.json';
 
 export const getContract = async (connector: any) => {
   if (!connector) throw Error('No connector found');

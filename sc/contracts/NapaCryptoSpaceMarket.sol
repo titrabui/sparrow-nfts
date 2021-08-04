@@ -97,7 +97,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function allInitialOwnersAssigned() public{
-        /** if (msg.sender != owner) revert('Error'); */ //COMMENT FOR TESTING
+        if (msg.sender != owner) revert('Error'); 
         allSpacesAssigned = true;
     }
 

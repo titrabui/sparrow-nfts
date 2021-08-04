@@ -3,11 +3,9 @@ import { Web3Config } from './web3.config';
 import { Web3Event } from './web3.event';
 
 @Module({
-  imports: [
-    Web3Event
-  ],
   providers: [
-    Web3Config
+    Web3Config,
+    Web3Event
   ],
   exports: [
     Web3Event

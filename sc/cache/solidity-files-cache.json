@@ -2,11 +2,11 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/linh/Documents/projects/NAPA/sparrow-nfts/sc/contracts/NapaCryptoSpaceMarket.sol": {
-      "lastModificationDate": 1627961348669,
-      "contentHash": "038ceb63124cd3f8ea35af07c96f73f3",
+      "lastModificationDate": 1628048432827,
+      "contentHash": "a32a310fd9ee6dc09e75673c2c91ca3d",
       "sourceName": "contracts/NapaCryptoSpaceMarket.sol",
       "solcConfig": {
-        "version": "0.7.3",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -29,7 +29,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.7.3"
+        "0.8.4"
       ],
       "artifacts": [
         "NapaCryptoSpaceMarket"

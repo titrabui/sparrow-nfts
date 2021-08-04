@@ -1,10 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-
 import styled from 'styled-components';
-
 import { CheckOutlined, CopyOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
-
 import { Text, ModifiedTypographyProps } from './Typography';
 import Box, { BoxProps } from './Box';
 

@@ -1,12 +1,11 @@
 import React from 'react';
 import { Col, Row } from 'antd';
 import { NavLink, useLocation } from 'react-router-dom';
-
 import RightHeader from './RightHeader';
 import { routesEnum } from 'routes/routesData';
 import styled from 'styled-components';
 
-const CommonHeader = () => {
+const CommonHeader: React.FC = () => {
   const location = useLocation();
   return (
     <Container>

@@ -1,10 +1,7 @@
 import React from 'react';
-
 import { useAppSelector } from 'hooks';
-
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from 'styles/appTheme';
-
 import GlobalStyles from 'styles/globalStyles';
 import CommonHeader from './Header/Header';
 import { selectTheme } from 'store/ducks/theme/slice';

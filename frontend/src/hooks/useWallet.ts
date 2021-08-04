@@ -1,5 +1,4 @@
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-
 import Web3 from 'web3';
 import { injected } from 'utils/connector';
 import { UserRejectedRequestError as injectedUserRejectRequestError } from '@web3-react/injected-connector';

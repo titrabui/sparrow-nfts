@@ -1,9 +1,8 @@
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { privateRoutes, publicRoutes } from './routesData';
-
 import { Helmet } from 'react-helmet';
 import PrivateRoute from './PrivateRoute';
-import React from 'react';
 import ScrollToTop from 'utils/ScrollToTop';
 
 const Routes = (

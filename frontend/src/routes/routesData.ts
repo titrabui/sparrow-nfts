@@ -17,9 +17,7 @@ export enum routesEnum {
   notFoundPage = '/*'
 }
 
-const privateRoutes: RouteType[] = [
-  
-];
+const privateRoutes: RouteType[] = [];
 const publicRoutes: RouteType[] = [
   {
     path: routesEnum.login,

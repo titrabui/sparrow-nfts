@@ -1,13 +1,9 @@
 import React from 'react';
-
 import { Row, Select as AntdSelect, Space } from 'antd';
-
 import styled from 'styled-components';
-
 import MainContainer from 'ui/MainContainer';
 import { Text } from 'ui/Typography';
 import Select from 'ui/Select';
-import Input from 'ui/Input';
 import Button from 'ui/Button';
 import Box from 'ui/Box';
 
@@ -18,14 +14,13 @@ const BasicPage: React.FC = () => {
     <MainContainer mt='100px'>
       <Box w='1200px' m='auto'>
         <Row justify='center' gutter={[0, 24]}>
-          <StyledSpace >
-          <Text>Buttons</Text>
+          <StyledSpace>
+            <Text>Buttons</Text>
             <Button>Button</Button>
             <Button $bgType='action'>Button</Button>
             <Button $bgType='error'>Button</Button>
             <Button $bgType='warning'>Button</Button>
             <Button $bgType='success'>Button</Button>
-
           </StyledSpace>
 
           <StyledSpace size='large'>
@@ -45,11 +40,6 @@ const BasicPage: React.FC = () => {
   );
 };
 
-const BoxCss = `
-  width : 100%; 
-  font-weight : bold;
-`;
-
 const StyledSpace = styled(Space)`
   width: 100%;
   > * {
@@ -58,8 +48,8 @@ const StyledSpace = styled(Space)`
     vertical-align: middle;
   }
   button {
-    width:200px;
-    height:35px;
+    width: 200px;
+    height: 35px;
   }
 `;
 

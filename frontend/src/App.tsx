@@ -1,16 +1,11 @@
 import React from 'react';
-
 import { ConnectedRouter } from 'connected-react-router';
 import store, { history } from 'store';
-
 import { Provider } from 'react-redux';
 import { SocketIOProvider } from 'socketio-hooks';
 import Web3 from 'web3';
-
 import { Web3ReactProvider } from '@web3-react/core';
-
 import CommonLayout from 'ui/Layout';
-
 import routes from 'routes';
 // import { apiWs } from 'environments';
 

@@ -1,9 +1,8 @@
+import React from 'react';
 import { Dropdown, Menu, Switch } from 'antd';
-
 import Box from 'ui/Box';
 import { DownOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
-import React from 'react';
 import colors from '../colors';
 import styled from 'styled-components';
 import { useDarkMode } from 'hooks';
@@ -26,6 +25,7 @@ const DropdownMenu: React.FC = ({ children }) => {
       </MenuItem>
     </Container>
   );
+
   return (
     <DropdownContainer overlay={menu}>
       <Box flex>

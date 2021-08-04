@@ -1,5 +1,4 @@
 import React from 'react';
-
 import styled from 'styled-components';
 
 /**
@@ -24,7 +23,6 @@ export interface BoxProps {
   alignItems?: 'center' | 'flex-start' | 'flex-end' | 'baseline' | 'stretch';
   bordered?: boolean;
   bgColor?: string;
-
   mt?: string;
   ml?: string;
   mb?: string;

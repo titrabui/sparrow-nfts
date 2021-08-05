@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
 
 const Container = styled.div`
   width: 100%;
-  height: 417px;
+  height: 250px;
   background-color: #d7dee9;
   margin-top: 120px;
   .ant-row {

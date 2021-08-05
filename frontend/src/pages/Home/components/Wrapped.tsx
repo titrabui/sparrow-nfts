@@ -15,16 +15,14 @@ const Wrapped: React.FC = () => {
     <Box w='1200px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
         <Box w='100%' mt='100px' mb='40px'>
-          <Text $size='36px' strong block>
-            Wrapped
-          </Text>
-          <Text $size='18px' block>
+          <Title>Wrapped</Title>
+          <StyledText>
             {`229 punks are "wrapped" for sale on ERC-721 markets, see wrappedpunks.com for more
               details.`}
-          </Text>
-          <Text $size='18px' block>
+          </StyledText>
+          <StyledText>
             Showing by punk number, click here to see all wrapped punks or view them on OpenSea.
-          </Text>
+          </StyledText>
         </Box>
       </Row>
       <ItemsContainer>
@@ -33,6 +31,17 @@ const Wrapped: React.FC = () => {
     </Box>
   );
 };
+
+const Title = styled(Text)`
+  font-size: 36px;
+  font-weight: bold;
+  display: block;
+`;
+
+const StyledText = styled(Text)`
+  font-size: 18px;
+  display: block;
+`;
 
 const ItemsContainer = styled.div`
   width: 100%;

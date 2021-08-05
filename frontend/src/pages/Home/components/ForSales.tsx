@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Select as AntdSelect } from 'antd';
+import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
@@ -15,21 +15,17 @@ const ForSales: React.FC = () => {
     <Box w='1200px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
         <Box w='100%' mt='100px' mb='40px'>
-          <Text $size='36px' strong block>
-            For Sales
-          </Text>
-          <Text $size='18px' block>
+          <Title>For Sales</Title>
+          <StyledText>
             The lowest price punk currently for sale is
-            <Text $size='18px' strong style={{ marginLeft: 10 }}>
-              19.9 ETH ($37,303.75 USD).
-            </Text>
-          </Text>
-          <Text $size='18px' block>
+            <HightlightText>19.9 ETH ($37,303.75 USD).</HightlightText>
+          </StyledText>
+          <StyledText>
             Showing most recent offers
-            <Text $size='18px' style={{ marginLeft: 10 }} $color='#0080FF'>
+            <LinkText>
               <a href='/'>click here to see all 1,510</a>
-            </Text>
-          </Text>
+            </LinkText>
+          </StyledText>
         </Box>
       </Row>
       <ItemsContainer>
@@ -56,6 +52,29 @@ const ItemsRow = styled(Row)`
       cursor: pointer;
     }
   }
+`;
+
+const Title = styled(Text)`
+  font-size: 36px;
+  font-weight: bold;
+  display: block;
+`;
+
+const StyledText = styled(Text)`
+  font-size: 18px;
+  display: block;
+`;
+
+const HightlightText = styled(Text)`
+  font-size: 18px;
+  margin-left: 10px;
+  font-weight: bold;
+`;
+
+const LinkText = styled(Text)`
+  font-size: 18px;
+  margin-left: 10px;
+  color: ${(p) => p.theme.primary};
 `;
 
 export default ForSales;

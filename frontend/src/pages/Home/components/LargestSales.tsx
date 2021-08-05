@@ -14,24 +14,36 @@ const LargestSales: React.FC = () => {
   return (
     <Box w='1200px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        <StyledSpace style={{ marginTop: 60 }}>
-          <Text $size='36px' strong>
+        <StyledSpace>
+          <Title>
             Largest Sales
-            <Text $size='20px' strong $color='#0080FF' style={{ marginLeft: 15 }}>
+            <LinkText>
               <a href='/'>See all top sales</a>
-            </Text>
-          </Text>
+            </LinkText>
+          </Title>
         </StyledSpace>
       </Row>
-      <Row justify='center' gutter={[0, 24]} style={{ marginTop: 20 }}>
+      <ItemsContainer justify='center' gutter={[0, 24]}>
         <ItemsLargestSales />
-      </Row>
-      <Row justify='center' gutter={[0, 24]} style={{ marginTop: 50 }}>
+      </ItemsContainer>
+      <ItemsContainer justify='center' gutter={[0, 24]}>
         <ItemsLargestSales />
-      </Row>
+      </ItemsContainer>
     </Box>
   );
 };
+
+const Title = styled(Text)`
+  font-size: 36px;
+  font-weight: bold;
+`;
+
+const LinkText = styled(Text)`
+  font-size: 20px;
+  font-weight: bold;
+  color: ${(p) => p.theme.primary};
+  margin-left: 15px;
+`;
 
 const ImageContainer = styled.div`
   width: 90%;
@@ -40,6 +52,7 @@ const ImageContainer = styled.div`
   position: relative;
   margin-bottom: 20px;
 `;
+
 const ImageNumber = styled(Text)`
   position: absolute;
   left: 8px;
@@ -68,6 +81,12 @@ const StyledSpace = styled(Space)`
     height: 100%;
     vertical-align: middle;
   }
+  margin-top: 60px;
+`;
+
+const ItemsContainer = styled(Row)`
+  margin-top: 20px;
+  margin-bottom: 50px;
 `;
 
 export default LargestSales;

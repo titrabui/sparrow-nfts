@@ -3,7 +3,7 @@ export const lightTheme = {
   background: '#FFFFFF',
   surface: '#FFFFFF',
   onSurface: '#FAFAFA',
-  primary: '#2F54EB',
+  primary: '#0080FF',
   link: '#1890FF',
   success: '#008805',
   warning: '#FAAD14',

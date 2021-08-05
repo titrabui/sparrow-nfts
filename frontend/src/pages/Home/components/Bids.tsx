@@ -15,33 +15,25 @@ const Bids: React.FC = () => {
     <Box w='1200px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
         <Box w='100%' mt='100px' mb='40px'>
-          <Text $size='36px' strong block>
-            Bids
-          </Text>
-          <Text $size='18px' block>
+          <Title>Bids</Title>
+          <StyledText>
             The average bid over the last year was
-            <Text $size='18px' strong style={{ marginLeft: 10 }}>
-              26.25 ETH ($49,214.19 USD).
-            </Text>
-          </Text>
-          <Text $size='18px' block>
+            <HightlightText>26.25 ETH ($49,214.19 USD).</HightlightText>
+          </StyledText>
+          <StyledText>
             The average currently open bid is
-            <Text $size='18px' strong style={{ marginLeft: 10 }}>
-              4.24 ETH ($7,948.00 USD).
-            </Text>
-          </Text>
-          <Text $size='18px' block>
+            <HightlightText>4.24 ETH ($7,948.00 USD).</HightlightText>
+          </StyledText>
+          <StyledText>
             Total value of all current bids is
-            <Text $size='18px' strong style={{ marginLeft: 10 }}>
-              3,120.59 ETH ($5,849,726.91 USD).
-            </Text>
-          </Text>
-          <Text $size='18px' block>
-            Showing most recent bids,
-            <Text $size='18px' style={{ marginLeft: 10 }} $color='#0080FF'>
+            <HightlightText>3,120.59 ETH ($5,849,726.91 USD).</HightlightText>
+          </StyledText>
+          <StyledText>
+            Showing most recent bids
+            <LinkText>
               <a href='/'>click here to see all 736</a>
-            </Text>
-          </Text>
+            </LinkText>
+          </StyledText>
         </Box>
       </Row>
       <ItemsContainer>
@@ -68,6 +60,29 @@ const ItemsRow = styled(Row)`
       cursor: pointer;
     }
   }
+`;
+
+const Title = styled(Text)`
+  font-size: 36px;
+  font-weight: bold;
+  display: block;
+`;
+
+const StyledText = styled(Text)`
+  font-size: 18px;
+  display: block;
+`;
+
+const HightlightText = styled(Text)`
+  font-size: 18px;
+  margin-left: 10px;
+  font-weight: bold;
+`;
+
+const LinkText = styled(Text)`
+  font-size: 18px;
+  margin-left: 10px;
+  color: ${(p) => p.theme.primary};
 `;
 
 export default Bids;

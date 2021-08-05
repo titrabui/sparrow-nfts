@@ -8,6 +8,11 @@ import styled from 'styled-components';
 const { Text: AntText, Paragraph: AntParagraph, Link: AntLink, Title: AntTitle } = Typography;
 
 export type ModifiedTypographyProps = Partial<TypographyProps> & {
+  mt?: string;
+  ml?: string;
+  mb?: string;
+  mr?: string;
+  m?: string;
   $color?: string;
   $size?: string;
   $textAlign?: string;
@@ -27,6 +32,11 @@ const Text = styled(AntText)<ModifiedTypographyProps>`
   text-align: ${(p) => p.$textAlign || 'left'};
   display:${(p: any) => (p.block ? 'block' : '')};
   text-transform: ${(p) => p.$upperCase && 'uppercase'};
+  ${(p) => p.mt && `margin-top: ${p.mt}`};
+  ${(p) => p.ml && `margin-left:${p.ml}`};
+  ${(p) => p.mr && `margin-right:${p.mr}`};
+  ${(p) => p.mb && `margin-bottom:${p.mb}`};
+  ${(p) => p.m && `margin:${p.m}`};
 `;
 
 const Paragraph = styled(AntParagraph)<ModifiedTypographyProps>`

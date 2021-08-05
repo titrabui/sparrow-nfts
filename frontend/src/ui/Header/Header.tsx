@@ -15,13 +15,13 @@ const CommonHeader: React.FC = () => {
         </Col>
         <Col span={12}>
           <TabContainer>
-            <Tab data-active={location.pathname === routesEnum.basic} to={routesEnum.basic}>
+            <Tab data-active={location.pathname === routesEnum.basic} to={routesEnum.home}>
               Project
             </Tab>
             <Tab data-active={location.pathname === routesEnum.home} to={routesEnum.home}>
               Writing
             </Tab>
-            <Tab data-active={location.pathname === routesEnum.login} to={routesEnum.basic}>
+            <Tab data-active={location.pathname === routesEnum.login} to={routesEnum.home}>
               About
             </Tab>
           </TabContainer>
@@ -65,11 +65,6 @@ const Tab = styled(NavLink)<any>`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-bottom: ${(p) => {
-    return p['data-active']
-      ? `4px solid ${p.theme.lightBlueBorder}`
-      : `4px solid ${p.theme.darkBlue}`;
-  }};
   background-color: ${(p) => (p['data-active'] ? p.theme.mediumBlue : p.theme.darkBlue)};
   font-weight:bold;
   &:hover {

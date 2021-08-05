@@ -15,20 +15,10 @@ import img6 from 'assets/images/029-dog.svg';
 const Introduction: React.FC = () => {
   return (
     <>
-      <Box w='1200px' m='auto'>
+      <Box w='1200px' m='180px auto 0'>
         <Row justify='center' gutter={[0, 24]}>
           <StyledSpace>
-            <Button
-              $bgType='highlight'
-              $color='white'
-              style={{ borderRadius: 17 }}
-              $w='180px'
-              $h='35px'
-              $fontSize='18px'
-              $fontWeight='bold'
-            >
-              Blockchain
-            </Button>
+            <StyledButton $bgType='highlight'>Blockchain</StyledButton>
           </StyledSpace>
           <StyledSpace>
             <Text $size='48px' strong>
@@ -55,7 +45,7 @@ const Introduction: React.FC = () => {
       </Box>
       <Box w='1200px' m='auto'>
         <Row justify='center' gutter={[0, 24]}>
-          <StyledSpace style={{ marginTop: 10 }}>
+          <FirstParagraph>
             <Text $size='16px'>
               {`The CryptoSpace are 10,000 uniquely generated characters. No two are exactly alike,
               and each one of them can be officially owned by a single person on the Ethereum
@@ -67,14 +57,14 @@ const Introduction: React.FC = () => {
               current bids. Punks with a red background are available for sale by their owner.
               Finally, punks with a purple background have an active bid on them.`}
             </Text>
-          </StyledSpace>
-          <StyledSpace style={{ marginBottom: 80 }}>
+          </FirstParagraph>
+          <SecondParagraph>
             <Text $size='16px'>
               {`See the marketplace instructions below to acquire your very own punk. You should also join the
               Discord Chat, which includes a bot that announces all bids, offers and sales in
               realtime.`}
             </Text>
-          </StyledSpace>
+          </SecondParagraph>
         </Row>
       </Box>
       <Box w='100%' m='auto'>
@@ -85,6 +75,15 @@ const Introduction: React.FC = () => {
     </>
   );
 };
+
+const StyledButton = styled(Button)`
+  color: ${(p) => p.theme.surface};
+  border-radius: 17px;
+  width: 180px;
+  height: 35px;
+  font-size: 18px;
+  font-weight: bold;
+`;
 
 const BannerContainer = styled.div`
   width: 100%;
@@ -97,7 +96,7 @@ const BannerContainer = styled.div`
 `;
 
 const ItemsRow = styled(Row)`
-  margin: 15px 0;
+  margin: 25px 0;
   text-align: center;
   .ant-col {
     width: 100px;
@@ -117,6 +116,14 @@ const StyledSpace = styled(Space)`
   }
 `;
 
+const FirstParagraph = styled(StyledSpace)`
+  margin-top: 10px;
+`;
+
+const SecondParagraph = styled(StyledSpace)`
+  margin-bottom: 80px;
+`;
+
 const TextSpace = styled(Space)`
   width: 100%;
   > * {
@@ -124,7 +131,6 @@ const TextSpace = styled(Space)`
     height: 100%;
     vertical-align: middle;
   }
-  margin-top: 30px;
 `;
 
 export default Introduction;
@@ -133,24 +139,24 @@ const Banner = () => {
   return (
     <>
       {[0, 1].map((item) => (
-        <ItemsRow gutter={[0, 120]} style={{ marginTop: 25, marginBottom: 25 }}>
+        <ItemsRow gutter={[0, 120]}>
           <Col span={4}>
-            <img src={img1} alt='x' width='160px' height='160px' />
+            <img src={img1} alt='x' width='140px' height='140px' />
           </Col>
           <Col span={4}>
-            <img src={img2} alt='x' width='160px' height='160px' />
+            <img src={img2} alt='x' width='140px' height='140px' />
           </Col>
           <Col span={4}>
-            <img src={img3} alt='x' width='160px' height='160px' />
+            <img src={img3} alt='x' width='140px' height='140px' />
           </Col>
           <Col span={4}>
-            <img src={img4} alt='x' width='160px' height='160px' />
+            <img src={img4} alt='x' width='140px' height='140px' />
           </Col>
           <Col span={4}>
-            <img src={img5} alt='x' width='160px' height='160px' />
+            <img src={img5} alt='x' width='140px' height='140px' />
           </Col>
           <Col span={4}>
-            <img src={img6} alt='x' width='160px' height='160px' />
+            <img src={img6} alt='x' width='140px' height='140px' />
           </Col>
         </ItemsRow>
       ))}

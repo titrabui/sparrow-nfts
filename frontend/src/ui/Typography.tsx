@@ -46,15 +46,15 @@ const Paragraph = styled(AntParagraph)<ModifiedTypographyProps>`
 `;
 
 const Link = styled(AntLink)<ModifiedTypographyProps>`
-  color: ${(p: any) => (p.$color ? p.$color : p.theme.text)};
+  color: ${(p: any) => (p.$color ? p.$color : p.theme.text)} !important;
   font-size: ${(p: any) => (p.$size ? p.$size : '14px')}; // Default size
   text-align: ${(p) => p.$textAlign || 'left'};
 `;
 
 const Title = styled(AntTitle)<ModifiedTypographyProps>`
-  color: ${(p: any) => (p.$color ? p.$color : p.theme.text)};
+  color: ${(p: any) => (p.$color ? p.$color : p.theme.text)} !important;
   text-align: ${(p) => p.$textAlign || 'left'};
-  ${(p) => p.$size && `font-size:${p.$size}`};
+  ${(p) => p.$size && `font-size:${p.$size} !important`};
 `;
 
 export { Text, Paragraph, Link, Title };

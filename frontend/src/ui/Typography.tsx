@@ -18,13 +18,14 @@ export type ModifiedTypographyProps = Partial<TypographyProps> & {
   code?: boolean; // Antd props for intellisense
   mark?: boolean; // Antd props for intellisense
   ellipsis?: boolean; // Antd props for intellisense
+  block?:boolean;
   type?: 'secondary' | 'success' | 'warning' | 'danger'; // Antd props for intellisense
 };
 const Text = styled(AntText)<ModifiedTypographyProps>`
   color: ${(p: any) => (p.$color ? p.$color : p.theme.text)};
   font-size: ${(p: any) => (p.$size ? p.$size : '14px')}; // Default size
   text-align: ${(p) => p.$textAlign || 'left'};
-
+  display:${(p: any) => (p.block ? 'block' : '')};
   text-transform: ${(p) => p.$upperCase && 'uppercase'};
 `;
 

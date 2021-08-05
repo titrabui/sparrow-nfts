@@ -8,6 +8,8 @@ import Button from 'ui/Button';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import Web3 from 'web3';
+import { Text } from 'ui/Typography';
+import logo from 'assets/images/Logo.svg';
 
 interface RightHeaderProps {}
 
@@ -25,12 +27,11 @@ const RightHeader: React.FC<RightHeaderProps> = () => {
 
   return (
     <RightContainer>
-      {!active && <Button onClick={handleConnectWallet}>Connect Wallet</Button>}
-      {active && <Button onClick={callSC}>Call SC</Button>}
-
-      <DropdownMenu>
-        <AvatarContainer icon={<UserOutlined />} />
-      </DropdownMenu>
+      {/* {!active && <Button onClick={handleConnectWallet}>Connect Wallet</Button>}
+      {active && <Button onClick={callSC}>Call SC</Button>} */}
+      <div>
+        <img src={logo} alt='logo' width='100px' height='32px' />
+      </div>
     </RightContainer>
   );
 };
@@ -41,12 +42,5 @@ const RightContainer = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
-  justify-content: flex-end;
-  margin-right: 80px;
-`;
-
-const AvatarContainer = styled(Avatar)`
-  margin-left: 30px;
-  background-color: #fff;
-  color: black;
+  justify-content: flex-start;
 `;

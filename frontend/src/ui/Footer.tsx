@@ -1,19 +1,16 @@
-import React from 'react';
 import { Col, Row } from 'antd';
-import { NavLink, useLocation } from 'react-router-dom';
-import RightHeader from './RightHeader';
-import { routesEnum } from 'routes/routesData';
+import React from 'react';
 import styled from 'styled-components';
+import { NavLink, useLocation } from 'react-router-dom';
+import { routesEnum } from 'routes/routesData';
 
-const CommonHeader: React.FC = () => {
+const Footer: React.FC = () => {
   const location = useLocation();
+
   return (
     <Container>
       <Row>
-        <Col span={12}>
-          <RightHeader />
-        </Col>
-        <Col span={12}>
+        <Col span={24}>
           <TabContainer>
             <Tab data-active={location.pathname === routesEnum.basic} to={routesEnum.basic}>
               Project
@@ -32,18 +29,13 @@ const CommonHeader: React.FC = () => {
 };
 
 const Container = styled.div`
-  height: 64px;
-  max-width: 100vw;
-  background-color: ${(p) => p.theme.darkBlue};
-  position: fixed;
-  width:100%;
-  top:0;
-  z-index:100;
-  color: white;
+  width: 100%;
+  height: 417px;
+  background-color: #d7dee9;
+  margin-top: 120px;
   .ant-row {
-    height: 100%;
-    width:1200px;
-    margin:0 auto;
+    width: 1200px;
+    margin: 0 auto;
   }
 `;
 
@@ -52,12 +44,13 @@ const TabContainer = styled.ul`
   align-items: center;
   height: 100%;
   margin-bottom: 0 !important;
-  justify-content:flex-end;
+  justify-content: flex-end;
+  margin-top: 50px;
 `;
 
 const Tab = styled(NavLink)<any>`
   list-style-type: none;
-  color: #fff;
+  color: #3e5b87;
   font-size: 18px;
   cursor: pointer;
   height: 100%;
@@ -65,17 +58,10 @@ const Tab = styled(NavLink)<any>`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-bottom: ${(p) => {
-    return p['data-active']
-      ? `4px solid ${p.theme.lightBlueBorder}`
-      : `4px solid ${p.theme.darkBlue}`;
-  }};
-  background-color: ${(p) => (p['data-active'] ? p.theme.mediumBlue : p.theme.darkBlue)};
-  font-weight:bold;
+  font-weight: bold;
   &:hover {
-    background-color: ${(p) => p.theme.mediumBlue};
     font-weight: bold;
   }
 `;
 
-export default CommonHeader;
+export default Footer;

@@ -1,6 +1,6 @@
 export const lightTheme = {
-  text: '#444444',
-  background: '#F0F2F5',
+  text: '#4B4B4B',
+  background: '#FFFFFF',
   surface: '#FFFFFF',
   onSurface: '#FAFAFA',
   primary: '#2F54EB',
@@ -9,7 +9,7 @@ export const lightTheme = {
   warning: '#FAAD14',
   error: '#FF4D4F',
   notification: '#FF4D4F',
-  accent: '#D6E4FF',
+  accent: '#3E5B87',
   backdrop: 'rgba(0, 0, 0, 0.5)',
   disabled: '#DBDBDB',
   textDisabled: '#707070',
@@ -22,7 +22,8 @@ export const lightTheme = {
   darkBlue: '#3E5B87',
   lightBlueBorder: '#D6E4FF',
   mediumBlue: '#3E5B87',
-  action: '#D6E4FF'
+  action: '#D6E4FF',
+  highlight: '#FE4382'
 };
 
 export const darkTheme = {
@@ -49,7 +50,8 @@ export const darkTheme = {
   darkBlue: '#3E5B87',
   lightBlueBorder: '#D6E4FF',
   mediumBlue: '#3E5B87',
-  action: '#D6E4FF'
+  action: '#D6E4FF',
+  highlight: '#FE4382'
 };
 
 export type ThemeTypes = typeof lightTheme;

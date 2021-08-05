@@ -1,16 +1,11 @@
 import React from 'react';
-import { Col, Row, Space } from 'antd';
+import { Row, Space } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import Box from 'ui/Box';
 import banner1 from 'assets/images/banner1.svg';
-import img1 from 'assets/images/028-astronaut.svg';
-import img2 from 'assets/images/055-asteroid.svg';
-import img3 from 'assets/images/035-meteor.svg';
-import img4 from 'assets/images/068-solar-system-2.svg';
-import img5 from 'assets/images/032-alien.svg';
-import img6 from 'assets/images/029-dog.svg';
+import Banner from './Banner';
 
 const Introduction: React.FC = () => {
   return (
@@ -89,22 +84,10 @@ const BannerContainer = styled.div`
   width: 100%;
   height: 500px;
   background-color: #dfdbe8;
-  padding: 50px 100px;
+  padding: 50px;
   text-align: center;
   margin-top: 60px;
   margin-bottom: 60px;
-`;
-
-const ItemsRow = styled(Row)`
-  margin: 25px 0;
-  text-align: center;
-  .ant-col {
-    width: 100px;
-    img {
-      margin: 0 auto;
-      cursor: pointer;
-    }
-  }
 `;
 
 const StyledSpace = styled(Space)`
@@ -134,32 +117,3 @@ const TextSpace = styled(Space)`
 `;
 
 export default Introduction;
-
-const Banner = () => {
-  return (
-    <>
-      {[0, 1].map((item) => (
-        <ItemsRow gutter={[0, 120]}>
-          <Col span={4}>
-            <img src={img1} alt='x' width='140px' height='140px' />
-          </Col>
-          <Col span={4}>
-            <img src={img2} alt='x' width='140px' height='140px' />
-          </Col>
-          <Col span={4}>
-            <img src={img3} alt='x' width='140px' height='140px' />
-          </Col>
-          <Col span={4}>
-            <img src={img4} alt='x' width='140px' height='140px' />
-          </Col>
-          <Col span={4}>
-            <img src={img5} alt='x' width='140px' height='140px' />
-          </Col>
-          <Col span={4}>
-            <img src={img6} alt='x' width='140px' height='140px' />
-          </Col>
-        </ItemsRow>
-      ))}
-    </>
-  );
-};

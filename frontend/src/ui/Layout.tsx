@@ -6,6 +6,7 @@ import GlobalStyles from 'styles/globalStyles';
 import Header from './Header/Header';
 import { selectTheme } from 'store/ducks/theme/slice';
 import Footer from './Footer';
+import ConnectMetamask from './ConnectMetamask';
 
 const CommonLayout: React.FC = (props) => {
   const theme = useAppSelector(selectTheme);
@@ -16,7 +17,8 @@ const CommonLayout: React.FC = (props) => {
       <GlobalStyles />
       <Header />
       {props.children}
-      <Footer/>
+      <Footer />
+      <ConnectMetamask />
     </ThemeProvider>
   );
 };

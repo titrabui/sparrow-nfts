@@ -6,7 +6,6 @@ import LargestSales from './LargestSales';
 import RecentTransactions from './RecentTransactions';
 import ForSales from './ForSales';
 import Bids from './Bids';
-import Wrapped from './Wrapped';
 
 const HomePage: React.FC = () => {
   return (
@@ -17,7 +16,6 @@ const HomePage: React.FC = () => {
       <RecentTransactions />
       <ForSales />
       <Bids />
-      <Wrapped />
     </MainContainer>
   );
 };

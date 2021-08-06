@@ -1,6 +1,7 @@
 import BasicPage from 'pages/Basic';
 import HomePage from 'pages/Home';
 import TopOwners from 'pages/TopOwners';
+import Attributes from 'pages/Attributes';
 import { FunctionComponent } from 'react';
 
 type RouteType = {
@@ -17,6 +18,7 @@ export enum routesEnum {
   login = '/login',
   home = '/home',
   topOwners = '/topOwners',
+  attributes= '/attributes',
   notFoundPage = '/*',
   default = '/',
 }
@@ -41,6 +43,11 @@ const publicRoutes: RouteType[] = [
   {
     path: routesEnum.topOwners,
     component: TopOwners,
+    exact: true
+  },
+  {
+    path: routesEnum.attributes,
+    component: Attributes,
     exact: true
   },
 ];

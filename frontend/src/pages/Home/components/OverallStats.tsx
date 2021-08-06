@@ -28,7 +28,7 @@ const OverallStats: React.FC = () => {
         </Col>
         <ButtonContainer>
           <StyledButton $bgType='accent' onClick={() => window.open("/topOwners", "_blank")}>Top Owners</StyledButton>
-          <StyledButton $bgType='accent'>All Types and Attributes</StyledButton>
+          <StyledButton $bgType='accent'onClick={() => window.open("/attributes", "_blank")}>All Types and Attributes</StyledButton>
         </ButtonContainer>
       </Row>
     </Box>

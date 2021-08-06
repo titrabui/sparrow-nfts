@@ -49,7 +49,7 @@ const TopOwners: React.FC = () => {
   ];
   return (
     <MainContainer mt='100px'>
-      <Box m='100px'>
+      <Box w='1050px' m='auto'>
         <Title $size='48px'>All CryptoSpace Owners</Title>
         <OwnersTable
           columns={columns}

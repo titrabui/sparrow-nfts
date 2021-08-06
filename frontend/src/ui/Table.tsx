@@ -19,6 +19,7 @@ const StyledTable = styled(Table)<ModifiedTableProps>`
   .ant-table {
     background: ${({ theme }) => theme.surface};
     color: ${({ theme }) => theme.text};
+    margin-top: 20px;
   }
 
   .ant-table-tbody > tr.ant-table-row:hover > td {
@@ -28,13 +29,19 @@ const StyledTable = styled(Table)<ModifiedTableProps>`
 
   .ant-table-thead > tr:first-child > th {
     background-color: ${({ theme }) => theme.onSurface};
-    color: ${({ theme }) => theme.text};
+    color: ${({ theme }) => theme.text} !important;
+    border-bottom: 2px solid #ddd;
+    border-right-width: 0;
   }
   .ant-table-thead > tr > th {
     background-color: ${({ theme }) => theme.surface};
     color: ${({ theme }) => theme.text};
     text-align: center;
-    font-weight: normal;
+    font-weight: bold;
+    font-size: 20px !important;
+  }
+  .ant-table-thead > tr > th::before {
+    width: 0 !important;
   }
 
   .ant-table.ant-table-bordered > .ant-table-container {

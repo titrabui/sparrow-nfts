@@ -27,7 +27,7 @@ const OverallStats: React.FC = () => {
           <StatsValueText>210.9KΞ ($375.7M)</StatsValueText>
         </Col>
         <ButtonContainer>
-          <StyledButton $bgType='accent'>Top Owners</StyledButton>
+          <StyledButton $bgType='accent' onClick={() => window.open("/topOwners", "_blank")}>Top Owners</StyledButton>
           <StyledButton $bgType='accent'>All Types and Attributes</StyledButton>
         </ButtonContainer>
       </Row>

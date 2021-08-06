@@ -8,6 +8,11 @@ import styled from 'styled-components';
 const { Text: AntText, Paragraph: AntParagraph, Link: AntLink, Title: AntTitle } = Typography;
 
 export type ModifiedTypographyProps = Partial<TypographyProps> & {
+  mt?: string;
+  ml?: string;
+  mb?: string;
+  mr?: string;
+  m?: string;
   $color?: string;
   $size?: string;
   $textAlign?: string;
@@ -18,14 +23,20 @@ export type ModifiedTypographyProps = Partial<TypographyProps> & {
   code?: boolean; // Antd props for intellisense
   mark?: boolean; // Antd props for intellisense
   ellipsis?: boolean; // Antd props for intellisense
+  block?:boolean;
   type?: 'secondary' | 'success' | 'warning' | 'danger'; // Antd props for intellisense
 };
 const Text = styled(AntText)<ModifiedTypographyProps>`
   color: ${(p: any) => (p.$color ? p.$color : p.theme.text)};
   font-size: ${(p: any) => (p.$size ? p.$size : '14px')}; // Default size
   text-align: ${(p) => p.$textAlign || 'left'};
-
+  display:${(p: any) => (p.block ? 'block' : '')};
   text-transform: ${(p) => p.$upperCase && 'uppercase'};
+  ${(p) => p.mt && `margin-top: ${p.mt}`};
+  ${(p) => p.ml && `margin-left:${p.ml}`};
+  ${(p) => p.mr && `margin-right:${p.mr}`};
+  ${(p) => p.mb && `margin-bottom:${p.mb}`};
+  ${(p) => p.m && `margin:${p.m}`};
 `;
 
 const Paragraph = styled(AntParagraph)<ModifiedTypographyProps>`

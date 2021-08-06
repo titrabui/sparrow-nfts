@@ -8,7 +8,7 @@ interface MainContainerProps {
 const StyledDiv = styled.div<MainContainerProps>`
   margin-top: ${(p) => p.mt || '0px'};
   width: 100%;
-  max-width: 1152px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   position: relative;

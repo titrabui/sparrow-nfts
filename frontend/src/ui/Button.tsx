@@ -5,7 +5,7 @@ type ModifiedButtonProps = Partial<ButtonProps> & {
   $w?: string;
   $h?: string;
   $color?: string;
-  $bgType?: 'success' | 'warning' | 'error' | 'accent' | 'action';
+  $bgType?: 'success' | 'warning' | 'error' | 'accent' | 'action' | 'highlight';
   $fontWeight?: string;
   $borderColor?: string;
   $fontSize?: string;

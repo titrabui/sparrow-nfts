@@ -3,16 +3,11 @@ import { Col, Row, Space } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
-import img1 from 'assets/images/028-astronaut.svg';
-import img2 from 'assets/images/055-asteroid.svg';
-import img3 from 'assets/images/035-meteor.svg';
-import img4 from 'assets/images/068-solar-system-2.svg';
-import img5 from 'assets/images/032-alien.svg';
-import img6 from 'assets/images/029-dog.svg';
+import { Spaces } from 'utils/spaces';
 
 const LargestSales: React.FC = () => {
   return (
-    <Box w='1200px' m='auto'>
+    <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
         <StyledSpace>
           <Title>
@@ -23,9 +18,6 @@ const LargestSales: React.FC = () => {
           </Title>
         </StyledSpace>
       </Row>
-      <ItemsContainer justify='center' gutter={[0, 24]}>
-        <ItemsLargestSales />
-      </ItemsContainer>
       <ItemsContainer justify='center' gutter={[0, 24]}>
         <ItemsLargestSales />
       </ItemsContainer>
@@ -70,7 +62,7 @@ const ImageWrapper = styled.div`
   bottom: 3px;
   img {
     width: 140px;
-    height: 140px;
+    height: 130px;
   }
 `;
 
@@ -94,18 +86,11 @@ export default LargestSales;
 const ItemsLargestSales = () => {
   return (
     <>
-      {[
-        { id: 1, img: img1 },
-        { id: 2, img: img2 },
-        { id: 3, img: img3 },
-        { id: 4, img: img4 },
-        { id: 5, img: img5 },
-        { id: 6, img: img6 }
-      ].map((item) => (
+      {Spaces.map((item) => (
         <Col span={4}>
           <ImageContainer>
-            <ImageNumber $size='32px' $color='white' strong>
-              0{item.id}
+            <ImageNumber $size='30px' $color='white' strong>
+              {item.id.length > 1 ? item.id : `0${item.id}`}
             </ImageNumber>
             <ImageWrapper>
               <img src={item.img} alt={`img${item.id}`} />

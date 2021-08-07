@@ -3,16 +3,11 @@ import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
-import img1 from 'assets/images/028-astronaut.svg';
-import img2 from 'assets/images/055-asteroid.svg';
-import img3 from 'assets/images/035-meteor.svg';
-import img4 from 'assets/images/068-solar-system-2.svg';
-import img5 from 'assets/images/032-alien.svg';
-import img6 from 'assets/images/029-dog.svg';
+import { Spaces } from 'utils/spaces';
 
 const ForSales: React.FC = () => {
   return (
-    <Box w='1200px' m='auto'>
+    <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
         <Box w='100%' mt='100px' mb='40px'>
           <Title>For Sales</Title>
@@ -84,42 +79,11 @@ const Items = () => {
     <>
       {[0, 1, 2, 3].map((item) => (
         <ItemsRow gutter={[0, 10]}>
-          <Col span={2}>
-            <img src={img1} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img2} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img3} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img4} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img5} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img6} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img4} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img2} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img1} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img5} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img6} alt='x' width='60px' height='60px' />
-          </Col>
-          <Col span={2}>
-            <img src={img3} alt='x' width='60px' height='60px' />
-          </Col>
+          {Spaces.map((space) => (
+            <Col span={2}>
+              <img src={space.img} alt={space.id} width='60px' height='60px' />
+            </Col>
+          ))}
         </ItemsRow>
       ))}
     </>

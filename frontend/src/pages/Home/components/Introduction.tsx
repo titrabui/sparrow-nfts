@@ -10,7 +10,7 @@ import Banner from './Banner';
 const Introduction: React.FC = () => {
   return (
     <>
-      <Box w='1200px' m='180px auto 0'>
+      <Box w='1050px' m='180px auto 0'>
         <Row justify='center' gutter={[0, 24]}>
           <StyledSpace>
             <StyledButton $bgType='highlight'>Blockchain</StyledButton>
@@ -38,7 +38,7 @@ const Introduction: React.FC = () => {
           <Banner />
         </BannerContainer>
       </Box>
-      <Box w='1200px' m='auto'>
+      <Box w='1050px' m='auto'>
         <Row justify='center' gutter={[0, 24]}>
           <FirstParagraph>
             <Text $size='16px'>

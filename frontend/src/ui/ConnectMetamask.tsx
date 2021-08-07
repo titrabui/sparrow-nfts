@@ -16,7 +16,7 @@ const ConnectMetamask: React.FC = () => {
           {active ? 'Connected to Ethereum' : 'Ethereum Available'}
         </Text>
         <StyledButton onClick={handleConnectWallet}>
-          <Text $size='18px' $color='#ff04b4' strong>
+          <Text $size='18px' $color='#FE4382' strong>
             {active ? account?.slice(0, 10) : 'Allow access to MetaMask'}
           </Text>
         </StyledButton>

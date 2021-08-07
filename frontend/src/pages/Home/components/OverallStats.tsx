@@ -7,7 +7,7 @@ import Box from 'ui/Box';
 
 const OverallStats: React.FC = () => {
   return (
-    <Box w='1200px' m='auto'>
+    <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
         <TitleContainer>
           <Title>Overall Stats</Title>

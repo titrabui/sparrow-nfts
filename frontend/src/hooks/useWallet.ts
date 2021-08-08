@@ -6,12 +6,12 @@ import { useEffect } from 'react';
 
 const handleError = (error: any) => {
   if (error instanceof injectedUserRejectRequestError) {
-    console.log('User rejected connect');
+    // Handle Error
     return;
   }
 
   if (error instanceof UnsupportedChainIdError) {
-    console.log('Un-support chain ID');
+    // Handle Error
   }
 };
 
@@ -28,7 +28,7 @@ const useWallet = () => {
 
   // Refresh connection if already connected
   useEffect(() => {
-    const ethereum = (window as any).ethereum;
+    const { ethereum } = window as any;
 
     if (ethereum) {
       (async () => {
@@ -39,7 +39,7 @@ const useWallet = () => {
             await activate(injected, (error) => handleError(error));
           }
         } catch (err) {
-          console.log({err});
+          // Handle Error
         }
       })();
     }

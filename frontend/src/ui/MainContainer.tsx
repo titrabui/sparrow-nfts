@@ -28,7 +28,8 @@ const StyledDiv = styled.div<MainContainerProps>`
 `;
 
 const MainContainer: React.FC<MainContainerProps> = (props) => {
-  return <StyledDiv {...props}>{props.children}</StyledDiv>;
+  const { children } = props;
+  return <StyledDiv {...props}>{children}</StyledDiv>;
 };
 
 export default MainContainer;

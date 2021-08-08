@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Input as AntdInput, InputProps } from 'antd';
 import styled from 'styled-components';
 

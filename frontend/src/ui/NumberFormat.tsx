@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 

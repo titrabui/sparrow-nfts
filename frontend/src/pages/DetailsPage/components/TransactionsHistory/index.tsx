@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Title, Link, Text } from 'ui/Typography';
+import {  Link, Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
 import { ISpaceProps } from 'types/SpaceProps';
 
-const TransactionsHistory:React.FC<ISpaceProps> = (props: any) => {
+const TransactionsHistory:React.FC<ISpaceProps> = () => {
   const dataSource = [
     {
       type: 'Offered',

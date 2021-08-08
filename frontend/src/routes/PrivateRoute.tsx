@@ -13,9 +13,9 @@ const PrivateRoute: React.FC<Props> = (props: Props) => {
    * TODO: Create useAuth hook to check if use is authenticated or not.
    */
   const isAuth = true;
-
+  const { path, exact, component } = props;
   return isAuth ? (
-    <Route path={props.path} exact={props.exact} component={props.component} />
+    <Route path={path} exact={exact} component={component} />
   ) : (
     <Redirect to={routesEnum.login} />
   );

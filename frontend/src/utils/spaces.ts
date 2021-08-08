@@ -11,125 +11,127 @@ import img10 from 'assets/images/046-comet-2.svg';
 import img11 from 'assets/images/003-earth-globe.svg';
 import img12 from 'assets/images/013-space-capsule-3.svg';
 
-export const Spaces = [
+const Spaces = [
   {
-    id: '1',
+    id: 1,
     name: 'Cloud',
     type: 'Nature',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img1,
     status: 0
   },
   {
-    id: '2',
+    id: 2,
     name: 'Satellite Dish',
     type: 'Device',
-    price: '2500',
-    bid: '0',
+    price: 2500,
+    bid: 0,
     owner: '0x6611fe',
     img: img2,
     status: 0
   },
   {
-    id: '3',
+    id: 3,
     name: 'Galaxy',
     type: 'Nature',
-    price: '3500',
-    bid: '0',
+    price: 3500,
+    bid: 0,
     owner: '0x6611fe',
     img: img3,
     status: 1
   },
   {
-    id: '4',
+    id: 4,
     name: 'Astrounaut',
     type: 'Device',
-    price: '5500',
-    bid: '0.5',
+    price: 5500,
+    bid: 0.5,
     owner: '0x6611fe',
     img: img4,
     status: 0
   },
   {
-    id: '5',
+    id: 5,
     name: 'Stars',
     type: 'Nature',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img5,
     status: 0
   },
   {
-    id: '6',
+    id: 6,
     name: 'Comet 1',
     type: 'Nature',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img6,
     status: 0
   },
   {
-    id: '7',
+    id: 7,
     name: 'Gamma Ray',
     type: 'Nature',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img7,
     status: 0
   },
   {
-    id: '8',
+    id: 8,
     name: 'Space Shuttle',
     type: 'Device',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img8,
     status: 0
   },
   {
-    id: '9',
+    id: 9,
     name: 'Super Nova',
     type: 'Nature',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img9,
     status: 0
   },
   {
-    id: '10',
+    id: 10,
     name: 'Comet 2',
     type: 'Nature',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img10,
     status: 0
   },
   {
-    id: '11',
+    id: 11,
     name: 'Eath Globe',
     type: 'Device',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img11,
     status: 0
   },
   {
-    id: '12',
+    id: 12,
     name: 'Space Capsule',
     type: 'Device',
-    price: '1500',
-    bid: '0',
+    price: 1500,
+    bid: 0,
     owner: '0x6611fe',
     img: img12,
     status: 0
   }
 ];
+
+export default Spaces;

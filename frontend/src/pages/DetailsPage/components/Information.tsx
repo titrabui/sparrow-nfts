@@ -16,13 +16,14 @@ import { ISpaceProps } from 'types/SpaceProps';
 
 const Information: React.FC<ISpaceProps> = (props: any) => {
   const { active } = useWallet();
+  const { data } = props;
   return (
     <Box w='900px' m='40px auto 0'>
-      <BigTitle>{props.data.name}</BigTitle>
+      <BigTitle>{data.name}</BigTitle>
       <Type>
-        One of {props.data.type === 'Device' ? 5 : 7}
+        One of {data.type === 'Device' ? 5 : 7}
         <Link href='/'>
-          <LinkText> {props.data.type} </LinkText>
+          <LinkText> {data.type} </LinkText>
         </Link>
         space.
       </Type>
@@ -30,17 +31,17 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       <StyledText>
         This space is currently owned by address{' '}
         <Link href='/'>
-          <LinkText>{props.data.owner}</LinkText>
+          <LinkText>{data.owner}</LinkText>
         </Link>
         .
       </StyledText>
       <StyledText>
-        This space is currently for sale by owner for {props.data.price} ETH ($
-        {props.data.price * 2500} USD).
+        This space is currently for sale by owner for {data.price} ETH ($
+        {data.price * 2500} USD).
       </StyledText>
-      {props.data.bid !== '0' && (
+      {data.bid !== '0' && (
         <StyledText>
-          There is a bid of {props.data.bid} ETH (${props.data.bid * 2500} USD) for this space from{' '}
+          There is a bid of {data.bid} ETH (${data.bid * 2500} USD) for this space from{' '}
           <Link href='/'>
             <LinkText>0x72fae9</LinkText>
           </Link>

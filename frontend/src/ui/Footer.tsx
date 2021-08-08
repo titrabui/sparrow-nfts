@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Footer: React.FC = () => {
-  return <Container />;
-};
+const Footer: React.FC = () => <Container />;
 
 const Container = styled.div`
   width: 100%;

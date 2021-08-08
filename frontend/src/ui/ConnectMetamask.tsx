@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import useWallet from 'hooks/useWallet';
 import Button from './Button';
 import { Text } from './Typography';
-import useWallet from 'hooks/useWallet';
 
 const ConnectMetamask: React.FC = () => {
   const { connect, active, account } = useWallet();

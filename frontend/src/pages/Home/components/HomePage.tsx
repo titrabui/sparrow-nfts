@@ -7,17 +7,15 @@ import RecentTransactions from './RecentTransactions';
 import ForSales from './ForSales';
 import Bids from './Bids';
 
-const HomePage: React.FC = () => {
-  return (
-    <MainContainer mt='100px'>
-      <Introduction />
-      <OverallStats />
-      <LargestSales />
-      <RecentTransactions />
-      <ForSales />
-      <Bids />
-    </MainContainer>
-  );
-};
+const HomePage: React.FC = () => (
+  <MainContainer mt='100px'>
+    <Introduction />
+    <OverallStats />
+    <LargestSales />
+    <RecentTransactions />
+    <ForSales />
+    <Bids />
+  </MainContainer>
+);
 
 export default HomePage;

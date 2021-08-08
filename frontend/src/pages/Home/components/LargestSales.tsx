@@ -3,27 +3,25 @@ import { Col, Row, Space } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
-import { Spaces } from 'utils/spaces';
+import Spaces from 'utils/spaces';
 
-const LargestSales: React.FC = () => {
-  return (
-    <Box w='1050px' m='auto'>
-      <Row justify='center' gutter={[0, 24]}>
-        <StyledSpace>
-          <Title>
-            Largest Sales
-            <LinkText>
-              <a href='/'>See all top sales</a>
-            </LinkText>
-          </Title>
-        </StyledSpace>
-      </Row>
-      <ItemsContainer justify='center' gutter={[0, 24]}>
-        <ItemsLargestSales />
-      </ItemsContainer>
-    </Box>
-  );
-};
+const LargestSales: React.FC = () => (
+  <Box w='1050px' m='auto'>
+    <Row justify='center' gutter={[0, 24]}>
+      <StyledSpace>
+        <Title>
+          Largest Sales
+          <LinkText>
+            <a href='/'>See all top sales</a>
+          </LinkText>
+        </Title>
+      </StyledSpace>
+    </Row>
+    <ItemsContainer justify='center' gutter={[0, 24]}>
+      <ItemsLargestSales />
+    </ItemsContainer>
+  </Box>
+);
 
 const Title = styled(Text)`
   font-size: 36px;
@@ -83,30 +81,28 @@ const ItemsContainer = styled(Row)`
 
 export default LargestSales;
 
-const ItemsLargestSales = () => {
-  return (
-    <>
-      {Spaces.map((item) => (
-        <Col span={4}>
-          <ImageContainer>
-            <ImageNumber $size='30px' $color='white' strong>
-              {item.id.length > 1 ? item.id : `0${item.id}`}
-            </ImageNumber>
-            <ImageWrapper>
-              <img src={item.img} alt={`img${item.id}`} />
-            </ImageWrapper>
-          </ImageContainer>
-          <Text $size='24px' strong $color='#0C264D' block>
-            #028
-          </Text>
-          <Text $size='20px' $color='#4B4B4B' block>
-            4.2KΞ ($7.57M)
-          </Text>
-          <Text $size='20px' $color='#8D8D8D' block>
-            Mar 11, 2021
-          </Text>
-        </Col>
-      ))}
-    </>
-  );
-};
+const ItemsLargestSales = () => (
+  <>
+    {Spaces.map((item) => (
+      <Col span={4}>
+        <ImageContainer>
+          <ImageNumber $size='30px' $color='white' strong>
+            {item.id > 9 ? item.id : `0${item.id}`}
+          </ImageNumber>
+          <ImageWrapper>
+            <img src={item.img} alt={`img${item.id}`} />
+          </ImageWrapper>
+        </ImageContainer>
+        <Text $size='24px' strong $color='#0C264D' block>
+          #028
+        </Text>
+        <Text $size='20px' $color='#4B4B4B' block>
+          4.2KΞ ($7.57M)
+        </Text>
+        <Text $size='20px' $color='#8D8D8D' block>
+          Mar 11, 2021
+        </Text>
+      </Col>
+    ))}
+  </>
+);

@@ -4,10 +4,11 @@ import { ISpaceProps } from 'types/SpaceProps';
 import Box from 'ui/Box';
 
 const Avatar: React.FC<ISpaceProps> = (props: any) => {
+  const { data } = props;
   return (
     <Container w='1050px' h='360px' m='auto'>
       <ImageWrapper>
-        <Image src={props.data.img} alt={props.data.id} />
+        <Image src={data.img} alt={data.id} />
       </ImageWrapper>
     </Container>
   );

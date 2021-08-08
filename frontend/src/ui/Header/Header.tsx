@@ -1,19 +1,17 @@
 import React from 'react';
 import { Col, Row } from 'antd';
-import RightHeader from './RightHeader';
 import styled from 'styled-components';
+import RightHeader from './RightHeader';
 
-const CommonHeader: React.FC = () => {
-  return (
-    <Container>
-      <Row>
-        <Col span={12}>
-          <RightHeader />
-        </Col>
-      </Row>
-    </Container>
-  );
-};
+const CommonHeader: React.FC = () => (
+  <Container>
+    <Row>
+      <Col span={12}>
+        <RightHeader />
+      </Col>
+    </Row>
+  </Container>
+);
 
 const Container = styled.div`
   height: 64px;

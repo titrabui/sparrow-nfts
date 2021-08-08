@@ -3,32 +3,30 @@ import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
-import { Spaces } from 'utils/spaces';
+import Spaces from 'utils/spaces';
 
-const ForSales: React.FC = () => {
-  return (
-    <Box w='1050px' m='auto'>
-      <Row justify='center' gutter={[0, 24]}>
-        <Box w='100%' mt='100px' mb='40px'>
-          <Title>For Sales</Title>
-          <StyledText>
-            The lowest price punk currently for sale is
-            <HightlightText>19.9 ETH ($37,303.75 USD).</HightlightText>
-          </StyledText>
-          <StyledText>
-            Showing most recent offers
-            <LinkText>
-              <a href='/'>click here to see all 1,510</a>
-            </LinkText>
-          </StyledText>
-        </Box>
-      </Row>
-      <ItemsContainer>
-        <Items />
-      </ItemsContainer>
-    </Box>
-  );
-};
+const ForSales: React.FC = () => (
+  <Box w='1050px' m='auto'>
+    <Row justify='center' gutter={[0, 24]}>
+      <Box w='100%' mt='100px' mb='40px'>
+        <Title>For Sales</Title>
+        <StyledText>
+          The lowest price punk currently for sale is
+          <HightlightText>19.9 ETH ($37,303.75 USD).</HightlightText>
+        </StyledText>
+        <StyledText>
+          Showing most recent offers
+          <LinkText>
+            <a href='/'>click here to see all 1,510</a>
+          </LinkText>
+        </StyledText>
+      </Box>
+    </Row>
+    <ItemsContainer>
+      <Items />
+    </ItemsContainer>
+  </Box>
+);
 
 const ItemsContainer = styled.div`
   width: 100%;
@@ -74,18 +72,16 @@ const LinkText = styled(Text)`
 
 export default ForSales;
 
-const Items = () => {
-  return (
-    <>
-      {[0, 1, 2, 3].map((item) => (
-        <ItemsRow gutter={[0, 10]}>
-          {Spaces.map((space) => (
-            <Col span={2}>
-              <img src={space.img} alt={space.id} width='60px' height='60px' />
-            </Col>
-          ))}
-        </ItemsRow>
-      ))}
-    </>
-  );
-};
+const Items = () => (
+  <>
+    {[0, 1, 2, 3].map(() => (
+      <ItemsRow gutter={[0, 10]}>
+        {Spaces.map((space) => (
+          <Col span={2}>
+            <img src={space.img} alt={space.name} width='60px' height='60px' />
+          </Col>
+        ))}
+      </ItemsRow>
+    ))}
+  </>
+);

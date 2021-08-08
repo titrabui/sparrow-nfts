@@ -1,11 +1,9 @@
-import React from 'react';
-
 export interface ISpace {
-  id?: string;
+  id?: number;
   name?: string;
   type?: string;
-  price?: string;
-  bid?: string;
+  price?: number;
+  bid?: number;
   owner?: string;
   img?: any;
   status?: number;

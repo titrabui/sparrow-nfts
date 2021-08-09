@@ -30,6 +30,21 @@ const StyledButton = styled(Button)`
   padding: 0;
   margin-top: 5px;
   box-shadow: none;
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited {
+    background: none !important;
+    border: none !important;
+  }
+  .ant-typography {
+    &:hover,
+    &:active,
+    &:focus,
+    &:visited {
+      color: black;
+    }
+  }
 `;
 
 const Container = styled.div`

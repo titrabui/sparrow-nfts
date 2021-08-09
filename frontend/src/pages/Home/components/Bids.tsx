@@ -77,6 +77,7 @@ const LinkText = styled(Text)`
   font-size: 18px;
   margin-left: 10px;
   color: ${(p) => p.theme.primary};
+  font-weight:bold;
 `;
 
 export default Bids;

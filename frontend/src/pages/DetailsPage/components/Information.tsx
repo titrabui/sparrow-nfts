@@ -50,27 +50,26 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       )}
       {active && (
         <>
-          <StyledButton $bgType='highlight'>
+          <StyledButton $bgType='primary'>
             <PlusSquareOutlined /> Claim
           </StyledButton>
-          <StyledButton $bgType='highlight'>
+          <StyledButton $bgType='primary'>
             <RetweetOutlined /> Transfer
           </StyledButton>
-          <StyledButton $bgType='highlight'>
+          <StyledButton $bgType='primary'>
             <EditOutlined /> Offer for Sale
           </StyledButton>
-          <StyledButton $bgType='highlight'>
+          <StyledButton $bgType='primary'>
             <ShoppingCartOutlined /> Buy
           </StyledButton>
-          <StyledButton $bgType='highlight'>
+          <StyledButton $bgType='primary'>
             <TagOutlined /> Bid
           </StyledButton>
-          <StyledButton $bgType='highlight'>
+          <StyledButton $bgType='primary'>
             <CreditCardOutlined /> Withdraw Bid
           </StyledButton>
         </>
       )}
-
       <SmallTitle>Transaction History</SmallTitle>
     </Box>
   );
@@ -118,7 +117,7 @@ const Type = styled(Text)`
 const LinkText = styled(Text)`
   font-size: 18px;
   font-weight: bold;
-  color: ${(p) => p.theme.highlight};
+  color: ${(p) => p.theme.primary};
 `;
 
 export default Information;

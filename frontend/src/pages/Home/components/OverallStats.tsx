@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import Box from 'ui/Box';
+import { OrderedListOutlined, DeploymentUnitOutlined } from '@ant-design/icons';
 
 const OverallStats: React.FC = () => (
   <Box w='1050px' m='auto'>
@@ -26,10 +27,14 @@ const OverallStats: React.FC = () => (
         <StatsValueText>210.9KΞ ($375.7M)</StatsValueText>
       </Col>
       <ButtonContainer>
-        <StyledButton $bgType='accent' onClick={() => window.open('/topOwners', '_blank')}>
+        <StyledButton $bgType='primary' onClick={() => window.open('/topOwners', '_blank')}>
+          <OrderedListOutlined />
           Top Owners
         </StyledButton>
-        <StyledButton $bgType='accent'>All Types and Attributes</StyledButton>
+        <StyledButton $bgType='primary'>
+          <DeploymentUnitOutlined />
+          All Types and Attributes
+        </StyledButton>
       </ButtonContainer>
     </Row>
   </Box>
@@ -57,6 +62,11 @@ const StyledButton = styled(Button)`
   height: 48px;
   font-size: 18px;
   width: 100%;
+  .anticon {
+    margin-right: 10px;
+    font-size: 19px;
+    font-weight: bold;
+  }
 `;
 
 const ButtonContainer = styled(Space)`

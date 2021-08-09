@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import {  Link, Text } from 'ui/Typography';
+import { Link, Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
 import { ISpaceProps } from 'types/SpaceProps';
 
-const TransactionsHistory:React.FC<ISpaceProps> = () => {
+const TransactionsHistory: React.FC<ISpaceProps> = () => {
   const dataSource = [
     {
       type: 'Offered',
@@ -126,7 +126,9 @@ const TransactionsHistory:React.FC<ISpaceProps> = () => {
 };
 
 const OwnersTable = styled(StyledTable)`
-  margin-top: 20px;
+  .ant-table {
+    margin-top: 0;
+  }
   td,
   th {
     text-align: left !important ;
@@ -154,7 +156,7 @@ const OwnersTable = styled(StyledTable)`
 const LinkText = styled(Text)`
   font-size: 18px;
   font-weight: bold;
-  color: ${(p) => p.theme.highlight};
+  color: ${(p) => p.theme.primary};
 `;
 
 export default TransactionsHistory;

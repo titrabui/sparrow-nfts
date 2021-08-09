@@ -5,7 +5,7 @@ import RightHeader from './RightHeader';
 
 const CommonHeader: React.FC = () => (
   <Container>
-    <Box w='1050px' h='60px' m='auto'>
+    <Box w='1050px' h='100%' m='auto'>
       <RightHeader />
     </Box>
   </Container>

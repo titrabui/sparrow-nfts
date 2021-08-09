@@ -4,6 +4,7 @@ import MainContainer from 'ui/MainContainer';
 import { Title, Link, Text } from 'ui/Typography';
 import  StyledTable from 'ui/Table';
 import Box from 'ui/Box';
+import BreadCrumb from 'ui/BreadCrumb';
 
 const TopOwners: React.FC = () => {
   const dataSource = [...Array(10).keys()].map(() => ({
@@ -49,7 +50,8 @@ const TopOwners: React.FC = () => {
   ];
   return (
     <MainContainer mt='100px'>
-      <Box m='100px'>
+      <Box w='1050px' m='auto'>
+        <BreadCrumb />
         <Title $size='48px'>All CryptoSpace Owners</Title>
         <OwnersTable
           columns={columns}

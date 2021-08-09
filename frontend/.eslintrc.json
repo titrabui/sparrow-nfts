@@ -14,7 +14,6 @@
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {
-    "max-classes-per-file": "off",
     "no-use-before-define": "off",
     "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
     "jsx-quotes": [2, "prefer-single"],
@@ -28,19 +27,7 @@
     ],
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["warn"],
-    "@typescript-eslint/no-unused-vars": "off",
-    "no-unused-vars": "off",
-    "comma-dangle": "off",
-    "object-curly-newline": "off",
-    "import/no-extraneous-dependencies": ["warn", { "devDependencies": true }],
-    "react/jsx-one-expression-per-line": "off",
-    "prefer-destructuring": "off",
-    "react/destructuring-assignment": "off",
     "react/prop-types": "off",
-    "arrow-body-style": "off",
-    "arrow-parens": "off",
-    "arrow-spacing": "error",
-    "no-console": "off",
     "react/self-closing-comp": [
       "warn",
       {
@@ -49,11 +36,8 @@
       }
     ],
     "react/jsx-props-no-spreading": "off",
-    "import/order": "off",
     "import/no-unresolved": "off",
-    "react-hooks/exhaustive-deps": "warn",
-    "import/prefer-default-export": "off",
-    "no-param-reassign": "off"
+    "react-hooks/exhaustive-deps": "warn"
   },
   "settings": {
     "import/resolver": {

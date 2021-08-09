@@ -5,7 +5,7 @@ type ModifiedButtonProps = Partial<ButtonProps> & {
   $w?: string;
   $h?: string;
   $color?: string;
-  $bgType?: 'success' | 'warning' | 'error' | 'accent' | 'action' | 'highlight';
+  $bgType?: 'success' | 'warning' | 'error' | 'accent' | 'action' | 'highlight' | 'primary';
   $fontWeight?: string;
   $borderColor?: string;
   $fontSize?: string;
@@ -28,10 +28,9 @@ const Button = styled(AntdButton)<ModifiedButtonProps>`
   &:active,
   &:focus,
   &:visited {
-    background-color: ${(p) => p.$bgType && p.theme[p.$bgType]};
-    color: ${(p) => (p.$color && p.$color) || (p.$bgType && '#030852')};
-    border-color: ${(p) => p.$bgType && p.theme[p.$bgType]};
-    filter: brightness(110%);
+    background-color: black !important;
+    color: white !important;
+    border-color: black !important;
   }
 
   &.ant-btn[disabled],

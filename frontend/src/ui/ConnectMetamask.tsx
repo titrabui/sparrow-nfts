@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import useWallet from 'hooks/useWallet';
 import Button from './Button';
 import { Text } from './Typography';
-import useWallet from 'hooks/useWallet';
 
 const ConnectMetamask: React.FC = () => {
   const { connect, active, account } = useWallet();
@@ -16,7 +16,7 @@ const ConnectMetamask: React.FC = () => {
           {active ? 'Connected to Ethereum' : 'Ethereum Available'}
         </Text>
         <StyledButton onClick={handleConnectWallet}>
-          <Text $size='18px' $color='#ff04b4' strong>
+          <Text $size='18px' $color='#0080FF' strong>
             {active ? account?.slice(0, 10) : 'Allow access to MetaMask'}
           </Text>
         </StyledButton>
@@ -30,6 +30,21 @@ const StyledButton = styled(Button)`
   padding: 0;
   margin-top: 5px;
   box-shadow: none;
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited {
+    background: none !important;
+    border: none !important;
+  }
+  .ant-typography {
+    &:hover,
+    &:active,
+    &:focus,
+    &:visited {
+      color: black;
+    }
+  }
 `;
 
 const Container = styled.div`

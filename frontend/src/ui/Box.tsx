@@ -70,7 +70,8 @@ const StyledBox = styled.div<BoxProps>`
 `;
 
 const Box: React.FC<BoxProps> = (props) => {
-  return <StyledBox {...props}>{props.children}</StyledBox>;
+  const { children } = props;
+  return <StyledBox {...props}>{children}</StyledBox>;
 };
 
 export default Box;

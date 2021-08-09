@@ -3,57 +3,46 @@ import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
-import img1 from 'assets/images/028-astronaut.svg';
-import img2 from 'assets/images/055-asteroid.svg';
-import img3 from 'assets/images/035-meteor.svg';
-import img4 from 'assets/images/068-solar-system-2.svg';
-import img5 from 'assets/images/032-alien.svg';
-import img6 from 'assets/images/029-dog.svg';
+import Spaces from 'utils/spaces';
+import { Link } from 'react-router-dom';
 
-const RecentTransactions: React.FC = () => {
-  return (
-    <Box w='1200px' m='auto'>
-      <Row justify='center' gutter={[0, 24]}>
-        <Box w='100%' mt='50px'>
-          <Title>Recent Transactions</Title>
-          <UpdateTime>Updated 32 seconds ago</UpdateTime>
-        </Box>
-      </Row>
-      <Box w='100%' mt='30px'>
-        <Row justify='center' gutter={[0, 24]}>
-          {[
-            { id: 1, img: img1 },
-            { id: 2, img: img2 },
-            { id: 3, img: img3 },
-            { id: 4, img: img4 },
-            { id: 5, img: img5 },
-            { id: 6, img: img6 }
-          ].map((item) => (
-            <Col span={4}>
-              <ImageContainer>
-                <ImageNumber $size='32px' $color='white' strong>
-                  0{item.id}
-                </ImageNumber>
-                <ImageWrapper>
-                  <img src={item.img} alt={`img${item.id}`} />
-                </ImageWrapper>
-              </ImageContainer>
-              <Text $size='24px' strong $color='#0C264D' block>
-                #028
-              </Text>
-              <Text $size='20px' $color='#8D8D8D' block>
-                Offered for
-              </Text>
-              <Text $size='20px' $color='#4B4B4B' block>
-                4.2KΞ ($7.57M)
-              </Text>
-            </Col>
-          ))}
-        </Row>
+const RecentTransactions: React.FC = () => (
+  <Box w='1050px' m='auto'>
+    <Row justify='center' gutter={[0, 24]}>
+      <Box w='100%' mt='50px'>
+        <Title>Recent Transactions</Title>
+        <UpdateTime>Updated 32 seconds ago</UpdateTime>
       </Box>
+    </Row>
+    <Box w='100%' mt='30px'>
+      <Row justify='center' gutter={[0, 24]}>
+        {Spaces.slice(0, 6).map((space) => (
+          <Col span={4}>
+            <ImageContainer>
+              <ImageNumber $size='30px' $color='white' strong>
+                0{space.id}
+              </ImageNumber>
+              <ImageWrapper>
+                <Link to={`/detail/${space.id}`}>
+                  <img src={space.img} alt={`img${space.id}`} />
+                </Link>
+              </ImageWrapper>
+            </ImageContainer>
+            <Text $size='24px' strong $color='#0C264D' block>
+              #028
+            </Text>
+            <Text $size='20px' $color='#8D8D8D' block>
+              Offered for
+            </Text>
+            <Text $size='20px' $color='#4B4B4B' block>
+              4.2KΞ ($7.57M)
+            </Text>
+          </Col>
+        ))}
+      </Row>
     </Box>
-  );
-};
+  </Box>
+);
 
 const Title = styled(Text)`
   font-size: 36px;
@@ -90,7 +79,7 @@ const ImageWrapper = styled.div`
   bottom: 3px;
   img {
     width: 140px;
-    height: 140px;
+    height: 130px;
   }
 `;
 

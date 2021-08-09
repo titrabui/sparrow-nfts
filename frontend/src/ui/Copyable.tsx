@@ -8,10 +8,11 @@ import Box, { BoxProps } from './Box';
 interface CopyableProps {
   boxProps?: BoxProps;
   textProps?: ModifiedTypographyProps;
-  children?: string;
+  children?: React.ReactChildren;
 }
 
-const Copyable: React.FC<CopyableProps> = ({ textProps, boxProps, children }) => {
+const Copyable: React.FC<CopyableProps> = (props: CopyableProps) => {
+  const { textProps, boxProps, children } = props;
   const textRef = useRef<any>(null);
   const [copied, setCopied] = useState(false);
 
@@ -52,9 +53,14 @@ const Copyable: React.FC<CopyableProps> = ({ textProps, boxProps, children }) =>
   );
 };
 
+Copyable.defaultProps = {
+  boxProps: undefined,
+  textProps: undefined,
+  children: undefined
+};
+
 const CopyButton = styled.button`
   background-color: transparent;
-
   border: none;
   color: ${(p) => p.theme.text};
   cursor: pointer;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Select as AntdSelect, SelectProps } from 'antd';
 import { OptionProps } from 'antd/lib/select';
 import styled from 'styled-components';

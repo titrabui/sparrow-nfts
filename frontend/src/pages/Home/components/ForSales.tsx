@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
+import { Link } from 'react-router-dom';
 
 const ForSales: React.FC = () => (
   <Box w='1050px' m='auto'>
@@ -78,7 +79,9 @@ const Items = () => (
       <ItemsRow gutter={[0, 10]}>
         {Spaces.map((space) => (
           <Col span={2}>
-            <img src={space.img} alt={space.name} width='60px' height='60px' />
+            <Link to={`/detail/${space.id}`}>
+              <img src={space.img} alt={space.name} width='60px' height='60px' />
+            </Link>
           </Col>
         ))}
       </ItemsRow>

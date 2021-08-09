@@ -1,15 +1,13 @@
 import React from 'react';
-import { Col, Row } from 'antd';
 import styled from 'styled-components';
+import Box from 'ui/Box';
 import RightHeader from './RightHeader';
 
 const CommonHeader: React.FC = () => (
   <Container>
-    <Row>
-      <Col span={12}>
-        <RightHeader />
-      </Col>
-    </Row>
+    <Box w='1050px' h='60px' m='auto'>
+      <RightHeader />
+    </Box>
   </Container>
 );
 

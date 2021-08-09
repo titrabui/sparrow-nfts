@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
+import { Link } from 'react-router-dom';
 
 const RecentTransactions: React.FC = () => (
   <Box w='1050px' m='auto'>
@@ -15,14 +16,16 @@ const RecentTransactions: React.FC = () => (
     </Row>
     <Box w='100%' mt='30px'>
       <Row justify='center' gutter={[0, 24]}>
-        {Spaces.slice(0, 6).map((item) => (
+        {Spaces.slice(0, 6).map((space) => (
           <Col span={4}>
             <ImageContainer>
               <ImageNumber $size='30px' $color='white' strong>
-                0{item.id}
+                0{space.id}
               </ImageNumber>
               <ImageWrapper>
-                <img src={item.img} alt={`img${item.id}`} />
+                <Link to={`/detail/${space.id}`}>
+                  <img src={space.img} alt={`img${space.id}`} />
+                </Link>
               </ImageWrapper>
             </ImageContainer>
             <Text $size='24px' strong $color='#0C264D' block>

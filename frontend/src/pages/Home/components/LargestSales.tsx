@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
+import { Link } from 'react-router-dom';
 
 const LargestSales: React.FC = () => (
   <Box w='1050px' m='auto'>
@@ -83,14 +84,16 @@ export default LargestSales;
 
 const ItemsLargestSales = () => (
   <>
-    {Spaces.map((item) => (
+    {Spaces.map((space) => (
       <Col span={4}>
         <ImageContainer>
           <ImageNumber $size='30px' $color='white' strong>
-            {item.id > 9 ? item.id : `0${item.id}`}
+            {space.id > 9 ? space.id : `0${space.id}`}
           </ImageNumber>
           <ImageWrapper>
-            <img src={item.img} alt={`img${item.id}`} />
+            <Link to={`/detail/${space.id}`}>
+              <img src={space.img} alt={`img${space.id}`} />
+            </Link>
           </ImageWrapper>
         </ImageContainer>
         <Text $size='24px' strong $color='#0C264D' block>

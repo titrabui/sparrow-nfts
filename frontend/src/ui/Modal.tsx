@@ -11,11 +11,16 @@ type ModifiedModalProps = Partial<ModalProps> & {
 
 const CommonButton = styled(Modal)<ModifiedModalProps>`
   .ant-modal-header {
-    padding: 8.6px 24px;
+    padding:  20px;
     color: rgba(0, 0, 0, 0.85);
-    background: ${({ theme }) => theme.accent};
-    text-align: center;
+    background: #f3f3f3;
+    text-align: left;
     ${(p) => p.$headerCss && p.$headerCss};
+  }
+
+  .ant-modal-title {
+    font-weight:bold;
+    font-size:18px;
   }
 
   .ant-modal-content {

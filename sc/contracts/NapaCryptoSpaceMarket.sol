@@ -5,6 +5,8 @@
 
 pragma solidity 0.8.4;
 
+import "hardhat/console.sol";
+
 contract NapaCryptoSpaceMarket {
 
     // You can use this hash to verify the image file containing all the spaces
@@ -73,9 +75,9 @@ contract NapaCryptoSpaceMarket {
     }
 
     function setInitialOwner(address to, uint spaceIndex) public {
-        if (msg.sender != owner) revert('Error');
-        if (allSpacesAssigned) revert('Error');
-        if (spaceIndex >= 10000) revert('Error');
+        if (msg.sender != owner) revert('Error');       
+        if (allSpacesAssigned) revert('Error');        
+        if (spaceIndex >= 10000) revert('Error');       
         if (spaceIndexToAddress[spaceIndex] != to) {
             if (spaceIndexToAddress[spaceIndex] != address(0)) {
                 balanceOf[spaceIndexToAddress[spaceIndex]]--;
@@ -102,7 +104,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function getSpace(uint spaceIndex) public{
-        if (!allSpacesAssigned) revert('Error');
+        // if (!allSpacesAssigned) revert('Error');
         if (spacesRemainingToAssign == 0) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != address(0)) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
@@ -114,7 +116,7 @@ contract NapaCryptoSpaceMarket {
 
     // Transfer ownership of a space to another user without requiring payment
     function transferSpace(address to, uint spaceIndex) public{
-        if (!allSpacesAssigned) revert('Error');
+        // if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
         if (spacesOfferedForSale[spaceIndex].isForSale) {
@@ -144,7 +146,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function offerSpaceForSale(uint spaceIndex, uint minSalePriceInWei) public{
-        if (!allSpacesAssigned) revert('Error');
+        // if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
         spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, msg.sender, minSalePriceInWei, address(0));
@@ -160,7 +162,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function buySpace(uint spaceIndex) public payable {
-        if (!allSpacesAssigned) revert('Error');
+        // if (!allSpacesAssigned) revert('Error');
         Offer memory offer = spacesOfferedForSale[spaceIndex];
         if (spaceIndex >= 10000) revert('Error');
         if (!offer.isForSale) revert('Error');                // space not actually for sale
@@ -190,7 +192,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function withdraw() public{
-        if (!allSpacesAssigned) revert('Error');
+        // if (!allSpacesAssigned) revert('Error');
         uint amount = pendingWithdrawals[msg.sender];
         // Remember to zero the pending refund before
         // sending to prevent re-entrancy attacks
@@ -200,7 +202,7 @@ contract NapaCryptoSpaceMarket {
 
     function enterBidForSpace(uint spaceIndex) public payable {
         if (spaceIndex >= 10000) revert('Error');
-        if (!allSpacesAssigned) revert('Error');
+        //if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] == address(0)) revert('Error');
         if (spaceIndexToAddress[spaceIndex] == msg.sender) revert('Error');
         if (msg.value == 0) revert('Error');
@@ -216,7 +218,7 @@ contract NapaCryptoSpaceMarket {
 
     function acceptBidForSpace(uint spaceIndex, uint minPrice) public{
         if (spaceIndex >= 10000) revert('Error');
-        if (!allSpacesAssigned) revert('Error');
+        // if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         address seller = msg.sender;
         Bid memory bid = spaceBids[spaceIndex];

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Link, Text } from 'ui/Typography';
@@ -13,10 +13,71 @@ import {
 } from '@ant-design/icons';
 import useWallet from 'hooks/useWallet';
 import { ISpaceProps } from 'types/SpaceProps';
+import { getContract } from 'utils/getContract';
+import SaleModal from '../SaleModal';
+import BidModal from '../BidModal';
 
 const Information: React.FC<ISpaceProps> = (props: any) => {
-  const { active } = useWallet();
+  const { active, connector, account, library } = useWallet();
   const { data } = props;
+  const emptyAddress = '0x0000000000000000000000000000000000000000';
+  const [spaceInfo, setSpaceInfo] = useState({
+    owner: emptyAddress
+  });
+  const [isSale, setIsSale] = useState(false);
+  const [isBid, setIsBid] = useState(false);
+
+  useEffect(() => {
+    getOwner();
+  }, [connector, data.id]);
+
+  const getOwner = async () => {
+    if (connector) {
+      const contract = await getContract(connector);
+      const owner = await contract.methods.spaceIndexToAddress(data.id).call();
+      setSpaceInfo({ owner });
+    }
+  };
+  const handleClaim = async () => {
+    const contract = await getContract(connector);
+    await contract.methods
+      .setInitialOwner(account, data.id)
+      .send({ from: account })
+      .on('receipt', async () => {
+        alert('Claim success');
+        getOwner();
+      });
+  };
+
+  const handleOfferForSale = async (value: any) => {
+    const contract = await getContract(connector);
+    await contract.methods
+      .offerSpaceForSale(data.id, library.utils.toWei(value, 'ether'))
+      .send({ from: account })
+      .on('receipt', async () => {
+        alert('Offer success');
+      });
+  };
+
+  // const handleBid = async (value: any) => {
+  //   const contract = await getContract(connector);
+  //   await contract.methods
+  //     .offerSpaceForSale(data.id, library.utils.toWei(value, 'ether'))
+  //     .send({ from: account })
+  //     .on('receipt', async () => {
+  //       alert('Offer success');
+  //     });
+  // };
+
+  const handleBuySpace = async () => {
+    const contract = await getContract(connector);
+    await contract.methods
+      .buySpace(data.id)
+      .send({ from: account })
+      .on('receipt', async () => {
+        alert('Buy success');
+      });
+  };
   return (
     <Box w='900px' m='40px auto 0'>
       <BigTitle>{data.name}</BigTitle>
@@ -29,10 +90,17 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       </Type>
       <SmallTitle>Current Market Status</SmallTitle>
       <StyledText>
-        This space is currently owned by address{' '}
-        <Link href='/'>
-          <LinkText>{data.owner}</LinkText>
-        </Link>
+        This space is currently owned by{' '}
+        {spaceInfo.owner !== emptyAddress ? (
+          <>
+            address{' '}
+            <Link href='/'>
+              <LinkText>{spaceInfo.owner.slice(0, 8)}</LinkText>
+            </Link>
+          </>
+        ) : (
+          ' no one'
+        )}
         .
       </StyledText>
       <StyledText>
@@ -48,21 +116,35 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           .
         </StyledText>
       )}
+      {isSale && (
+        <SaleModal
+          setOpenModal={setIsSale}
+          visible={isSale}
+          handleOfferForSale={handleOfferForSale}
+        />
+      )}
+      {isBid && <BidModal setOpenModal={setIsBid} visible={isBid} />}
+
       {active && (
         <>
-          <StyledButton $bgType='primary'>
+          <StyledButton $bgType='primary' onClick={handleClaim}>
             <PlusSquareOutlined /> Claim
           </StyledButton>
           <StyledButton $bgType='primary'>
             <RetweetOutlined /> Transfer
           </StyledButton>
-          <StyledButton $bgType='primary'>
+          <StyledButton
+            $bgType='primary'
+            onClick={() => {
+              setIsSale(true);
+            }}
+          >
             <EditOutlined /> Offer for Sale
           </StyledButton>
-          <StyledButton $bgType='primary'>
+          <StyledButton $bgType='primary' onClick={handleBuySpace}>
             <ShoppingCartOutlined /> Buy
           </StyledButton>
-          <StyledButton $bgType='primary'>
+          <StyledButton $bgType='primary' onClick={() => setIsBid(true)}>
             <TagOutlined /> Bid
           </StyledButton>
           <StyledButton $bgType='primary'>

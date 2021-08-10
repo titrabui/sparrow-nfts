@@ -10,22 +10,18 @@ import { CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 interface IModalProps {
   visible: boolean;
   setOpenModal: any;
-  handleOfferForSale: any;
-  handleOfferForSaleToAddress: any;
+  handleAcceptBid: any;
 }
-const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
-  const { visible, setOpenModal, handleOfferForSale, handleOfferForSaleToAddress } = props;
+const AcceptBidModal: React.FC<IModalProps> = (props: IModalProps) => {
+  const { visible, setOpenModal, handleAcceptBid } = props;
   const [value, setValue] = useState('0');
-  const [address, setAddress] = useState('');
-
   const handleSubmit = () => {
-    if (address) handleOfferForSaleToAddress(value, address);
-    else handleOfferForSale(value);
+    handleAcceptBid(value);
     setOpenModal(false);
   };
   return (
     <StyledModal
-      title='Place Sale For Space'
+      title='Accept Bid For Space'
       visible={visible}
       onCancel={() => setOpenModal(false)}
     >
@@ -35,15 +31,6 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
-          }}
-        />
-      </StyledText>
-      <StyledText>
-        To Address
-        <StyledInput
-          value={address}
-          onChange={(e) => {
-            setAddress(e.target.value);
           }}
         />
       </StyledText>
@@ -59,7 +46,7 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
         </StyledButton>
         <StyledButton $bgType='primary' onClick={handleSubmit}>
           <CheckOutlined />
-          Submit Sale
+          Submit Accept Bid
         </StyledButton>
       </ButtonContainer>
     </StyledModal>
@@ -69,7 +56,7 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
 const StyledText = styled(Text)`
   font-weight: bold;
   font-size: 18px;
-  margin-top: 15px;
+  margin-top: 10px;
   display: block;
 `;
 
@@ -109,8 +96,6 @@ const StyledModal = styled(Modal)`
   .ant-modal-footer {
     display: none;
   }
-  .ant-modal-body {
-    padding-top: 10px;
-  }
 `;
-export default SaleModal;
+
+export default AcceptBidModal;

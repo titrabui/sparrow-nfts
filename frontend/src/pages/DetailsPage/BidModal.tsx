@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from 'ui/Modal';
 import { Text } from 'ui/Typography';
 import Input from 'ui/Input';
@@ -10,23 +10,37 @@ import { CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 interface IModalProps {
   visible: boolean;
   setOpenModal: any;
+  handleBid: any;
 }
 const BidModal: React.FC<IModalProps> = (props: IModalProps) => {
-  const { visible, setOpenModal } = props;
-  console.log(visible, setOpenModal);
-
+  const { visible, setOpenModal, handleBid } = props;
+  const [value, setValue] = useState('0');
+  const handleSubmit = () => {
+    handleBid(value);
+    setOpenModal(false);
+  };
   return (
-    <StyledModal title='Place Bid For Space' visible onCancel={() => setOpenModal(false)}>
+    <StyledModal title='Place Bid For Space' visible={visible} onCancel={() => setOpenModal(false)}>
       <StyledText>
         Bid Amount in ETH
-        <StyledInput />
+        <StyledInput
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
+        />
       </StyledText>
       <ButtonContainer>
-        <StyledButton $bgType='primary'>
+        <StyledButton
+          $bgType='primary'
+          onClick={() => {
+            setOpenModal(false);
+          }}
+        >
           <CloseCircleOutlined />
           Cancel
         </StyledButton>
-        <StyledButton $bgType='primary'>
+        <StyledButton $bgType='primary' onClick={handleSubmit}>
           <CheckOutlined />
           Submit Bid
         </StyledButton>

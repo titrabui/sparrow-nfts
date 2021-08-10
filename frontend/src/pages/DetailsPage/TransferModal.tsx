@@ -10,40 +10,29 @@ import { CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 interface IModalProps {
   visible: boolean;
   setOpenModal: any;
-  handleOfferForSale: any;
-  handleOfferForSaleToAddress: any;
+  handleTransferSpace: any;
 }
-const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
-  const { visible, setOpenModal, handleOfferForSale, handleOfferForSaleToAddress } = props;
+const TransferModal: React.FC<IModalProps> = (props: IModalProps) => {
+  const { visible, setOpenModal, handleTransferSpace } = props;
   const [value, setValue] = useState('0');
-  const [address, setAddress] = useState('');
-
   const handleSubmit = () => {
-    if (address) handleOfferForSaleToAddress(value, address);
-    else handleOfferForSale(value);
+    handleTransferSpace(value);
     setOpenModal(false);
   };
   return (
     <StyledModal
-      title='Place Sale For Space'
+      title='Transfer Space'
       visible={visible}
-      onCancel={() => setOpenModal(false)}
+      onCancel={() => {
+        setOpenModal(false);
+      }}
     >
       <StyledText>
-        Min Price in ETH
+        Transfer Space to Address
         <StyledInput
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
-          }}
-        />
-      </StyledText>
-      <StyledText>
-        To Address
-        <StyledInput
-          value={address}
-          onChange={(e) => {
-            setAddress(e.target.value);
           }}
         />
       </StyledText>
@@ -59,7 +48,7 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
         </StyledButton>
         <StyledButton $bgType='primary' onClick={handleSubmit}>
           <CheckOutlined />
-          Submit Sale
+          Submit Transfer
         </StyledButton>
       </ButtonContainer>
     </StyledModal>
@@ -69,7 +58,7 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
 const StyledText = styled(Text)`
   font-weight: bold;
   font-size: 18px;
-  margin-top: 15px;
+  margin-top: 10px;
   display: block;
 `;
 
@@ -109,8 +98,5 @@ const StyledModal = styled(Modal)`
   .ant-modal-footer {
     display: none;
   }
-  .ant-modal-body {
-    padding-top: 10px;
-  }
 `;
-export default SaleModal;
+export default TransferModal;

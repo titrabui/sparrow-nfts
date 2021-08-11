@@ -65,11 +65,11 @@ contract NapaCryptoSpaceMarket {
 
     /* Initializes contract with initial supply tokens to the creator of the contract */
     constructor() payable {
-        //        balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
+        // balanceOf[msg.sender] = initialSupply;   // Give the creator all initial tokens
         owner = msg.sender;
         totalSupply = 10000;                        // Update total supply
         spacesRemainingToAssign = totalSupply;
-        name = "CRYPTOSPACE";                                   // Set the name for display purposes
+        name = "CRYPTOSPACE";                       // Set the name for display purposes
         symbol = "C";                               // Set the symbol for display purposes
         decimals = 0; 
         allInitialOwnersAssigned();                                    // Amount of decimals for display purposes

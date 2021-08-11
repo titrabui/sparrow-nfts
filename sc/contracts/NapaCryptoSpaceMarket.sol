@@ -65,19 +65,20 @@ contract NapaCryptoSpaceMarket {
 
     /* Initializes contract with initial supply tokens to the creator of the contract */
     constructor() payable {
-        //        balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
+        // balanceOf[msg.sender] = initialSupply;   // Give the creator all initial tokens
         owner = msg.sender;
         totalSupply = 10000;                        // Update total supply
         spacesRemainingToAssign = totalSupply;
-        name = "CRYPTOSPACE";                                   // Set the name for display purposes
+        name = "CRYPTOSPACE";                       // Set the name for display purposes
         symbol = "C";                               // Set the symbol for display purposes
-        decimals = 0;                                       // Amount of decimals for display purposes
+        decimals = 0;                               // Amount of decimals for display purposes
+        allInitialOwnersAssigned();
     }
 
     function setInitialOwner(address to, uint spaceIndex) public {
-        if (msg.sender != owner) revert('Error');       
-        if (allSpacesAssigned) revert('Error');        
-        if (spaceIndex >= 10000) revert('Error');       
+        if (msg.sender != owner) revert('Error');
+        if (allSpacesAssigned) revert('Error');
+        if (spaceIndex >= 10000) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != to) {
             if (spaceIndexToAddress[spaceIndex] != address(0)) {
                 balanceOf[spaceIndexToAddress[spaceIndex]]--;
@@ -90,7 +91,7 @@ contract NapaCryptoSpaceMarket {
         }
     }
 
-    function setInitialOwners(address[] memory addresses, uint[] memory indices) public{
+    function setInitialOwners(address[] memory addresses, uint[] memory indices) public {
         if (msg.sender != owner) revert('Error');
         uint n = addresses.length;
         for (uint i = 0; i < n; i++) {
@@ -98,13 +99,13 @@ contract NapaCryptoSpaceMarket {
         }
     }
 
-    function allInitialOwnersAssigned() public{
+    function allInitialOwnersAssigned() public {
         if (msg.sender != owner) revert('Error');
         allSpacesAssigned = true;
     }
 
-    function getSpace(uint spaceIndex) public{
-        // if (!allSpacesAssigned) revert('Error');
+    function getSpace(uint spaceIndex) public {
+        if (!allSpacesAssigned) revert('Error');
         if (spacesRemainingToAssign == 0) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != address(0)) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
@@ -115,8 +116,8 @@ contract NapaCryptoSpaceMarket {
     }
 
     // Transfer ownership of a space to another user without requiring payment
-    function transferSpace(address to, uint spaceIndex) public{
-        // if (!allSpacesAssigned) revert('Error');
+    function transferSpace(address to, uint spaceIndex) public {
+        if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
         if (spacesOfferedForSale[spaceIndex].isForSale) {
@@ -137,7 +138,7 @@ contract NapaCryptoSpaceMarket {
         }
     }
 
-    function spaceNoLongerForSale(uint spaceIndex) public{
+    function spaceNoLongerForSale(uint spaceIndex) public {
         if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
@@ -145,15 +146,15 @@ contract NapaCryptoSpaceMarket {
         emit SpaceNoLongerForSale(spaceIndex);
     }
 
-    function offerSpaceForSale(uint spaceIndex, uint minSalePriceInWei) public{
-        // if (!allSpacesAssigned) revert('Error');
+    function offerSpaceForSale(uint spaceIndex, uint minSalePriceInWei) public {
+        if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
         spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, msg.sender, minSalePriceInWei, address(0));
         emit SpaceOffered(spaceIndex, minSalePriceInWei, address(0));
     }
 
-    function offerSpaceForSaleToAddress(uint spaceIndex, uint minSalePriceInWei, address toAddress) public{
+    function offerSpaceForSaleToAddress(uint spaceIndex, uint minSalePriceInWei, address toAddress) public {
         if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         if (spaceIndex >= 10000) revert('Error');
@@ -162,7 +163,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function buySpace(uint spaceIndex) public payable {
-        // if (!allSpacesAssigned) revert('Error');
+        if (!allSpacesAssigned) revert('Error');
         Offer memory offer = spacesOfferedForSale[spaceIndex];
         if (spaceIndex >= 10000) revert('Error');
         if (!offer.isForSale) revert('Error');                // space not actually for sale
@@ -191,8 +192,8 @@ contract NapaCryptoSpaceMarket {
         }
     }
 
-    function withdraw() public{
-        // if (!allSpacesAssigned) revert('Error');
+    function withdraw() public {
+        if (!allSpacesAssigned) revert('Error');
         uint amount = pendingWithdrawals[msg.sender];
         // Remember to zero the pending refund before
         // sending to prevent re-entrancy attacks
@@ -202,7 +203,7 @@ contract NapaCryptoSpaceMarket {
 
     function enterBidForSpace(uint spaceIndex) public payable {
         if (spaceIndex >= 10000) revert('Error');
-        //if (!allSpacesAssigned) revert('Error');
+        if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] == address(0)) revert('Error');
         if (spaceIndexToAddress[spaceIndex] == msg.sender) revert('Error');
         if (msg.value == 0) revert('Error');
@@ -216,9 +217,9 @@ contract NapaCryptoSpaceMarket {
         emit SpaceBidEntered(spaceIndex, msg.value, msg.sender);
     }
 
-    function acceptBidForSpace(uint spaceIndex, uint minPrice) public{
+    function acceptBidForSpace(uint spaceIndex, uint minPrice) public {
         if (spaceIndex >= 10000) revert('Error');
-        // if (!allSpacesAssigned) revert('Error');
+        if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
         address seller = msg.sender;
         Bid memory bid = spaceBids[spaceIndex];
@@ -237,7 +238,7 @@ contract NapaCryptoSpaceMarket {
         emit SpaceBought(spaceIndex, bid.value, seller, bid.bidder);
     }
 
-    function withdrawBidForSpace(uint spaceIndex) public{
+    function withdrawBidForSpace(uint spaceIndex) public {
         if (spaceIndex >= 10000) revert('Error');
         if (!allSpacesAssigned) revert('Error');
         if (spaceIndexToAddress[spaceIndex] == address(0)) revert('Error');

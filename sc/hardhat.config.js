@@ -5,7 +5,7 @@ require("@nomiclabs/hardhat-web3");
  * @type import('hardhat/config').HardhatUserConfig
  */
 
- task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
+task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
 
   for (const account of accounts) {

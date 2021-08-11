@@ -10,4 +10,8 @@ export class BaseModel {
   convertToNumber(data: any): number {
     return Number(data);
   }
+
+  generateUniqueId(): string {
+    return Date.now() + ((Math.random() * 100000).toFixed());
+  }
 }

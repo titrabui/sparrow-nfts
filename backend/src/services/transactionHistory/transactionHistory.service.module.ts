@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ModelsModule } from 'src/models/models.module';
-import { WsClientService } from './ws-client.service';
+import { TransactionHistoryService } from './transactionHistory.service';
 
 @Module({
   imports: [
     ModelsModule
   ],
   providers: [
-    WsClientService
+    TransactionHistoryService
   ],
   exports: [
-    WsClientService
+    TransactionHistoryService
   ]
 })
-export class WsClientServiceModule { }
+export class TransactionHistoryServiceModule { }

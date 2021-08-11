@@ -12,9 +12,9 @@ const ConnectMetamask: React.FC = () => {
   return (
     <Container>
       <div>
-        <Text $size='18px' block strong>
+        <StyledText $size='18px' strong>
           {active ? 'Connected to Ethereum' : 'Ethereum Available'}
-        </Text>
+        </StyledText>
         <StyledButton onClick={handleConnectWallet}>
           <Text $size='18px' $color='#0080FF' strong>
             {active ? account?.slice(0, 10) : 'Allow access to MetaMask'}
@@ -24,6 +24,10 @@ const ConnectMetamask: React.FC = () => {
     </Container>
   );
 };
+
+const StyledText = styled(Text)`
+  display: block;
+`;
 
 const StyledButton = styled(Button)`
   border: none;

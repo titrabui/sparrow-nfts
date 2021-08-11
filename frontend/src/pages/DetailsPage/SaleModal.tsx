@@ -4,7 +4,7 @@ import { Text } from 'ui/Typography';
 import Input from 'ui/Input';
 import styled from 'styled-components';
 import Button from 'ui/Button';
-import { Space } from 'antd';
+import { Space, Radio } from 'antd';
 import { CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 
 interface IModalProps {
@@ -17,9 +17,10 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
   const { visible, setOpenModal, handleOfferForSale, handleOfferForSaleToAddress } = props;
   const [value, setValue] = useState('0');
   const [address, setAddress] = useState('');
+  const [saleType, setSaleType] = useState(1);
 
   const handleSubmit = () => {
-    if (address) handleOfferForSaleToAddress(value, address);
+    if (address && saleType === 2) handleOfferForSaleToAddress(value, address);
     else handleOfferForSale(value);
     setOpenModal(false);
   };
@@ -29,6 +30,15 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
       visible={visible}
       onCancel={() => setOpenModal(false)}
     >
+      <Radio.Group
+        onChange={(e) => {
+          setSaleType(e.target.value);
+        }}
+        value={saleType}
+      >
+        <Radio value={1}>Offer Sale</Radio>
+        <Radio value={2}>Offer Sale To Address</Radio>
+      </Radio.Group>
       <StyledText>
         Min Price in ETH
         <StyledInput
@@ -38,15 +48,17 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
           }}
         />
       </StyledText>
-      <StyledText>
-        To Address
-        <StyledInput
-          value={address}
-          onChange={(e) => {
-            setAddress(e.target.value);
-          }}
-        />
-      </StyledText>
+      {saleType === 2 && (
+        <StyledText>
+          To Address
+          <StyledInput
+            value={address}
+            onChange={(e) => {
+              setAddress(e.target.value);
+            }}
+          />
+        </StyledText>
+      )}{' '}
       <ButtonContainer>
         <StyledButton
           $bgType='primary'

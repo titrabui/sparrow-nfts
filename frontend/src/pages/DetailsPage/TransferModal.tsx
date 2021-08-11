@@ -14,7 +14,7 @@ interface IModalProps {
 }
 const TransferModal: React.FC<IModalProps> = (props: IModalProps) => {
   const { visible, setOpenModal, handleTransferSpace } = props;
-  const [value, setValue] = useState('0');
+  const [value, setValue] = useState('');
   const handleSubmit = () => {
     handleTransferSpace(value);
     setOpenModal(false);

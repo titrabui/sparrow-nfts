@@ -71,13 +71,14 @@ contract NapaCryptoSpaceMarket {
         spacesRemainingToAssign = totalSupply;
         name = "CRYPTOSPACE";                                   // Set the name for display purposes
         symbol = "C";                               // Set the symbol for display purposes
-        decimals = 0;                                       // Amount of decimals for display purposes
+        decimals = 0; 
+        allInitialOwnersAssigned();                                    // Amount of decimals for display purposes
     }
 
     function setInitialOwner(address to, uint spaceIndex) public {
-        if (msg.sender != owner) revert('Error');       
-        if (allSpacesAssigned) revert('Error');        
-        if (spaceIndex >= 10000) revert('Error');       
+        require(msg.sender == owner,'Sender is not owner');       
+        require(spaceIndex < 10000,'Error');  
+             
         if (spaceIndexToAddress[spaceIndex] != to) {
             if (spaceIndexToAddress[spaceIndex] != address(0)) {
                 balanceOf[spaceIndexToAddress[spaceIndex]]--;
@@ -91,7 +92,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function setInitialOwners(address[] memory addresses, uint[] memory indices) public{
-        if (msg.sender != owner) revert('Error');
+        require(msg.sender == owner,'Sender is not owner');
         uint n = addresses.length;
         for (uint i = 0; i < n; i++) {
             setInitialOwner(addresses[i], indices[i]);
@@ -99,15 +100,15 @@ contract NapaCryptoSpaceMarket {
     }
 
     function allInitialOwnersAssigned() public{
-        if (msg.sender != owner) revert('Error');
+        require(msg.sender == owner,'Sender is not owner');  
         allSpacesAssigned = true;
     }
 
     function getSpace(uint spaceIndex) public{
-        // if (!allSpacesAssigned) revert('Error');
-        if (spacesRemainingToAssign == 0) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] != address(0)) revert('Error');
-        if (spaceIndex >= 10000) revert('Error');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+        require(spacesRemainingToAssign != 0,'No space left');
+        require(spaceIndexToAddress[spaceIndex] == address(0),'Space must be long to empty address');
+        require(spaceIndex < 10000,'Index must less than 10000');
         spaceIndexToAddress[spaceIndex] = msg.sender;
         balanceOf[msg.sender]++;
         spacesRemainingToAssign--;
@@ -116,9 +117,9 @@ contract NapaCryptoSpaceMarket {
 
     // Transfer ownership of a space to another user without requiring payment
     function transferSpace(address to, uint spaceIndex) public{
-        // if (!allSpacesAssigned) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
-        if (spaceIndex >= 10000) revert('Error');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+        require(spaceIndexToAddress[spaceIndex] == msg.sender,'You are not owner');
+        require(spaceIndex < 10000,'Index must less than 10000');
         if (spacesOfferedForSale[spaceIndex].isForSale) {
             spaceNoLongerForSale(spaceIndex);
         }
@@ -138,37 +139,38 @@ contract NapaCryptoSpaceMarket {
     }
 
     function spaceNoLongerForSale(uint spaceIndex) public{
-        if (!allSpacesAssigned) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
-        if (spaceIndex >= 10000) revert('Error');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+        require(spaceIndexToAddress[spaceIndex] == msg.sender,'You are not owner');
+        require(spaceIndex < 10000,'Index must less than 10000');
         spacesOfferedForSale[spaceIndex] = Offer(false, spaceIndex, msg.sender, 0, address(0));
         emit SpaceNoLongerForSale(spaceIndex);
     }
 
     function offerSpaceForSale(uint spaceIndex, uint minSalePriceInWei) public{
-        // if (!allSpacesAssigned) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
-        if (spaceIndex >= 10000) revert('Error');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+        require(spaceIndexToAddress[spaceIndex] == msg.sender,'You are not owner');
+        require(spaceIndex < 10000,'Index must less than 10000');
         spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, msg.sender, minSalePriceInWei, address(0));
         emit SpaceOffered(spaceIndex, minSalePriceInWei, address(0));
     }
 
     function offerSpaceForSaleToAddress(uint spaceIndex, uint minSalePriceInWei, address toAddress) public{
-        if (!allSpacesAssigned) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
-        if (spaceIndex >= 10000) revert('Error');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+        require(spaceIndexToAddress[spaceIndex] == msg.sender,'You are not owner');
+        require(spaceIndex < 10000,'Index must less than 10000');
         spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, msg.sender, minSalePriceInWei, toAddress);
         emit SpaceOffered(spaceIndex, minSalePriceInWei, toAddress);
     }
 
     function buySpace(uint spaceIndex) public payable {
-        // if (!allSpacesAssigned) revert('Error');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
         Offer memory offer = spacesOfferedForSale[spaceIndex];
-        if (spaceIndex >= 10000) revert('Error');
-        if (!offer.isForSale) revert('Error');                // space not actually for sale
-        if (offer.onlySellTo != address(0) && offer.onlySellTo != msg.sender) revert('Error');  // space not supposed to be sold to this user
-        if (msg.value < offer.minValue) revert('Error');      // Didn't send enough ETH
-        if (offer.seller != spaceIndexToAddress[spaceIndex]) revert('Error'); // Seller no longer owner of space
+        require(spaceIndex < 10000,'Index must less than 10000');
+        require(offer.isForSale,'Space is not for sale');  
+        // space not actually for sale
+        require(offer.onlySellTo == address(0) || offer.onlySellTo == msg.sender,'This space can not be sold to you');  // space not supposed to be sold to this user
+        require(msg.value >= offer.minValue,'You must buy more than min value');      // Didn't send enough ETH
+        require(offer.seller == spaceIndexToAddress[spaceIndex],'Seller no longer owner of space'); // Seller no longer owner of space
 
         address seller = offer.seller;
 
@@ -192,7 +194,7 @@ contract NapaCryptoSpaceMarket {
     }
 
     function withdraw() public{
-        // if (!allSpacesAssigned) revert('Error');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
         uint amount = pendingWithdrawals[msg.sender];
         // Remember to zero the pending refund before
         // sending to prevent re-entrancy attacks
@@ -201,13 +203,13 @@ contract NapaCryptoSpaceMarket {
     }
 
     function enterBidForSpace(uint spaceIndex) public payable {
-        if (spaceIndex >= 10000) revert('Error');
-        //if (!allSpacesAssigned) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] == address(0)) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] == msg.sender) revert('Error');
-        if (msg.value == 0) revert('Error');
+        require(spaceIndex < 10000,'Index must less than 10000');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+        require(spaceIndexToAddress[spaceIndex] != address(0),'Space must have owner');
+        require(spaceIndexToAddress[spaceIndex] != msg.sender,'Owner can not bid');
+        require(msg.value != 0,'Value can not be 0');
         Bid memory existing = spaceBids[spaceIndex];
-        if (msg.value <= existing.value) revert('Error');
+        require(msg.value > existing.value,'Value must be greater than the highest bid');
         if (existing.value > 0) {
             // Refund the failing bid
             pendingWithdrawals[existing.bidder] += existing.value;
@@ -217,13 +219,13 @@ contract NapaCryptoSpaceMarket {
     }
 
     function acceptBidForSpace(uint spaceIndex, uint minPrice) public{
-        if (spaceIndex >= 10000) revert('Error');
-        // if (!allSpacesAssigned) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] != msg.sender) revert('Error');
+        require(spaceIndex < 10000,'Index must less than 10000');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+       require(spaceIndexToAddress[spaceIndex] == msg.sender,'You must be owner to accept bid');
         address seller = msg.sender;
         Bid memory bid = spaceBids[spaceIndex];
-        if (bid.value == 0) revert('Error');
-        if (bid.value < minPrice) revert('Error');
+       require(bid.value != 0,'Bid value must not be 0');
+       require(bid.value >= minPrice,'Bid value must be greater or equal min price');
 
         spaceIndexToAddress[spaceIndex] = bid.bidder;
         balanceOf[seller]--;
@@ -238,12 +240,12 @@ contract NapaCryptoSpaceMarket {
     }
 
     function withdrawBidForSpace(uint spaceIndex) public{
-        if (spaceIndex >= 10000) revert('Error');
-        if (!allSpacesAssigned) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] == address(0)) revert('Error');
-        if (spaceIndexToAddress[spaceIndex] == msg.sender) revert('Error');
+        require(spaceIndex < 10000,'Index must less than 10000');
+        require(allSpacesAssigned,'All Spaces is not assigned'); 
+        require(spaceIndexToAddress[spaceIndex] != address(0),'Space must have owner');
+        require(spaceIndexToAddress[spaceIndex] != msg.sender,'Owner can not bid');
         Bid memory bid = spaceBids[spaceIndex];
-        if (bid.bidder != msg.sender) revert('Error');
+        require(bid.bidder == msg.sender,'You are not the bidder');
         emit SpaceBidWithdrawn(spaceIndex, bid.value, msg.sender);
         uint amount = bid.value;
         spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);

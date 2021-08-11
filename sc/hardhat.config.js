@@ -16,6 +16,17 @@ require("@nomiclabs/hardhat-web3");
   }
 });
 
+task("init-owner","Set init owner", async (taskArgs, hre) => {
+  const NapaCryptoSpaceMarket = await ethers.getContractFactory("NapaCryptoSpaceMarket");
+  console.log(NapaCryptoSpaceMarket)
+  const contract = await NapaCryptoSpaceMarket.deployed();
+  const accounts = await hre.ethers.getSigners();
+  console.log(accounts)
+
+});
+
+
+
 module.exports = {
   networks: {
     hardhat: {

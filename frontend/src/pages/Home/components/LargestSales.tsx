@@ -80,12 +80,16 @@ const ItemsContainer = styled(Row)`
   margin-bottom: 50px;
 `;
 
+const StyledText = styled(Text)`
+  display:block;
+`
+
 export default LargestSales;
 
 const ItemsLargestSales = () => (
   <>
     {Spaces.map((space) => (
-      <Col span={4}>
+      <Col span={4} key={space.id}>
         <ImageContainer>
           <ImageNumber $size='30px' $color='white' strong>
             {space.id > 9 ? space.id : `0${space.id}`}
@@ -96,15 +100,15 @@ const ItemsLargestSales = () => (
             </Link>
           </ImageWrapper>
         </ImageContainer>
-        <Text $size='24px' strong $color='#0C264D' block>
+        <StyledText $size='24px' strong $color='#0C264D' >
           #028
-        </Text>
-        <Text $size='20px' $color='#4B4B4B' block>
+        </StyledText>
+        <StyledText $size='20px' $color='#4B4B4B' >
           4.2KΞ ($7.57M)
-        </Text>
-        <Text $size='20px' $color='#8D8D8D' block>
+        </StyledText>
+        <StyledText $size='20px' $color='#8D8D8D' >
           Mar 11, 2021
-        </Text>
+        </StyledText>
       </Col>
     ))}
   </>

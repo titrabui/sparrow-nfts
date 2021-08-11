@@ -12,7 +12,7 @@ const ForSales: React.FC = () => (
       <Box w='100%' mt='100px' mb='40px'>
         <Title>For Sales</Title>
         <StyledText>
-          The lowest price punk currently for sale is
+          The lowest price space currently for sale is
           <HightlightText>19.9 ETH ($37,303.75 USD).</HightlightText>
         </StyledText>
         <StyledText>
@@ -69,17 +69,17 @@ const LinkText = styled(Text)`
   font-size: 18px;
   margin-left: 10px;
   color: ${(p) => p.theme.primary};
-  font-weight:bold;
+  font-weight: bold;
 `;
 
 export default ForSales;
 
 const Items = () => (
   <>
-    {[0, 1, 2, 3].map(() => (
-      <ItemsRow gutter={[0, 10]}>
+    {[0, 1, 2, 3].map((item) => (
+      <ItemsRow gutter={[0, 10]} key={item}>
         {Spaces.map((space) => (
-          <Col span={2}>
+          <Col span={2} key={space.id}>
             <Link to={`/detail/${space.id}`}>
               <img src={space.img} alt={space.name} width='60px' height='60px' />
             </Link>

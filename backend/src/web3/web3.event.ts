@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { SC_EVENT_MAPPER } from 'src/constants';
-import { TransactionHistoryService } from 'src/services/transactionHistory/transactionHistory.service';
+import { TransactionHistoryService } from 'src/services/transactionHistory/transaction.history.service';
 import { Web3Config } from './web3.config';
 
 @Injectable()

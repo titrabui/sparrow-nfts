@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConnectionsModule } from 'src/connections/connections.module';
 import { TransactionHistoryReposity } from './transactionHistory/transaction.history.reposity';
-import { WsClientReposity } from './ws_client/ws-client.reposity';
+import { WsClientReposity } from './wsClient/ws.client.reposity';
 
 @Module({
   imports: [

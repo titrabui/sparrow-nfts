@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ModelsModule } from 'src/models/models.module';
-import { TransactionHistoryServiceModule } from './transactionHistory/transactionHistory.service.module';
-import { WsClientServiceModule } from './ws_client/ws-client.service.module';
+import { TransactionHistoryServiceModule } from './transactionHistory/transaction.history.service.module';
+import { WsClientServiceModule } from './wsClient/ws.client.service.module';
 
 @Module({
   imports: [

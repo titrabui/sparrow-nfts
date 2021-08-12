@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger, OnModuleInit } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { WsClientService } from 'src/services/ws_client/ws-client.service';
+import { WsClientService } from 'src/services/wsClient/ws.client.service';
 import config from 'src/config';
 
 @WebSocketGateway(config.ENV.SOCKET_PORT, {

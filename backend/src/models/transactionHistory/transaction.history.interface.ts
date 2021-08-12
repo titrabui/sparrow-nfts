@@ -3,5 +3,6 @@ export interface ITransactionHistory {
   spaceIndex: string,
   amount?: number,
   from: string,
-  to?: string
+  to?: string,
+  createdAt: number
 };

@@ -16,6 +16,8 @@ export class TransactionHistoryReposity extends BaseModel {
   }
 
   async create(data: ITransactionHistory) {
+    data.createdAt = new Date().getTime();
+
     try {
       await this.redisService.hset(
         `${DATABASE_NAME}:${data.spaceIndex}`,
@@ -24,6 +26,19 @@ export class TransactionHistoryReposity extends BaseModel {
       );
     } catch (error) {
       this.logger.error(error);
+    }
+  }
+
+  async getBySpaceId(spaceId: string): Promise<Array<ITransactionHistory>> {
+    try {
+      const queriedData = await this.redisService.hgetall(`${DATABASE_NAME}:${spaceId}`);
+      if (!queriedData) return [];
+
+      const data = Object.values(queriedData);
+      return data.map(item => this.convertToObject(item));
+    } catch (error) {
+      this.logger.error(error);
+      return [];
     }
   }
 }

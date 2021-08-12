@@ -68,16 +68,14 @@ contract NapaCryptoSpaceMarket is Ownable {
     string public name;
     string public symbol;
 
-    uint8 public decimals;
-
     uint256 private _totalSupply = 10000;
-    uint256 public spacesRemainingToAssign = 0;
+    uint256 public spacesRemainingToAssign;
 
     struct Offer {
         bool isForSale;
         uint256 spaceIndex;
         address seller;
-        uint256 minValue;          // in ether
+        uint256 minValue;       // In ether
         address onlySellTo;     // specify to sell only to a specific person
     }
 
@@ -90,7 +88,7 @@ contract NapaCryptoSpaceMarket is Ownable {
 
     mapping (uint256 => address) public spaceIndexToAddress;
 
-    /* This creates an array with all balances */
+    // This creates an array with all balances
     mapping (address => uint256) public balanceOf;
 
     // A record of spaces that are offered for sale at a specific minimum value, and perhaps to a specific person
@@ -113,9 +111,10 @@ contract NapaCryptoSpaceMarket is Ownable {
     /* Initializes contract with initial supply tokens to the creator of the contract */
     constructor() {
         spacesRemainingToAssign = _totalSupply;
-        name = "CRYPTOSPACE";                   // Set the name for display purposes
-        symbol = "NCS";                         // Set the symbol for display purposes
-        decimals = 0;                           // Amount of decimals for display purposes
+
+        // Display purposes
+        name = "CRYPTOSPACE";
+        symbol = "NCS";
     }
 
     modifier onlySpaceOwner(uint256 spaceIndex) {

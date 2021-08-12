@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { IWsClient } from 'src/models/wsClient/ws.client.interface';
 import { WsClientReposity } from 'src/models/wsClient/ws.client.reposity';
 
 @Injectable()
@@ -29,8 +30,8 @@ export class WsClientService {
     return groupBySpace;
   }
 
-  async syncClientInfo(clientId: string, data: any) {
-    this.wsClientsRepo.syncByClientId(clientId, data);
+  async syncClientInfo(clientId: string, data: IWsClient) {
+    this.wsClientsRepo.syncByClientId(clientId, { ...data, clientId });
   }
 
   async removeClient(clientId: string) {

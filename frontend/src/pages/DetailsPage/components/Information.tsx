@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Link, Text } from 'ui/Typography';
@@ -54,30 +54,32 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       });
   };
 
-  const getBlockchainData = useCallback(async () => {
-    if (connector) {
-      const contract = await getContract(connector);
-      const owner = await contract.methods.spaceIndexToAddress(data.id).call();
-      const spacesOfferedForSale = await contract.methods.spacesOfferedForSale(data.id).call();
-      const spaceBids = await contract.methods.spaceBids(data.id).call();
-      const { isForSale, minValue, onlySellTo } = spacesOfferedForSale;
-      const { hasBid, bidder, value } = spaceBids;
-      // if (!mountedRef.current) return;
-      setSpaceInfo({
-        owner,
-        isForSale,
-        price: minValue,
-        onlySellTo,
-        hasBid,
-        bidder,
-        bidValue: value
-      });
-    }
-  }, [connector, data.id]);
-  // const mountedRef = useRef(true);
-
   useEffect(() => {
+    let mounted = true;
+    const getBlockchainData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const owner = await contract.methods.spaceIndexToAddress(data.id).call();
+        const spacesOfferedForSale = await contract.methods.spacesOfferedForSale(data.id).call();
+        const spaceBids = await contract.methods.spaceBids(data.id).call();
+        const { isForSale, minValue, onlySellTo } = spacesOfferedForSale;
+        const { hasBid, bidder, value } = spaceBids;
+        if (mounted)
+          setSpaceInfo({
+            owner,
+            isForSale,
+            price: minValue,
+            onlySellTo,
+            hasBid,
+            bidder,
+            bidValue: value
+          });
+      }
+    };
     getBlockchainData();
+    return () => {
+      mounted = false;
+    };
   });
 
   const handleClaim = async () => {
@@ -86,7 +88,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .getSpace(data.id)
         .send({ from: account })
-        // .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Claim Space',
@@ -94,11 +95,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      notification.error({
-        message: 'err',
-        description: 'Claim Space Success'
-      });
-      //
+      handleError(e);
     }
   };
 
@@ -110,8 +107,8 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
         .send({ from: account })
         .on('receipt', async () => {
           notification.success({
-            message: 'Offer Sale',
-            description: 'Offer Sale Success'
+            message: 'Offer For Sale',
+            description: 'Offer For Sale Success'
           });
         });
     } catch (e) {
@@ -127,8 +124,8 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
         .send({ from: account })
         .on('receipt', async () => {
           notification.success({
-            message: 'Offer Sale',
-            description: 'Offer Sale Success'
+            message: 'Offer For Sale',
+            description: 'Offer For Sale Success'
           });
         });
     } catch (e) {

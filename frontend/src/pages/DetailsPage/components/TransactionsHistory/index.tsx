@@ -23,12 +23,12 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
     isWatchingSpaceDetail: true,
     spaceId: data ? data.id : null
   });
-
   useSocket('transaction_history', '', async (socketData) => {
     const sortData = socketData
       ? socketData.sort((a: any, b: any) => b.createdAt - a.createdAt)
       : [];
-    if (JSON.stringify(sortData) !== JSON.stringify(tableData)) setTableData(sortData);
+    if (JSON.stringify(sortData) !== JSON.stringify(tableData))
+      setTableData(sortData);
   });
   const columns = [
     {

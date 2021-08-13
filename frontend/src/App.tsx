@@ -7,10 +7,9 @@ import { Web3ReactProvider } from '@web3-react/core';
 import CommonLayout from 'ui/Layout';
 import routes from 'routes';
 import { SocketIOProvider } from 'socketio-hooks';
-import apiWs from 'environment';
+import { apiWs } from 'environment';
 
 const getLibrary = (provider: any): Web3 => new Web3(provider);
-
 const App: React.FC = () => (
   <Web3ReactProvider getLibrary={getLibrary}>
     <SocketIOProvider

@@ -3,6 +3,7 @@ import MainContainer from 'ui/MainContainer';
 import Spaces from 'utils/spaces';
 import { Redirect } from 'react-router-dom';
 import { MAX_SPACE_SUPPLY_TOTAL } from 'environment';
+import BreadCrumb from 'ui/Breadcrumb';
 import Avatar from './Avatar';
 import Information from './Information';
 import TransactionsHistory from './TransactionsHistory';
@@ -14,6 +15,7 @@ const DetailsPage: React.FC = (props: any) => {
     <Redirect to='/detail/1' />
   ) : (
     <MainContainer>
+      <BreadCrumb crumbs={[id]} />
       <Avatar data={space} />
       <Information data={space} />
       <TransactionsHistory data={space} />

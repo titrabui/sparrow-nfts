@@ -29,6 +29,25 @@ export class TransactionHistoryReposity extends BaseModel {
     }
   }
 
+  async getAll() {
+    try {
+      const hashes = await this.redisService.keys(`${DATABASE_NAME}:*`);
+      if (hashes.length === 0) return [];
+
+      let results = [] as ITransactionHistory[];
+      for (const hash of hashes) {
+        const queriedData = await this.redisService.hgetall(hash);
+        const data = Object.values(queriedData);
+        results = results.concat(data.map(item => this.convertToObject(item)));
+      }
+
+      return results;
+    } catch (error) {
+      this.logger.error(error);
+      return [];
+    }
+  }
+
   async getBySpaceId(spaceId: string): Promise<Array<ITransactionHistory>> {
     try {
       const queriedData = await this.redisService.hgetall(`${DATABASE_NAME}:${spaceId}`);

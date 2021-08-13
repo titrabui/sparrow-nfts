@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { SC_EVENT_MAPPER } from 'src/constants';
 import { ITransactionHistory } from 'src/models/transactionHistory/transaction.history.interface';
 import { TransactionHistoryReposity } from 'src/models/transactionHistory/transaction.history.reposity';
+
+const LIMIT_RECENTS_NUMBER = 12;
 
 @Injectable()
 export class TransactionHistoryService {
@@ -10,45 +11,26 @@ export class TransactionHistoryService {
     private readonly transactionHistoryRepo: TransactionHistoryReposity
   ) { }
 
-  async createTransactionHistory(event, transactionData) {
-    const eventValues = event.returnValues
-    const historyData = {
-      type: SC_EVENT_MAPPER[event.event],
-      spaceIndex: eventValues.spaceIndex,
-      from: transactionData.from,
-      txn: event.transactionHash
-    } as ITransactionHistory;
-
-    switch (event.event) {
-      case 'Assign':
-      case 'SpaceTransfer':
-        historyData.to = eventValues.to;
-        break;
-
-      case 'SpaceOffered':
-        historyData.amount = eventValues.minValue;
-        historyData.to = eventValues.toAddress;
-        break;
-
-      case 'SpaceBidEntered':
-      case 'SpaceBidWithdrawn':
-        historyData.amount = eventValues.value;
-        break;
-
-      case 'SpaceBought':
-        historyData.amount = eventValues.value;
-        historyData.from = eventValues.fromAddress;
-        historyData.to = eventValues.toAddress;
-        break;
-
-      default:
-        break;
-    }
-
-    await this.transactionHistoryRepo.create(historyData);
+  async createTransactionHistory(historyData: ITransactionHistory) {
+    this.transactionHistoryRepo.create(historyData);
   }
 
   async getTransactionBySpaceId(spaceId: string): Promise<Array<ITransactionHistory>> {
-    return this.transactionHistoryRepo.getBySpaceId(spaceId);
+    if (!spaceId || spaceId === '') return [];
+    const transactions = await this.transactionHistoryRepo.getBySpaceId(spaceId);
+    return transactions.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  async getRecentTransactions(): Promise<Array<ITransactionHistory>> {
+    const transactions = await this.transactionHistoryRepo.getAll();
+
+    // Sort transaction newest to oldest
+    const sortedTransactions = transactions.sort((a, b) => b.createdAt - a.createdAt);
+
+    if (sortedTransactions.length > LIMIT_RECENTS_NUMBER) {
+      return sortedTransactions.slice(0, LIMIT_RECENTS_NUMBER);
+    }
+
+    return sortedTransactions;
   }
 }

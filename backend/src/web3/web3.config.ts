@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import config from 'src/config';
+import { ConfigService } from '@nestjs/config';
 const Web3 = require('web3');
 const CryptoSpaceContract = require('../../../sc/artifacts/contracts/NapaCryptoSpaceMarket.sol/NapaCryptoSpaceMarket.json');
 
-const WEB3_CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 const WEB3_SOCKET_PROVIDER_OPTIONS = {
   timeout: 30000, // ms
 
@@ -30,18 +29,22 @@ const WEB3_SOCKET_PROVIDER_OPTIONS = {
 export class Web3Config {
   private readonly logger: Logger = new Logger(Web3Config.name);
 
+  constructor(
+    private readonly config: ConfigService
+  ) {}
+
   async init() {
     try {
       const web3 = new Web3(
         new Web3.providers.WebsocketProvider(
-          config.ENV.WEB3_WEBSOCKET_URL,
-          WEB3_SOCKET_PROVIDER_OPTIONS,
+          this.config.get('WEB3_WEBSOCKET_URL'),
+          WEB3_SOCKET_PROVIDER_OPTIONS
         ),
       );
 
       const contract = new web3.eth.Contract(
         CryptoSpaceContract.abi,
-        WEB3_CONTRACT_ADDRESS
+        this.config.get('WEB3_CONTRACT_ADDRESS')
       );
 
       const latestBlock = await web3.eth.getBlockNumber();

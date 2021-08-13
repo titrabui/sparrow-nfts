@@ -62,6 +62,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       const spaceBids = await contract.methods.spaceBids(data.id).call();
       const { isForSale, minValue, onlySellTo } = spacesOfferedForSale;
       const { hasBid, bidder, value } = spaceBids;
+      // if (!mountedRef.current) return;
       setSpaceInfo({
         owner,
         isForSale,
@@ -73,6 +74,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       });
     }
   }, [connector, data.id]);
+  // const mountedRef = useRef(true);
 
   useEffect(() => {
     getBlockchainData();
@@ -84,7 +86,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .getSpace(data.id)
         .send({ from: account })
-        .on('error', handleError)
+        // .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Claim Space',
@@ -92,6 +94,10 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
+      notification.error({
+        message: 'err',
+        description: 'Claim Space Success'
+      });
       //
     }
   };
@@ -102,7 +108,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .offerSpaceForSale(data.id, library.utils.toWei(value, 'ether'))
         .send({ from: account })
-        .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Offer Sale',
@@ -110,7 +115,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      //
+      handleError(e);
     }
   };
 
@@ -120,7 +125,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .offerSpaceForSaleToAddress(data.id, library.utils.toWei(value, 'ether'), toAddress)
         .send({ from: account })
-        .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Offer Sale',
@@ -128,7 +132,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      //
+      handleError(e);
     }
   };
 
@@ -138,7 +142,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .enterBidForSpace(data.id)
         .send({ from: account, value: library.utils.toWei(value, 'ether') })
-        .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Bid Space',
@@ -146,7 +149,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      //
+      handleError(e);
     }
   };
 
@@ -156,7 +159,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .acceptBidForSpace(data.id, library.utils.toWei(value, 'ether'))
         .send({ from: account })
-        .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Accept Bid',
@@ -164,7 +166,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      //
+      handleError(e);
     }
   };
 
@@ -174,7 +176,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .withdrawBidForSpace(data.id)
         .send({ from: account })
-        .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Withdraw Bid',
@@ -182,10 +183,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      // notification.error({
-      //   message: 'Withdraw Bid',
-      //   description: 'Withdraw Bid Failed'
-      // });
+      handleError(e);
     }
   };
 
@@ -195,7 +193,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .buySpace(data.id)
         .send({ from: account, value: price })
-        .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Buy Space',
@@ -203,7 +200,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      //
+      handleError(e);
     }
   };
 
@@ -213,7 +210,6 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       await contract.methods
         .transferSpace(to, data.id)
         .send({ from: account })
-        .on('error', handleError)
         .on('receipt', async () => {
           notification.success({
             message: 'Transfer Space',
@@ -221,7 +217,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           });
         });
     } catch (e) {
-      //
+      handleError(e);
     }
   };
 

@@ -26,7 +26,7 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
   };
   return (
     <StyledModal
-      title='Place Sale For Space'
+      title='Offer For Sale'
       visible={visible}
       onCancel={() => setOpenModal(false)}
     >
@@ -36,8 +36,8 @@ const SaleModal: React.FC<IModalProps> = (props: IModalProps) => {
         }}
         value={saleType}
       >
-        <Radio value={1}>Offer Sale</Radio>
-        <Radio value={2}>Offer Sale To Address</Radio>
+        <Radio value={1}>To All</Radio>
+        <Radio value={2}>To Address</Radio>
       </Radio.Group>
       <StyledText>
         Min Price in ETH

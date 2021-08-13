@@ -16,17 +16,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-task("init-owner","Set init owner", async (taskArgs, hre) => {
-  const NapaCryptoSpaceMarket = await ethers.getContractFactory("NapaCryptoSpaceMarket");
-  console.log(NapaCryptoSpaceMarket)
-  const contract = await NapaCryptoSpaceMarket.deployed();
-  const accounts = await hre.ethers.getSigners();
-  console.log(accounts)
-
-});
-
-
-
 module.exports = {
   networks: {
     hardhat: {

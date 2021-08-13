@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import useWallet from 'hooks/useWallet';
-import { Link, Text } from 'ui/Typography';
+import { Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
 import { ISpaceProps } from 'types/SpaceProps';
 import { useSocket, useEmit } from 'socketio-hooks';
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
 const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
   const { account, library } = useWallet();
@@ -42,10 +43,12 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       title: 'From  ',
       dataIndex: 'from',
       key: 'from',
-      render(from: string) {
+      render(from: string, record: any) {
         return (
-          <Link href='/'>
-            <LinkText>{from && from.slice(0, 10)}</LinkText>
+          <Link to='/'>
+            <LinkText>
+              {from && record.type !== 'Offered' && record.type !== 'Claimed' && from.slice(0, 10)}
+            </LinkText>
           </Link>
         );
       }
@@ -54,10 +57,10 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       title: 'To',
       dataIndex: 'to',
       key: 'to',
-      render(to: string) {
+      render(to: string, record: any) {
         return (
-          <Link href='/'>
-            <LinkText>{to && to.slice(0, 10)}</LinkText>
+          <Link to='/'>
+            <LinkText>{to && record.type !== 'Offered' && to.slice(0, 10)}</LinkText>
           </Link>
         );
       }
@@ -69,7 +72,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       render(amount: string) {
         return (
           <Text $size='18px'>
-            {amount
+            {amount && library
               ? `${library?.utils?.fromWei(amount.toString(), 'ether')}Ξ ($${
                   library?.utils?.fromWei(amount.toString(), 'ether') * 3000
                 })`
@@ -83,8 +86,14 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       title: 'Txn',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render(createdAt: string) {
-        return <LinkText $size='18px'>{dayjs(createdAt).format('MMM DD, YYYY')}</LinkText>;
+      render(createdAt: string, record: any) {
+        return (
+          <LinkText $size='18px'>
+            <a href={`https://etherscan.io/tx/${record.txn}`}>
+              {dayjs(createdAt).format('MMM DD, YYYY')}
+            </a>
+          </LinkText>
+        );
       }
     }
   ];
@@ -111,7 +120,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       <OwnersTable
         columns={columns}
         dataSource={tableData}
-        rowKey='txn'
+        rowKey='createdAt'
         pagination={false}
         rowClassName={getRowClassName}
       />

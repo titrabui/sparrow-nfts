@@ -2,7 +2,7 @@ import React from 'react';
 import MainContainer from 'ui/MainContainer';
 import Spaces from 'utils/spaces';
 import { Redirect } from 'react-router-dom';
-import { totalSpace } from 'environment';
+import { MAX_SPACE_SUPPLY_TOTAL } from 'environment';
 import Avatar from './Avatar';
 import Information from './Information';
 import TransactionsHistory from './TransactionsHistory';
@@ -10,7 +10,7 @@ import TransactionsHistory from './TransactionsHistory';
 const DetailsPage: React.FC = (props: any) => {
   const id = (props as any)?.match?.params?.id;
   const space = Spaces.find((item) => item.id === Number(id));
-  return id > totalSpace ? (
+  return id > MAX_SPACE_SUPPLY_TOTAL ? (
     <Redirect to='/detail/1' />
   ) : (
     <MainContainer>

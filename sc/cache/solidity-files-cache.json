@@ -1,9 +1,9 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/home/synguyen/Documents/sparrow-nfts/sc/contracts/NapaCryptoSpaceMarket.sol": {
-      "lastModificationDate": 1628759794518,
-      "contentHash": "b93901db1cd079ea16add1730aeee262",
+    "C:\\Users\\Administrator\\Documents\\sparrow-nfts\\sc\\contracts\\NapaCryptoSpaceMarket.sol": {
+      "lastModificationDate": 1628782896367,
+      "contentHash": "a8e5e3a26669aa6ce32971bbb64e4171",
       "sourceName": "contracts/NapaCryptoSpaceMarket.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -35,40 +35,6 @@
         "Context",
         "NapaCryptoSpaceMarket",
         "Ownable"
-      ]
-    },
-    "/home/synguyen/Documents/sparrow-nfts/sc/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1627960211350,
-      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
       ]
     }
   }

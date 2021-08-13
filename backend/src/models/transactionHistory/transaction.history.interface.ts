@@ -4,5 +4,6 @@ export interface ITransactionHistory {
   amount?: number,
   from: string,
   to?: string,
-  createdAt: number
+  createdAt: number,
+  txn: string
 };

@@ -9,6 +9,7 @@ const ConnectMetamask: React.FC = () => {
   const handleConnectWallet = async (): Promise<any> => {
     await connect();
   };
+
   return (
     <Container>
       <div>

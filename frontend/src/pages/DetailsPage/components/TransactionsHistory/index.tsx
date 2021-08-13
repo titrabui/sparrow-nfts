@@ -1,50 +1,34 @@
-import React from 'react';
+/* eslint-disable react/destructuring-assignment */
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import useWallet from 'hooks/useWallet';
 import { Link, Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
 import { ISpaceProps } from 'types/SpaceProps';
+import { useSocket, useEmit } from 'socketio-hooks';
+import dayjs from 'dayjs';
 
-const TransactionsHistory: React.FC<ISpaceProps> = () => {
-  const dataSource = [
-    {
-      type: 'Offered',
-      from: '0x6611fe',
-      to: '0x7b8961',
-      amount: '4.2KΞ ($7.58M)',
-      txn: 'Mar 11, 2021'
-    },
+const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
+  const { account, library } = useWallet();
+  const { data } = props;
 
-    {
-      type: 'Bid',
-      from: '0x6611fe',
-      to: '0x7b8961',
-      amount: '4.2KΞ ($7.58M)',
-      txn: 'Mar 11, 2021'
-    },
-    {
-      type: 'Bid Withdrawn',
-      from: '0x6611fe',
-      to: '0x7b8961',
-      amount: '4.2KΞ ($7.58M)',
-      txn: 'Mar 11, 2021'
-    },
-    {
-      type: 'Sold',
-      from: '0x6611fe',
-      to: '0x7b8961',
-      amount: '4.2KΞ ($7.58M)',
-      txn: 'Mar 11, 2021'
-    },
-    {
-      type: 'Claimed',
-      from: '0x6611fe',
-      to: '0x7b8961',
-      amount: '4.2KΞ ($7.58M)',
-      txn: 'Mar 11, 2021'
-    }
-  ];
+  const [tableData, setTableData] = useState([]);
+  useEmit(
+    'sync_client_info',
+    ''
+  )({
+    walletAddress: account,
+    isWatchingSpaceDetail: true,
+    spaceId: data ? data.id : null
+  });
 
+  useSocket('transaction_history', '', async (socketData) => {
+    const sortData = socketData
+      ? socketData.sort((a: any, b: any) => b.createdAt - a.createdAt)
+      : [];
+    if (JSON.stringify(sortData) !== JSON.stringify(tableData)) setTableData(sortData);
+  });
   const columns = [
     {
       title: 'Type',
@@ -61,7 +45,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = () => {
       render(from: string) {
         return (
           <Link href='/'>
-            <LinkText>{from}</LinkText>
+            <LinkText>{from && from.slice(0, 10)}</LinkText>
           </Link>
         );
       }
@@ -73,7 +57,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = () => {
       render(to: string) {
         return (
           <Link href='/'>
-            <LinkText>{to}</LinkText>
+            <LinkText>{to && to.slice(0, 10)}</LinkText>
           </Link>
         );
       }
@@ -83,16 +67,24 @@ const TransactionsHistory: React.FC<ISpaceProps> = () => {
       dataIndex: 'amount',
       key: 'amount',
       render(amount: string) {
-        return <Text $size='18px'>{amount}</Text>;
+        return (
+          <Text $size='18px'>
+            {amount
+              ? `${library?.utils?.fromWei(amount.toString(), 'ether')}Ξ ($${
+                  library?.utils?.fromWei(amount.toString(), 'ether') * 3000
+                })`
+              : ''}
+          </Text>
+        );
       }
     },
 
     {
       title: 'Txn',
-      dataIndex: 'txn',
-      key: 'txn',
-      render(txn: string) {
-        return <Text $size='18px'>{txn}</Text>;
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render(createdAt: string) {
+        return <LinkText $size='18px'>{dayjs(createdAt).format('MMM DD, YYYY')}</LinkText>;
       }
     }
   ];
@@ -108,6 +100,8 @@ const TransactionsHistory: React.FC<ISpaceProps> = () => {
         return 'withdrawn-row';
       case 'Claimed':
         return 'claimed-row';
+      case 'Transfer':
+        return 'transfer-row';
       default:
         return '';
     }
@@ -116,8 +110,8 @@ const TransactionsHistory: React.FC<ISpaceProps> = () => {
     <Box w='900px' m='auto'>
       <OwnersTable
         columns={columns}
-        dataSource={dataSource}
-        rowKey='id'
+        dataSource={tableData}
+        rowKey='txn'
         pagination={false}
         rowClassName={getRowClassName}
       />
@@ -149,6 +143,9 @@ const OwnersTable = styled(StyledTable)`
     background-color: #b8a7ce;
   }
   .claimed-row {
+    background-color: #add6b8;
+  }
+  .transfer-row {
     background-color: #add6b8;
   }
 `;

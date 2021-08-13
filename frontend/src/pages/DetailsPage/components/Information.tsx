@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Box from 'ui/Box';
 import Button from 'ui/Button';
 import { Link, Text } from 'ui/Typography';
@@ -53,11 +53,8 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
         description: 'Transaction faileds'
       });
   };
-  useEffect(() => {
-    getBlockchainData();
-  });
 
-  const getBlockchainData = async () => {
+  const getBlockchainData = useCallback(async () => {
     if (connector) {
       const contract = await getContract(connector);
       const owner = await contract.methods.spaceIndexToAddress(data.id).call();
@@ -75,7 +72,11 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
         bidValue: value
       });
     }
-  };
+  }, [connector, data.id]);
+
+  useEffect(() => {
+    getBlockchainData();
+  });
 
   const handleClaim = async () => {
     const contract = await getContract(connector);

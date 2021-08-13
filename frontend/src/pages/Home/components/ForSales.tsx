@@ -18,7 +18,7 @@ const ForSales: React.FC = () => (
         <StyledText>
           Showing most recent offers
           <LinkText>
-            <a href='/'>click here to see all 1,510</a>
+            <Link to='/forSale'>click here to see all 1,510</Link>
           </LinkText>
         </StyledText>
       </Box>

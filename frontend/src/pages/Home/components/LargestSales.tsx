@@ -13,7 +13,7 @@ const LargestSales: React.FC = () => (
         <Title>
           Largest Sales
           <LinkText>
-            <a href='/'>See all top sales</a>
+            <Link to='/topSale'>See all top sales</Link>
           </LinkText>
         </Title>
       </StyledSpace>
@@ -81,8 +81,8 @@ const ItemsContainer = styled(Row)`
 `;
 
 const StyledText = styled(Text)`
-  display:block;
-`
+  display: block;
+`;
 
 export default LargestSales;
 
@@ -100,13 +100,13 @@ const ItemsLargestSales = () => (
             </Link>
           </ImageWrapper>
         </ImageContainer>
-        <StyledText $size='24px' strong $color='#0C264D' >
+        <StyledText $size='24px' strong $color='#0C264D'>
           #028
         </StyledText>
-        <StyledText $size='20px' $color='#4B4B4B' >
+        <StyledText $size='20px' $color='#4B4B4B'>
           4.2KΞ ($7.57M)
         </StyledText>
-        <StyledText $size='20px' $color='#8D8D8D' >
+        <StyledText $size='20px' $color='#8D8D8D'>
           Mar 11, 2021
         </StyledText>
       </Col>

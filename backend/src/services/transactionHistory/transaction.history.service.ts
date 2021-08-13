@@ -15,7 +15,8 @@ export class TransactionHistoryService {
     const historyData = {
       type: SC_EVENT_MAPPER[event.event],
       spaceIndex: eventValues.spaceIndex,
-      from: transactionData.from
+      from: transactionData.from,
+      txn: event.transactionHash
     } as ITransactionHistory;
 
     switch (event.event) {

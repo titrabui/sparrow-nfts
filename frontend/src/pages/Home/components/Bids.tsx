@@ -26,7 +26,7 @@ const Bids: React.FC = () => (
         <StyledText>
           Showing most recent bids
           <LinkText>
-            <a href='/'>click here to see all 736</a>
+            <Link to='/bids'>click here to see all 736</Link>
           </LinkText>
         </StyledText>
       </Box>

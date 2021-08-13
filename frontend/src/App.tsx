@@ -6,16 +6,26 @@ import Web3 from 'web3';
 import { Web3ReactProvider } from '@web3-react/core';
 import CommonLayout from 'ui/Layout';
 import routes from 'routes';
+import { SocketIOProvider } from 'socketio-hooks';
 
 const getLibrary = (provider: any): Web3 => new Web3(provider);
 
 const App: React.FC = () => (
   <Web3ReactProvider getLibrary={getLibrary}>
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <CommonLayout>{routes}</CommonLayout>
-      </ConnectedRouter>
-    </Provider>
+    <SocketIOProvider
+      url='http://localhost:3001'
+      connectionOptions={{
+        path: '/socket.io',
+        reconnectionAttempts: 3,
+        timeout: 2000
+      }}
+    >
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <CommonLayout>{routes}</CommonLayout>
+        </ConnectedRouter>
+      </Provider>
+    </SocketIOProvider>
   </Web3ReactProvider>
 );
 

@@ -92,6 +92,10 @@ const StyledInput = styled(Input)`
   padding-left: 20px;
   font-weight: bold;
   margin-top: 10px;
+  border-color: blue;
+  border-right-width: 1px !important;
+  outline: 0;
+  box-shadow: 0 0 0 1px rgb(24 144 255 / 20%);
 `;
 
 const StyledButton = styled(Button)`

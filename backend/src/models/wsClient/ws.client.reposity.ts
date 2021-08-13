@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { WebRedisService } from "src/connections/redis/web.redis.provider";
 import { BaseModel } from 'src/models/base.model';
-import { IWsClient, IWsClients } from "./ws-client.interface";
+import { IWsClient, IWsClients } from "./ws.client.interface";
 
 const DATABASE_NAME = 'ws_clients';
 

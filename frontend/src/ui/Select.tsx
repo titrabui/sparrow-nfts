@@ -6,11 +6,6 @@ import styled from 'styled-components';
 type ModifiedSelectProps = Partial<SelectProps<any>> & {
   css?: string;
 };
-type ModifiedOption = Partial<OptionProps> & {
-  css?: string;
-};
-
-const { Option: AntdOption } = AntdSelect;
 
 const Select = styled(AntdSelect)<ModifiedSelectProps>`
   .ant-select-selector {

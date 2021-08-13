@@ -17,7 +17,7 @@ const RecentTransactions: React.FC = () => (
     <Box w='100%' mt='30px'>
       <Row justify='center' gutter={[0, 24]}>
         {Spaces.slice(0, 6).map((space) => (
-          <Col span={4}>
+          <Col span={4} key={space.id}>
             <ImageContainer>
               <ImageNumber $size='30px' $color='white' strong>
                 0{space.id}
@@ -28,21 +28,25 @@ const RecentTransactions: React.FC = () => (
                 </Link>
               </ImageWrapper>
             </ImageContainer>
-            <Text $size='24px' strong $color='#0C264D' block>
+            <StyledText $size='24px' strong $color='#0C264D' >
               #028
-            </Text>
-            <Text $size='20px' $color='#8D8D8D' block>
+            </StyledText>
+            <StyledText $size='20px' $color='#8D8D8D' >
               Offered for
-            </Text>
-            <Text $size='20px' $color='#4B4B4B' block>
+            </StyledText>
+            <StyledText $size='20px' $color='#4B4B4B' >
               4.2KΞ ($7.57M)
-            </Text>
+            </StyledText>
           </Col>
         ))}
       </Row>
     </Box>
   </Box>
 );
+
+const StyledText = styled(Text)`
+  display:block;
+`
 
 const Title = styled(Text)`
   font-size: 36px;

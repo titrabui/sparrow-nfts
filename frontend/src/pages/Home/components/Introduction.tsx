@@ -19,17 +19,19 @@ const Introduction: React.FC = () => (
             CryptoSpace
           </Text>
         </StyledSpace>
-        <TextSpace>
-          <Text $size='16px'>
-            {`10,000 unique collectible characters with proof of ownership stored on the Ethereum
-              blockchain. The project that inspired the modern CryptoArt movement. Selected press
-              and appearances include Mashable, CNBC, The Financial Times, Bloomberg, MarketWatch,
-              The Paris Review, Salon, The Outline, BreakerMag, Christie's of London, Art|Basel, The
-              PBS NewsHour, The New York Times in 2018 and again in 2021. The Cryptopunks are the
-              first "Non-Fungible Token" on Ethereum and inspiration for the ERC-721 standard that
-              powers most digital art and collectibles.`}
-          </Text>
-        </TextSpace>
+        <FirstParagraph>
+          The CryptoSpace demo is a project including 12 unique NFTs with proof of ownership
+          designed on the Ethereum blockchain using the ERC-721 standard. The collection is inspired
+          from general different subjects on Space (for instance, Astrobiology, Astronaut, Rocket,
+          Stars, Galaxies, and many other forms of matter and energy).
+        </FirstParagraph>
+        <SecondParagraph>
+          CryptoSpace is an NFT platform which includes of a collective of NFTs and a website This
+          website is a stored place where all these NFTs are minted and transferred into the
+          possession of the users. In addition to this website will have a parachainbridge built
+          between our existing token on Binance Smart Chain (BSC) to a new parachain on Ethereum
+          (ETH).
+        </SecondParagraph>
       </Row>
     </Box>
     <Box w='100%'>
@@ -39,26 +41,23 @@ const Introduction: React.FC = () => (
     </Box>
     <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        <FirstParagraph>
+        <ThirdParagraph>
           <Text $size='16px'>
-            {`The CryptoSpace are 10,000 uniquely generated characters. No two are exactly alike,
-              and each one of them can be officially owned by a single person on the Ethereum
-              blockchain. Originally, they could be claimed for free by anybody with an Ethereum
-              wallet, but all 10,000 were quickly claimed. Now they must be purchased from someone
-              via the marketplace that's also embedded in the blockchain. Via this market you can
-              buy, bid on, and offer punks for sale. Below, you'll find information about the status
-              of each Punk in the market. Punks with a blue background are not for sale and have no
-              current bids. Punks with a red background are available for sale by their owner.
-              Finally, punks with a purple background have an active bid on them.`}
+            The demo of CryptoSpace are 12 unique generated characters. There are no alike NFTs on
+            the Ethereum Blockchain. The CryptoSpace collection will be listed on OpenSea, Rarible,
+            and other marketplaces when it is launched. Via the marketplaces, you can buy, bid on,
+            and offer Spacy subjects for sale.
           </Text>
-        </FirstParagraph>
-        <SecondParagraph>
+        </ThirdParagraph>
+        <FourthParagraph>
           <Text $size='16px'>
-            {`See the marketplace instructions below to acquire your very own punk. You should also join the
-              Discord Chat, which includes a bot that announces all bids, offers and sales in
-              realtime.`}
+            The CryptoSpace was developed and supported by the core NFT team of NAPA GLOBAL. Our
+            teammates are experienced full-stack developers who will support you building the back
+            end and front end on a minimal site. See our marketplace instructions below to proceed
+            your first buy with our Space subjects. You should also join the Telegram, which
+            includes a bot that announces all upcoming offers and pre-sales in real time project.
           </Text>
-        </SecondParagraph>
+        </FourthParagraph>
       </Row>
     </Box>
     <Box w='100%' m='auto'>
@@ -98,20 +97,23 @@ const StyledSpace = styled(Space)`
 `;
 
 const FirstParagraph = styled(StyledSpace)`
-  margin-top: 10px;
+  width: 690px;
+  display: block;
+  margin: 5px auto 0 0;
 `;
 
 const SecondParagraph = styled(StyledSpace)`
-  margin-bottom: 80px;
+  width: 690px;
+  display: block;
+  margin: 5px  auto 0 0;
 `;
 
-const TextSpace = styled(Space)`
-  width: 100%;
-  > * {
-    width: 690px;
-    height: 100%;
-    vertical-align: middle;
-  }
+const ThirdParagraph = styled(StyledSpace)`
+  margin-top: 10px;
+`;
+
+const FourthParagraph = styled(StyledSpace)`
+  margin-bottom: 80px;
 `;
 
 export default Introduction;

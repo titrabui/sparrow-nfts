@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const Banner: React.FC = () => (
   <ItemsRow gutter={[0, 120]}>
     {Spaces.map((space: any) => (
-      <Col span={4}>
+      <Col span={4} key={space.id}>
         <Link to={`/detail/${space.id}`}>
           <img src={space.img} alt={space.name} width='140px' height='140px' />
         </Link>

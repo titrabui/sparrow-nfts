@@ -3,7 +3,7 @@ import config from 'src/config';
 const Web3 = require('web3');
 const CryptoSpaceContract = require('../../../sc/artifacts/contracts/NapaCryptoSpaceMarket.sol/NapaCryptoSpaceMarket.json');
 
-const WEB3_CONTRACT_ADDRESS = '0x9A676e781A523b5d0C0e43731313A708CB607508';
+const WEB3_CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 const WEB3_SOCKET_PROVIDER_OPTIONS = {
   timeout: 30000, // ms
 

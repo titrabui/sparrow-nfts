@@ -26,7 +26,7 @@ const Bids: React.FC = () => (
         <StyledText>
           Showing most recent bids
           <LinkText>
-            <a href='/'>click here to see all 736</a>
+            <Link to='/bids'>click here to see all 736</Link>
           </LinkText>
         </StyledText>
       </Box>
@@ -77,17 +77,17 @@ const LinkText = styled(Text)`
   font-size: 18px;
   margin-left: 10px;
   color: ${(p) => p.theme.primary};
-  font-weight:bold;
+  font-weight: bold;
 `;
 
 export default Bids;
 
 const Items = () => (
   <>
-    {[0, 1, 2, 3].map(() => (
-      <ItemsRow gutter={[0, 10]}>
+    {[0, 1, 2, 3].map((item) => (
+      <ItemsRow gutter={[0, 10]} key={item}>
         {Spaces.map((space) => (
-          <Col span={2}>
+          <Col span={2} key={space.id}>
             <Link to={`/detail/${space.id}`}>
               <img src={space.img} alt={space.name} width='60px' height='60px' />
             </Link>

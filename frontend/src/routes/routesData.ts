@@ -43,6 +43,6 @@ const publicRoutes: RouteType[] = [
     path: routesEnum.detail,
     component: DetailsPage,
     exact: false
-  }
+  },
 ];
 export { privateRoutes, publicRoutes };

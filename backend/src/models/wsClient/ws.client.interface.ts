@@ -1,7 +1,8 @@
 export interface IWsClient {
   walletAddress: string,
   isWatchingSpaceDetail: boolean,
-  spaceId?: string
+  spaceId?: string,
+  clientId: string
 };
 
 export interface IWsClients {

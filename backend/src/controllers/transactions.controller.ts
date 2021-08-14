@@ -1,21 +1,21 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ITransactionHistory } from 'src/models/transactionHistory/transaction.history.interface';
-import { TransactionHistoryService } from 'src/services/transactionHistory/transaction.history.service';
+import { ITransaction } from 'src/models/transaction/transaction.interface';
+import { TransactionService } from 'src/services/transaction/transaction.service';
 
 @Controller('transactions')
 export class TransactionsController {
 
   constructor(
-    private readonly transactionHistoryService: TransactionHistoryService
+    private readonly transactionService: TransactionService
   ) { }
 
   @Get('space/:id')
-  async getBySpace(@Param('id') spaceId: string): Promise<ITransactionHistory[]> {
-    return this.transactionHistoryService.getTransactionBySpaceId(spaceId);
+  async getBySpace(@Param('id') spaceId: string): Promise<ITransaction[]> {
+    return this.transactionService.getTransactionBySpaceId(spaceId);
   }
 
   @Get('recent')
-  async getRecentTransactions(): Promise<ITransactionHistory[]> {
-    return this.transactionHistoryService.getRecentTransactions();
+  async getRecentTransactions(): Promise<ITransaction[]> {
+    return this.transactionService.getRecentTransactions();
   }
 }

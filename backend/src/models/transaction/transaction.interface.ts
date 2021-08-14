@@ -1,4 +1,4 @@
-export interface ITransactionHistory {
+export interface ITransaction {
   type: string,
   spaceIndex: string,
   amount?: number,

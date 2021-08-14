@@ -1,7 +1,7 @@
 import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
 import { SC_EVENT_MAPPER } from 'src/constants';
-import { TransactionHistoryMap } from 'src/models/transactionHistory/transaction.history.map';
-import { TransactionHistoryService } from 'src/services/transactionHistory/transaction.history.service';
+import { TransactionMap } from 'src/models/transaction/transaction.map';
+import { TransactionService } from 'src/services/transaction/transaction.service';
 import { SocketGateway } from 'src/socket-gateways/socket.gateway';
 import { Web3Config } from './web3.config';
 
@@ -14,7 +14,7 @@ export class Web3Event implements OnApplicationBootstrap {
 
   constructor(
     private readonly wed3Config: Web3Config,
-    private readonly transactionHistoryService: TransactionHistoryService,
+    private readonly transactionService: TransactionService,
     private readonly socketGateway: SocketGateway
   ) { }
 
@@ -47,13 +47,13 @@ export class Web3Event implements OnApplicationBootstrap {
           event.transactionHash
         );
 
-        const historyData = TransactionHistoryMap.createDTO(
+        const transactionDto = TransactionMap.createDTO(
           event,
           transactionData
         );
 
-        await this.transactionHistoryService.createTransactionHistory(historyData);
-        await this.socketGateway.emitMessage(historyData);
+        await this.transactionService.createTransaction(transactionDto);
+        await this.socketGateway.emitMessage(transactionDto);
       }
 
     } catch (error) {

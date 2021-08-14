@@ -15,7 +15,7 @@ export class TransactionSchedule {
   // the first application startup. So we will call event every 1 second
   // to get event data in development environment
   @Cron(CronExpression.EVERY_SECOND)
-  async getTransactionHistory() {
+  async getTransactions() {
     if (this.config.get('NODE_ENV') !== 'development') return;
     this.web3Event.setupEventListeners();
   }

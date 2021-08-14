@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ModelsModule } from 'src/models/models.module';
-import { TransactionHistoryService } from './transaction.history.service';
+import { TransactionService } from './transaction.service';
 
 @Module({
   imports: [
     ModelsModule
   ],
   providers: [
-    TransactionHistoryService
+    TransactionService
   ],
   exports: [
-    TransactionHistoryService
+    TransactionService
   ]
 })
-export class TransactionHistoryServiceModule { }
+export class TransactionServiceModule { }

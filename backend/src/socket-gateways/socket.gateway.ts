@@ -1,10 +1,10 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server } from 'socket.io';
-import { ITransactionHistory } from 'src/models/transactionHistory/transaction.history.interface';
+import { ITransaction } from 'src/models/transaction/transaction.interface';
 import { ConfigService } from '@nestjs/config';
 
-const EMIT_EVENT_NAME = 'transaction_history';
+const EMIT_EVENT_NAME = 'transactions';
 
 @WebSocketGateway({
   cors: {
@@ -26,7 +26,7 @@ export class SocketGateway {
     this.logger.log(`Socket is running on PORT ${this.config.get('SERVER_PORT')}`);
   }
 
-  async emitMessage(data: ITransactionHistory) {
+  async emitMessage(data: ITransaction) {
     try {
       this.wss.emit(EMIT_EVENT_NAME, data);
     } catch (error) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MainContainer from 'ui/MainContainer';
 import styled from 'styled-components';
 import { Col, Row } from 'antd';
@@ -7,24 +7,87 @@ import { Link } from 'react-router-dom';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
 
-const Bids: React.FC = () => (
-  <MainContainer>
-    <BreadCrumb crumbs={['Current Bids']} />
-    <Box w='1050px' m='40px auto 0'>
-      <BigTitle>Current Bids</BigTitle>
-      <ItemsContainer justify='center' gutter={[0, 10]}>
-        <ItemsLargestSales />
-        <ItemsLargestSales />
-        <ItemsLargestSales />
-      </ItemsContainer>
-    </Box>
-  </MainContainer>
-);
+const Bids: React.FC = () => {
+  const { connector, library } = useWallet();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    let mounted = true;
+    const getBlockchainData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
+        if (mounted) {
+          const filteredData =
+            spacesOfferedBids &&
+            spacesOfferedBids.length > 0 &&
+            spacesOfferedBids
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.value
+              }));
+          setData(filteredData);
+        }
+      }
+    };
+    getBlockchainData();
+    return () => {
+      mounted = false;
+    };
+  }, [connector]);
+
+  const spacesBids = Spaces.filter((space: any) =>
+    data.some((item: any) => item.index === space.id)
+  );
+  const mappedSpaces = spacesBids.map((space: any) => {
+    const blockchainData: any = data.find((item: any) => item.index === space.id);
+    return { ...space, price: blockchainData.price };
+  });
+
+  return (
+    <MainContainer>
+      <BreadCrumb crumbs={['Current Bids']} />
+      <Box w='1050px' m='40px auto 0'>
+        <BigTitle>Current Bids </BigTitle>
+        <ItemsContainer justify='start' gutter={[0, 10]}>
+          {mappedSpaces.length > 0 ? (
+            mappedSpaces.map((space) => (
+              <Col key={space.id}>
+                <ImageContainer>
+                  <ImageWrapper>
+                    <Link to={`/detail/${space.id}`}>
+                      <img src={space.img} alt={`img${space.id}`} />
+                    </Link>
+                  </ImageWrapper>
+                </ImageContainer>
+                <StyledText $size='14px' $color='#4B4B4B'>
+                  {library && library.utils.fromWei(space.price.toString(), 'ether')} ETH
+                </StyledText>
+                <StyledText $size='14px' $color='#4B4B4B'>
+                  (${library && library.utils.fromWei(space.price.toString(), 'ether') * 3000})
+                </StyledText>
+              </Col>
+            ))
+          ) : (
+            <Text $size='18px'>There is no bid for spaces currently.</Text>
+          )}
+        </ItemsContainer>
+      </Box>
+    </MainContainer>
+  );
+};
 
 const ItemsContainer = styled(Row)`
   margin-top: 30px;
   margin-bottom: 50px;
+  width: 100%;
+  .ant-col {
+    flex: 1;
+    padding: 30px 0;
+  }
 `;
 
 const BigTitle = styled(Text)`
@@ -35,18 +98,15 @@ const BigTitle = styled(Text)`
 
 const ImageContainer = styled.div`
   width: 100%;
-  height: 90px;
+  height: 130px;
   background-color: #8e6fb6;
   position: relative;
   margin-bottom: 5px;
+  display: flex;
+  align-items: center;
 `;
 
 const ImageWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-    margin-left: 0;
-  margin-right: 0;
   width: 100%;
   text-align: center;
   bottom: 3px;
@@ -62,25 +122,3 @@ const StyledText = styled(Text)`
 `;
 
 export default Bids;
-
-const ItemsLargestSales = () => (
-  <>
-    {Spaces.map((space) => (
-      <Col span={2} key={space.id}>
-        <ImageContainer>
-          <ImageWrapper>
-            <Link to={`/detail/${space.id}`}>
-              <img src={space.img} alt={`img${space.id}`} />
-            </Link>
-          </ImageWrapper>
-        </ImageContainer>
-        <StyledText $size='14px' $color='#4B4B4B'>
-          4.2KΞ
-        </StyledText>
-        <StyledText $size='14px' $color='#4B4B4B'>
-          ($7.57M)
-        </StyledText>
-      </Col>
-    ))}
-  </>
-);

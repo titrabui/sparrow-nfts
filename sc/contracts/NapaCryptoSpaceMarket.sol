@@ -93,9 +93,10 @@ contract NapaCryptoSpaceMarket is Ownable {
 
     // A record of spaces that are offered for sale at a specific minimum value, and perhaps to a specific person
     mapping (uint256 => Offer) public spacesOfferedForSale;
-
+    Offer[12] public spacesOfferedForSaleArray; 
     // A record of the highest space bid
     mapping (uint256 => Bid) public  spaceBids;
+    Bid[12] public spaceBidsArray; 
 
     mapping (address => uint256) public pendingWithdrawals;
 
@@ -195,6 +196,7 @@ contract NapaCryptoSpaceMarket is Ownable {
             // Kill bid and refund value
             pendingWithdrawals[to] += bid.value;
             spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
+            spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
         }
     }
 
@@ -204,6 +206,7 @@ contract NapaCryptoSpaceMarket is Ownable {
         onlySpaceOwner(spaceIndex)
     {
         spacesOfferedForSale[spaceIndex] = Offer(false, spaceIndex, _msgSender(), 0, address(0));
+        spacesOfferedForSaleArray[spaceIndex] = Offer(false, spaceIndex, _msgSender(), 0, address(0));
         emit SpaceNoLongerForSale(spaceIndex);
     }
 
@@ -213,6 +216,7 @@ contract NapaCryptoSpaceMarket is Ownable {
         onlySpaceOwner(spaceIndex)
     {
         spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, address(0));
+        spacesOfferedForSaleArray[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, address(0));
         emit SpaceOffered(spaceIndex, minSalePriceInWei, address(0));
     }
 
@@ -222,6 +226,7 @@ contract NapaCryptoSpaceMarket is Ownable {
         onlySpaceOwner(spaceIndex)
     {
         spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, toAddress);
+        spacesOfferedForSaleArray[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, toAddress);
         emit SpaceOffered(spaceIndex, minSalePriceInWei, toAddress);
     }
 
@@ -253,6 +258,7 @@ contract NapaCryptoSpaceMarket is Ownable {
             // Kill bid and refund value
             pendingWithdrawals[_msgSender()] += bid.value;
             spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
+            spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
         }
     }
 
@@ -279,6 +285,7 @@ contract NapaCryptoSpaceMarket is Ownable {
             pendingWithdrawals[existing.bidder] += existing.value;
         }
         spaceBids[spaceIndex] = Bid(true, spaceIndex, _msgSender(), msg.value);
+        spaceBidsArray[spaceIndex] = Bid(true, spaceIndex, _msgSender(), msg.value);
         emit SpaceBidEntered(spaceIndex, msg.value);
     }
 
@@ -297,8 +304,10 @@ contract NapaCryptoSpaceMarket is Ownable {
         balanceOf[bid.bidder]++;
 
         spacesOfferedForSale[spaceIndex] = Offer(false, spaceIndex, bid.bidder, 0, address(0));
+        spacesOfferedForSaleArray[spaceIndex] = Offer(false, spaceIndex, bid.bidder, 0, address(0));    
         uint256 amount = bid.value;
         spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
+        spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
         pendingWithdrawals[seller] += amount;
         emit SpaceBought(spaceIndex, bid.value, seller, bid.bidder);
     }
@@ -313,9 +322,18 @@ contract NapaCryptoSpaceMarket is Ownable {
         emit SpaceBidWithdrawn(spaceIndex, bid.value);
         uint256 amount = bid.value;
         spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
+        spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
         // Refund the bid money
         payable(_msgSender()).transfer(amount);
         emit ETHTransfer(address(this), _msgSender(), amount);
+    }
+
+    function returnSpacesOfferedForSaleArray() public view returns( Offer[12] memory) {
+        return spacesOfferedForSaleArray;
+    }
+
+    function returnSpacesBidsArray() public view returns( Bid[12] memory) {
+        return spaceBidsArray;
     }
 
 }

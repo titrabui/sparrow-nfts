@@ -1,45 +1,129 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
 
-const Bids: React.FC = () => (
-  <Box w='1050px' m='auto'>
-    <Row justify='center' gutter={[0, 24]}>
-      <Box w='100%' mt='100px' mb='40px'>
-        <Title>Bids</Title>
-        <StyledText>
-          The average bid over the last year was
-          <HightlightText>26.25 ETH ($49,214.19 USD).</HightlightText>
-        </StyledText>
-        <StyledText>
-          The average currently open bid is
-          <HightlightText>4.24 ETH ($7,948.00 USD).</HightlightText>
-        </StyledText>
-        <StyledText>
-          Total value of all current bids is
-          <HightlightText>3,120.59 ETH ($5,849,726.91 USD).</HightlightText>
-        </StyledText>
-        <StyledText>
-          Showing most recent bids
-          <LinkText>
-            <Link to='/bids'>click here to see all 736</Link>
-          </LinkText>
-        </StyledText>
-      </Box>
-    </Row>
-    <ItemsContainer>
-      <Items />
-    </ItemsContainer>
-  </Box>
-);
+const Bids: React.FC = () => {
+  const { connector, library } = useWallet();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    let mounted = true;
+    const getBlockchainData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
+        if (mounted) {
+          const filteredData =
+            spacesOfferedBids &&
+            spacesOfferedBids.length > 0 &&
+            spacesOfferedBids
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.value
+              }));
+          setData(filteredData);
+        }
+      }
+    };
+    getBlockchainData();
+    return () => {
+      mounted = false;
+    };
+  }, [connector]);
+  const spacesBids = Spaces.filter((space: any) =>
+    data.some((item: any) => item.index === space.id)
+  );
+
+  const spacesBidsWithPrice = spacesBids.map((space: any) => {
+    const blockchainData: any = data.find((item: any) => item.index === space.id);
+    return { ...space, price: blockchainData.price };
+  });
+
+  const totalBidValue =
+    spacesBidsWithPrice.length > 0 &&
+    spacesBidsWithPrice.reduce((prev: any, curr: any) => prev + Number(curr.price), 0);
+
+  const averageBidValue = totalBidValue / spacesBidsWithPrice.length;
+
+  const countBids = spacesBids.length;
+
+  return (
+    <Box w='1050px' m='auto'>
+      <Row justify='center' gutter={[0, 24]}>
+        <Box w='100%' mt='100px' mb='40px'>
+          <Title>Bids</Title>
+          <StyledText>
+            The average bid over the last year was
+            <HightlightText>
+              {averageBidValue &&
+                library &&
+                library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
+              ETH ($
+              {averageBidValue &&
+                library &&
+                library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
+              ).
+            </HightlightText>
+          </StyledText>
+          <StyledText>
+            The average currently open bid is
+            <HightlightText>
+              {averageBidValue &&
+                library &&
+                library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
+              ETH ($
+              {averageBidValue &&
+                library &&
+                library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
+              ).
+            </HightlightText>
+          </StyledText>
+          <StyledText>
+            Total value of all current bids is
+            <HightlightText>
+              {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
+              ETH ($
+              {totalBidValue &&
+                library &&
+                library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
+              ).
+            </HightlightText>
+          </StyledText>
+          <StyledText>
+            Showing most recent bids
+            <LinkText>
+              <Link to='/bids'>click here to see all {countBids}</Link>
+            </LinkText>
+          </StyledText>
+        </Box>
+      </Row>
+      {spacesBidsWithPrice.length > 0 ? (
+        <ItemsContainer>
+          <ItemsRow gutter={[0, 10]}>
+            {spacesBids.map((space) => (
+              <Col key={space.id} style={{ flex: 1 }}>
+                <Link to={`/detail/${space.id}`}>
+                  <img src={space.img} alt={space.name} width='60px' height='60px' />
+                </Link>
+              </Col>
+            ))}
+          </ItemsRow>
+        </ItemsContainer>
+      ) : (
+        <Text $size='18px'>There is no spaces is for sale currently.</Text>
+      )}
+    </Box>
+  );
+};
 
 const ItemsContainer = styled.div`
   width: 100%;
-  height: 360px;
   background-color: #8e6fb6;
   padding: 30px 50px;
 `;
@@ -81,19 +165,3 @@ const LinkText = styled(Text)`
 `;
 
 export default Bids;
-
-const Items = () => (
-  <>
-    {[0, 1, 2, 3].map((item) => (
-      <ItemsRow gutter={[0, 10]} key={item}>
-        {Spaces.map((space) => (
-          <Col span={2} key={space.id}>
-            <Link to={`/detail/${space.id}`}>
-              <img src={space.img} alt={space.name} width='60px' height='60px' />
-            </Link>
-          </Col>
-        ))}
-      </ItemsRow>
-    ))}
-  </>
-);

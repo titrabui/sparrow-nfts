@@ -19,7 +19,7 @@ const BreadCrumbComponent: React.FC<IBreadCrumbProp> = (props: IBreadCrumbProp) 
         {crumbs &&
           crumbs.length > 0 &&
           crumbs.map((item) => (
-            <Breadcrumb.Item>
+            <Breadcrumb.Item key={item}>
               <Text $size='18px'>{item}</Text>
             </Breadcrumb.Item>
           ))}
@@ -43,7 +43,7 @@ const StyledBreadCrumb = styled(Breadcrumb)`
   }
   .ant-breadcrumb-separator {
     margin: 0 13px;
-}
+  }
 `;
 
 export default BreadCrumbComponent;

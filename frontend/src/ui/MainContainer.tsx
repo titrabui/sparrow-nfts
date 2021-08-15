@@ -12,6 +12,7 @@ const StyledDiv = styled.div<MainContainerProps>`
   margin-left: auto;
   margin-right: auto;
   position: relative;
+  min-height: 75vh;
 
   @media screen and (max-width: 1208px) {
     padding-left: 16px;

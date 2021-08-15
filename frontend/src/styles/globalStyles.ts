@@ -9,6 +9,7 @@ const GlobalStyles = createGlobalStyle<{ theme: ThemeTypes }>`
   }
 
   html,body {
+    position: relative;
     margin: 0;
     font-family: 'Nunito Sans', sans-serif;
     -webkit-font-smoothing: antialiased;

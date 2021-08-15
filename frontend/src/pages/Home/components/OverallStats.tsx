@@ -16,7 +16,7 @@ const OverallStats: React.FC = () => (
     <Row justify='center' gutter={[0, 24]}>
       <Col span={8}>
         <StatsNameText>Current Lowest Price Available</StatsNameText>
-        <StatsValueText>19.75 ETH ($35,183.64 USD)</StatsValueText>
+        <StatsValueText>19.75 ETH ($35,183.64)</StatsValueText>
       </Col>
       <Col span={8}>
         <StatsNameText>Number of Sales (Last 12 Months)</StatsNameText>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MainContainer from 'ui/MainContainer';
 import styled from 'styled-components';
 import { Col, Row } from 'antd';
@@ -7,9 +7,106 @@ import { Link } from 'react-router-dom';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
 
 const Account: React.FC = (props: any) => {
+  const { connector, library } = useWallet();
+  const [bidData, setBidData] = useState([]);
+  const [saleData, setSaleData] = useState([]);
+  const [spacesOwned, setSpacesOwned] = useState([]);
   const id = (props as any)?.match?.params?.id;
+
+  useEffect(() => {
+    let mounted = true;
+    const getBlockchainBidData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
+        if (mounted) {
+          const filteredBidData =
+            spacesOfferedBids &&
+            spacesOfferedBids.length > 0 &&
+            spacesOfferedBids
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.value,
+                bidder: item.bidder
+              }));
+          setBidData(filteredBidData);
+        }
+      }
+    };
+    const getBlockchainSaleData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOffereds = await contract.methods.returnSpacesOfferedForSaleArray().call();
+        if (mounted) {
+          const filteredData =
+            spacesOffereds &&
+            spacesOffereds.length > 0 &&
+            spacesOffereds
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.minValue,
+                owner: item[2]
+              }));
+          setSaleData(filteredData);
+        }
+      }
+    };
+    const getBlockchainOwnedData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spaceIndexToAddress = await contract.methods.returnSpaceIndexToAddressArray().call();
+        if (mounted) {
+          let spacesOwnedArray = [] as any;
+          spaceIndexToAddress.forEach((item: any, index: any) => {
+            if (item === id) spacesOwnedArray = [...spacesOwnedArray, index];
+          });
+          setSpacesOwned(spacesOwnedArray);
+        }
+      }
+    };
+    getBlockchainOwnedData();
+
+    getBlockchainBidData();
+    getBlockchainSaleData();
+    return () => {
+      mounted = false;
+    };
+  }, [connector]);
+  const spacesBids = Spaces.filter((space: any) =>
+    bidData.some((item: any) => item.index === space.id)
+  );
+  const spacesBidsWithPriceAndOwner = spacesBids.map((space: any) => {
+    const blockchainBidData: any = bidData.find((item: any) => item.index === space.id);
+    return { ...space, price: blockchainBidData.price, bidder: blockchainBidData.bidder };
+  });
+
+  const accountBids =
+    spacesBidsWithPriceAndOwner &&
+    spacesBidsWithPriceAndOwner.filter((item) => item.bidder === id);
+  const totalBidValue =
+    (accountBids.length > 0 &&
+      accountBids.reduce((prev: any, curr: any) => prev + Number(curr.price), 0)) ||
+    0;
+
+  const spacesForSales = Spaces.filter((space: any) =>
+    saleData.some((item: any) => item.index === space.id)
+  );
+  const spacesForSalesWithPrice = spacesForSales.map((space: any) => {
+    const blockchainData: any = saleData.find((item: any) => item.index === space.id);
+    return { ...space, price: blockchainData.price, owner: blockchainData.owner };
+  });
+
+  const accountOffers = spacesForSalesWithPrice.filter((item: any) => item.owner === id);
+
+  const spacesOwnedDetail = Spaces.filter((space: any) =>
+    spacesOwned.some((item: any) => item === space.id)
+  );
   return (
     <MainContainer>
       <BreadCrumb crumbs={['Accounts', id.slice(0, 10)]} />
@@ -24,70 +121,148 @@ const Account: React.FC = (props: any) => {
             </a>
           </Col>
           <Col span={8}>
-            <Title>Total Punks Owned</Title>
-            <Value>0</Value>
+            <Title>Total Spaces Owned</Title>
+            <Value>{spacesOwned.length}</Value>
           </Col>
           <Col span={8}>
             <Title>Last Active</Title>
             <Value>3 days ago</Value>
           </Col>
           <Col span={8}>
-            <Title>Total Amount Spent Buying Punks</Title>
-            <Value>0.00Ξ ($0.00)</Value>
+            <Title>Total Amount Spent Buying Spaces</Title>
+            <Value>0.00ETH ($0.00)</Value>
           </Col>
           <Col span={8}>
-            <Title>Bids On Owned Punks</Title>
+            <Title>Bids On Owned Spaces</Title>
             <Value>0</Value>
           </Col>
           <Col span={8}>
-            <Title>Value of Bids On Owned Punks</Title>
-            <Value>0.00Ξ ($0.00)</Value>
+            <Title>Value of Bids On Owned Spaces</Title>
+            <Value>0.00ETH ($0.00)</Value>
           </Col>
           <Col span={8}>
-            <Title>Total Amount Earned Selling Punks</Title>
-            <Value>0.00Ξ ($0.00)</Value>
+            <Title>Total Amount Earned Selling Spaces</Title>
+            <Value>0.00ETH ($0.00)</Value>
           </Col>
           <Col span={8}>
             <Title>Current Bids Placed By This Account</Title>
-            <Value>1</Value>
+            <Value>{accountBids && accountBids.length}</Value>
           </Col>
           <Col span={8}>
             <Title>Value of Current Bids Placed</Title>
-            <Value>0.11Ξ ($360)</Value>
+            <Value>
+              {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
+              ETH ($
+              {totalBidValue &&
+                library &&
+                library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
+              ).
+            </Value>
           </Col>
         </Row>
 
         <StyledSpace style={{ marginTop: 60 }}>
-          <SpaceTitle>0 Punks Owned</SpaceTitle>
-          <Content />
-        </StyledSpace>
-
-        <StyledSpace>
-          <SpaceTitle>0 Punks for Sale by this Account</SpaceTitle>
-          <Content />
-        </StyledSpace>
-
-        <StyledSpace>
-          <SpaceTitle>0 in 0 Bids For Punks Owned by this Account</SpaceTitle>
-          <Content />
-        </StyledSpace>
-
-        <StyledSpace>
-          <SpaceTitle>0.11 ETH ($359.97 USD) in 1 Bid Placed by This Account</SpaceTitle>
+          <SpaceTitle>{spacesOwned.length} Spaces Owned</SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
-              <ItemsLargestSales />
+              {spacesOwnedDetail.map((space) => (
+                <Col span={2} key={space.id}>
+                  <ImageContainer>
+                    <ImageWrapper>
+                      <Link to={`/detail/${space.id}`}>
+                        <img src={space.img} alt={`img${space.id}`} />
+                      </Link>
+                    </ImageWrapper>
+                  </ImageContainer>
+                </Col>
+              ))}
             </ItemsContainer>
           </Content>
         </StyledSpace>
 
         <StyledSpace>
-          <SpaceTitle>0 in 0 Punk Bought by This Account</SpaceTitle>
+          <SpaceTitle>
+            {accountOffers && accountOffers.length} Spaces for Sale by this Account
+          </SpaceTitle>
+          <Content>
+            <ItemsContainer justify='start' gutter={[0, 10]}>
+              {accountOffers.map((space) => (
+                <Col span={2} key={space.id}>
+                  <ImageContainer>
+                    <ImageWrapper>
+                      <Link to={`/detail/${space.id}`}>
+                        <img src={space.img} alt={`img${space.id}`} />
+                      </Link>
+                    </ImageWrapper>
+                  </ImageContainer>
+                  <StyledText $size='14px' $color='#4B4B4B'>
+                    {space.price &&
+                      library &&
+                      library.utils.fromWei(space.price.toString(), 'ether')}{' '}
+                    ETH
+                  </StyledText>
+                  <StyledText $size='14px' $color='#4B4B4B'>
+                    $
+                    {space.price &&
+                      library &&
+                      library.utils.fromWei(space.price.toString(), 'ether') * 3000}
+                  </StyledText>
+                </Col>
+              ))}
+            </ItemsContainer>
+          </Content>
+        </StyledSpace>
+
+        <StyledSpace>
+          <SpaceTitle>0 in 0 Bids For Spaces Owned by this Account</SpaceTitle>
           <Content />
         </StyledSpace>
 
         <StyledSpace>
-          <SpaceTitle>0 in 0 Punk Sold by This Account</SpaceTitle>
+          <SpaceTitle>
+            {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
+            ETH ($
+            {totalBidValue &&
+              library &&
+              library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
+            ) in {accountBids && accountBids.length} Bid Placed by This Account
+          </SpaceTitle>
+          <Content>
+            <ItemsContainer justify='start' gutter={[0, 10]}>
+              {accountBids.map((space) => (
+                <Col span={2} key={space.id}>
+                  <ImageContainer>
+                    <ImageWrapper>
+                      <Link to={`/detail/${space.id}`}>
+                        <img src={space.img} alt={`img${space.id}`} />
+                      </Link>
+                    </ImageWrapper>
+                  </ImageContainer>
+                  <StyledText $size='14px' $color='#4B4B4B'>
+                    {space.price &&
+                      library &&
+                      library.utils.fromWei(space.price.toString(), 'ether')}{' '}
+                    ETH
+                  </StyledText>
+                  <StyledText $size='14px' $color='#4B4B4B'>
+                    $
+                    {space.price &&
+                      library &&
+                      library.utils.fromWei(space.price.toString(), 'ether') * 3000}
+                  </StyledText>
+                </Col>
+              ))}
+            </ItemsContainer>
+          </Content>
+        </StyledSpace>
+
+        <StyledSpace>
+          <SpaceTitle>0 in 0 Space Bought by This Account</SpaceTitle>
+          <Content />
+        </StyledSpace>
+
+        <StyledSpace>
+          <SpaceTitle>0 in 0 Space Sold by This Account</SpaceTitle>
           <Content />
         </StyledSpace>
       </Box>
@@ -174,24 +349,8 @@ const StyledText = styled(Text)`
 
 export default Account;
 
-const ItemsLargestSales = () => (
-  <>
-    {Spaces.slice(0, 1).map((space) => (
-      <Col span={2} key={space.id}>
-        <ImageContainer>
-          <ImageWrapper>
-            <Link to={`/detail/${space.id}`}>
-              <img src={space.img} alt={`img${space.id}`} />
-            </Link>
-          </ImageWrapper>
-        </ImageContainer>
-        <StyledText $size='14px' $color='#4B4B4B'>
-          4.2KΞ
-        </StyledText>
-        <StyledText $size='14px' $color='#4B4B4B'>
-          ($7.57M)
-        </StyledText>
-      </Col>
-    ))}
-  </>
-);
+// const ItemsLargestSales = () => (
+//   <>
+
+//   </>
+// );

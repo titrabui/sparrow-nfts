@@ -49,10 +49,11 @@ const ForSales: React.FC = () => {
   });
 
   const lowestPrice =
-    spacesForSalesWithPrice.length > 0 &&
-    spacesForSalesWithPrice.reduce((prev: any, curr: any) =>
-      prev.price < curr.price ? prev : curr
-    )|| 0;
+    (spacesForSalesWithPrice.length > 0 &&
+      spacesForSalesWithPrice.reduce((prev: any, curr: any) =>
+        prev.price < curr.price ? prev : curr
+      )) ||
+    0;
 
   const countSales = spacesForSales.length;
 
@@ -61,32 +62,36 @@ const ForSales: React.FC = () => {
       <Row justify='center' gutter={[0, 24]}>
         <Box w='100%' mt='100px' mb='40px'>
           <Title>For Sales</Title>
-          <StyledText>
-            The lowest price space currently for sale is
-            <HightlightText>
-              {lowestPrice &&
-                library &&
-                library.utils.fromWei(lowestPrice?.price?.toString(), 'ether')}{' '}
-              ETH ($
-              {lowestPrice &&
-                library &&
-                library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000}
-              ).
-            </HightlightText>
-          </StyledText>
-          <StyledText>
-            Showing most recent offers
-            <LinkText>
-              <Link to='/forSale'>click here to see all {countSales}</Link>
-            </LinkText>
-          </StyledText>
+          {spacesForSalesWithPrice.length > 0 ? (
+            <>
+              <StyledText>
+                The lowest price space currently for sale is
+                <HightlightText>
+                  {lowestPrice &&
+                    library &&
+                    library.utils.fromWei(lowestPrice?.price?.toString(), 'ether')}{' '}
+                  ETH ($
+                  {lowestPrice &&
+                    library &&
+                    library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000}
+                  ).
+                </HightlightText>
+              </StyledText>
+              <StyledText>
+                Showing most recent offers
+                <LinkText>
+                  <Link to='/forSale'>click here to see all {countSales}</Link>
+                </LinkText>
+              </StyledText>
+            </>
+          ) : null}
         </Box>
       </Row>
       {spacesForSalesWithPrice.length > 0 ? (
         <ItemsContainer>
           <ItemsRow gutter={[0, 10]}>
             {spacesForSales.map((space) => (
-              <Col key={space.id} style={{ flex: 1 }}>
+              <Col key={space.id}>
                 <Link to={`/detail/${space.id}`}>
                   <img src={space.img} alt={space.name} width='60px' height='60px' />
                 </Link>
@@ -101,17 +106,19 @@ const ForSales: React.FC = () => {
   );
 };
 
-const ItemsContainer = styled.div`
-  width: 100%;
-  background-color: #95554f;
-  padding: 30px 50px;
-`;
+const ItemsContainer = styled.div``;
 
 const ItemsRow = styled(Row)`
   margin: 15px 0;
   text-align: center;
+
   .ant-col {
     width: 100px;
+    background-color: #95554f;
+    padding: 20px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
     img {
       margin: 0 auto;
       cursor: pointer;

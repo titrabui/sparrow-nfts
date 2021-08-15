@@ -55,7 +55,7 @@ const Bids: React.FC = () => {
         <ItemsContainer justify='start' gutter={[0, 10]}>
           {mappedSpaces.length > 0 ? (
             mappedSpaces.map((space) => (
-              <Col key={space.id}>
+              <Col span={2} key={space.id}>
                 <ImageContainer>
                   <ImageWrapper>
                     <Link to={`/detail/${space.id}`}>
@@ -83,11 +83,6 @@ const Bids: React.FC = () => {
 const ItemsContainer = styled(Row)`
   margin-top: 30px;
   margin-bottom: 50px;
-  width: 100%;
-  .ant-col {
-    flex: 1;
-    padding: 30px 0;
-  }
 `;
 
 const BigTitle = styled(Text)`
@@ -98,7 +93,7 @@ const BigTitle = styled(Text)`
 
 const ImageContainer = styled.div`
   width: 100%;
-  height: 130px;
+  height: 90px;
   background-color: #8e6fb6;
   position: relative;
   margin-bottom: 5px;
@@ -107,6 +102,11 @@ const ImageContainer = styled.div`
 `;
 
 const ImageWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: 0;
+  margin-right: 0;
   width: 100%;
   text-align: center;
   bottom: 3px;

@@ -46,8 +46,9 @@ const Bids: React.FC = () => {
   });
 
   const totalBidValue =
-    spacesBidsWithPrice.length > 0 &&
-    spacesBidsWithPrice.reduce((prev: any, curr: any) => prev + Number(curr.price), 0) || 0;
+    (spacesBidsWithPrice.length > 0 &&
+      spacesBidsWithPrice.reduce((prev: any, curr: any) => prev + Number(curr.price), 0)) ||
+    0;
 
   const averageBidValue = totalBidValue / spacesBidsWithPrice.length || 0;
 
@@ -58,56 +59,62 @@ const Bids: React.FC = () => {
       <Row justify='center' gutter={[0, 24]}>
         <Box w='100%' mt='100px' mb='40px'>
           <Title>Bids</Title>
-          <StyledText>
-            The average bid over the last year was
-            <HightlightText>
-              {averageBidValue &&
-                library &&
-                library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
-              ETH ($
-              {averageBidValue &&
-                library &&
-                library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
-              ).
-            </HightlightText>
-          </StyledText>
-          <StyledText>
-            The average currently open bid is
-            <HightlightText>
-              {averageBidValue &&
-                library &&
-                library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
-              ETH ($
-              {averageBidValue &&
-                library &&
-                library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
-              ).
-            </HightlightText>
-          </StyledText>
-          <StyledText>
-            Total value of all current bids is
-            <HightlightText>
-              {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
-              ETH ($
-              {totalBidValue &&
-                library &&
-                library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
-              ).
-            </HightlightText>
-          </StyledText>
-          <StyledText>
-            Showing most recent bids
-            <LinkText>
-              <Link to='/bids'>click here to see all {countBids}</Link>
-            </LinkText>
-          </StyledText>
+          {spacesBidsWithPrice.length > 0 ? (
+            <>
+              <StyledText>
+                The average bid over the last year was
+                <HightlightText>
+                  {averageBidValue &&
+                    library &&
+                    library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
+                  ETH ($
+                  {averageBidValue &&
+                    library &&
+                    library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
+                  ).
+                </HightlightText>
+              </StyledText>
+              <StyledText>
+                The average currently open bid is
+                <HightlightText>
+                  {averageBidValue &&
+                    library &&
+                    library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
+                  ETH ($
+                  {averageBidValue &&
+                    library &&
+                    library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
+                  ).
+                </HightlightText>
+              </StyledText>
+              <StyledText>
+                Total value of all current bids is
+                <HightlightText>
+                  {totalBidValue &&
+                    library &&
+                    library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
+                  ETH ($
+                  {totalBidValue &&
+                    library &&
+                    library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
+                  ).
+                </HightlightText>
+              </StyledText>
+              <StyledText>
+                Showing most recent bids
+                <LinkText>
+                  <Link to='/bids'>click here to see all {countBids}</Link>
+                </LinkText>
+              </StyledText>
+            </>
+          ) : null}
         </Box>
       </Row>
       {spacesBidsWithPrice.length > 0 ? (
         <ItemsContainer>
           <ItemsRow gutter={[0, 10]}>
             {spacesBids.map((space) => (
-              <Col key={space.id} style={{ flex: 1 }}>
+              <Col key={space.id} >
                 <Link to={`/detail/${space.id}`}>
                   <img src={space.img} alt={space.name} width='60px' height='60px' />
                 </Link>
@@ -122,17 +129,19 @@ const Bids: React.FC = () => {
   );
 };
 
-const ItemsContainer = styled.div`
-  width: 100%;
-  background-color: #8e6fb6;
-  padding: 30px 50px;
-`;
+const ItemsContainer = styled.div``;
 
 const ItemsRow = styled(Row)`
   margin: 15px 0;
   text-align: center;
+
   .ant-col {
+    background-color: #8e6fb6;
+    padding: 20px;
     width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     img {
       margin: 0 auto;
       cursor: pointer;

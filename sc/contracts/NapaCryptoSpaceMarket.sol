@@ -87,6 +87,7 @@ contract NapaCryptoSpaceMarket is Ownable {
     }
 
     mapping (uint256 => address) public spaceIndexToAddress;
+    address[12] public spaceIndexToAddressArray; 
 
     // This creates an array with all balances
     mapping (address => uint256) public balanceOf;
@@ -171,6 +172,7 @@ contract NapaCryptoSpaceMarket is Ownable {
         freeSpace(spaceIndex)
     {
         spaceIndexToAddress[spaceIndex] = _msgSender();
+        spaceIndexToAddressArray[spaceIndex] = _msgSender();
         balanceOf[_msgSender()]++;
         spacesRemainingToAssign--;
         emit Assign(_msgSender(), spaceIndex);
@@ -186,6 +188,7 @@ contract NapaCryptoSpaceMarket is Ownable {
             spaceNoLongerForSale(spaceIndex);
         }
         spaceIndexToAddress[spaceIndex] = to;
+        spaceIndexToAddressArray[spaceIndex] = to;
         balanceOf[_msgSender()]--;
         balanceOf[to]++;
         emit SpaceTransfer(_msgSender(), to, spaceIndex);
@@ -244,6 +247,7 @@ contract NapaCryptoSpaceMarket is Ownable {
         address seller = offer.seller;
 
         spaceIndexToAddress[spaceIndex] = _msgSender();
+        spaceIndexToAddressArray[spaceIndex] = _msgSender();
         balanceOf[seller]--;
         balanceOf[_msgSender()]++;
 
@@ -300,6 +304,7 @@ contract NapaCryptoSpaceMarket is Ownable {
         require(bid.value >= minPrice, 'Bid value must be greater or equal min price');
 
         spaceIndexToAddress[spaceIndex] = bid.bidder;
+        spaceIndexToAddressArray[spaceIndex] = bid.bidder;
         balanceOf[seller]--;
         balanceOf[bid.bidder]++;
 
@@ -335,5 +340,10 @@ contract NapaCryptoSpaceMarket is Ownable {
     function returnSpacesBidsArray() public view returns( Bid[12] memory) {
         return spaceBidsArray;
     }
+
+     function returnSpaceIndexToAddressArray() public view returns( address[12] memory) {
+        return spaceIndexToAddressArray;
+    }
+
 
 }

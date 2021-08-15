@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IOverallStats, ITransaction } from 'src/models/transaction/transaction.interface';
+import { IAccountStats, IOverallStats, ITransaction } from 'src/models/transaction/transaction.interface';
 import { TransactionReposity } from 'src/models/transaction/transaction.reposity';
 
 const LIMIT_RECENTS_NUMBER = 12;
@@ -56,6 +56,32 @@ export class TransactionService {
       largestSales,
       recentTransactions
     } as IOverallStats;
+  }
+
+  async getAccountStats(address: string): Promise<IAccountStats> {
+    const transactions = await this.transactionRepo.getAll();
+
+    const soldTransactions = transactions.filter(item => {
+      return item.type === 'Sold';
+    });
+
+    const boughtsByAccount = soldTransactions.filter(item => {
+      return item.to === address;
+    });
+    const boughtsByAccountTotal = boughtsByAccount.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0);
+
+    const soldsByAccount = soldTransactions.filter(item => {
+      return item.from === address;
+    });
+    const soldsByAccountTotal = soldsByAccount.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0);
+
+
+    return {
+      bought: boughtsByAccount,
+      boughtETHTotal: boughtsByAccountTotal,
+      sold: soldsByAccount,
+      soldETHTotal: soldsByAccountTotal
+    } as IAccountStats;
   }
 
   private getLargestSales(transactions: ITransaction[]): ITransaction[] {

@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { IOverallStats, ITransaction } from 'src/models/transaction/transaction.interface';
+import { IAccountStats, IOverallStats, ITransaction } from 'src/models/transaction/transaction.interface';
 import { TransactionService } from 'src/services/transaction/transaction.service';
 
 @Controller('transactions')
@@ -19,8 +19,13 @@ export class TransactionsController {
     return this.transactionService.getTopSales();
   }
 
-  @Get('overallStats')
+  @Get('stats/overall')
   async getOverallStats(): Promise<IOverallStats> {
     return this.transactionService.getOverallStats();
+  }
+
+  @Get('stats/account/:address')
+  async getAccountStats(@Param('address') address: string): Promise<IAccountStats> {
+    return this.transactionService.getAccountStats(address);
   }
 }

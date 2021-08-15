@@ -14,3 +14,10 @@ export interface IOverallStats {
   largestSales: ITransaction[],
   recentTransactions: ITransaction[]
 }
+
+export interface IAccountStats {
+  bought: ITransaction[],
+  boughtETHTotal: number,
+  sold: ITransaction[],
+  soldETHTotal: number
+}

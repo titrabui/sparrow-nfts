@@ -32,7 +32,7 @@ const ForSales: React.FC = () => (
 const ItemsContainer = styled.div`
   width: 100%;
   height: 360px;
-  background-color: #dfdbe8;
+  background-color: #95554f;
   padding: 30px 50px;
 `;
 

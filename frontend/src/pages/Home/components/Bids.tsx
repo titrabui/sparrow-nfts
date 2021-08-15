@@ -40,7 +40,7 @@ const Bids: React.FC = () => (
 const ItemsContainer = styled.div`
   width: 100%;
   height: 360px;
-  background-color: #dfdbe8;
+  background-color: #8e6fb6;
   padding: 30px 50px;
 `;
 

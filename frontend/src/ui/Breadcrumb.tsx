@@ -41,6 +41,9 @@ const StyledBreadCrumb = styled(Breadcrumb)`
   & > span:last-child .ant-typography {
     color: #777;
   }
+  .ant-breadcrumb-separator {
+    margin: 0 13px;
+}
 `;
 
 export default BreadCrumbComponent;

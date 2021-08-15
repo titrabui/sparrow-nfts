@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ITransaction } from 'src/models/transaction/transaction.interface';
+import { IOverallStats, ITransaction } from 'src/models/transaction/transaction.interface';
 import { TransactionService } from 'src/services/transaction/transaction.service';
 
 @Controller('transactions')
@@ -14,13 +14,13 @@ export class TransactionsController {
     return this.transactionService.getTransactionBySpaceId(spaceId);
   }
 
-  @Get('recent')
-  async getRecentTransactions(): Promise<ITransaction[]> {
-    return this.transactionService.getRecentTransactions();
-  }
-
-  @Get('top_sales')
+  @Get('topSales')
   async getTopSales(): Promise<ITransaction[]> {
     return this.transactionService.getTopSales();
+  }
+
+  @Get('overallStats')
+  async getOverallStats(): Promise<IOverallStats> {
+    return this.transactionService.getOverallStats();
   }
 }

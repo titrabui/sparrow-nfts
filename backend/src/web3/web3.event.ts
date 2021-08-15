@@ -48,6 +48,7 @@ export class Web3Event implements OnApplicationBootstrap {
         );
 
         const transactionDto = TransactionMap.createDTO(
+          this.web3.utils,
           event,
           transactionData
         );

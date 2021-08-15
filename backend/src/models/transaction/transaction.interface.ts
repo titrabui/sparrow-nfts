@@ -7,3 +7,10 @@ export interface ITransaction {
   createdAt: number,
   txn: string
 };
+
+export interface IOverallStats {
+  numberOfSales: number,
+  totalLifeTimeValueOfAllSales: number,
+  largestSales: ITransaction[],
+  recentTransactions: ITransaction[]
+}

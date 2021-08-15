@@ -21,7 +21,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
       if (result && result.status === 200) setTableData(result.data);
     };
     getData();
-  }, []);
+  }, [data.id]);
   useSocket('transactions', '', async (socketData) => {
     setTableData([socketData, ...tableData.slice(0, tableData.length - 1)]);
   });

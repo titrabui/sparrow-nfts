@@ -8,26 +8,25 @@ import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
 import request from 'utils/request';
-import useWallet from 'hooks/useWallet';
 import dayjs from 'dayjs';
 
 const TopSale: React.FC = () => {
   const [data, setData] = useState([] as any);
-  const { library } = useWallet();
 
   useEffect(() => {
     const getData = async () => {
       const result = await request.getData('/transactions/topSales', {});
-      console.log(result)
       if (result && result.status === 200) setData(result.data);
     };
     getData();
   }, []);
 
-  const mappedSpaces = data && data.map((item: any) => {
-    const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
-    return { ...item, img: spacesData.img };
-  });
+  const mappedSpaces =
+    data &&
+    data.map((item: any) => {
+      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
+      return { ...item, img: spacesData.img };
+    });
 
   return (
     <MainContainer>
@@ -52,16 +51,8 @@ const TopSale: React.FC = () => {
                   #{space.spaceIndex}
                 </StyledText>
                 <StyledText $size='20px' $color='#4B4B4B'>
-                  {space &&
-                    space.amount &&
-                    library &&
-                    library.utils.fromWei(space.amount.toString(), 'ether')}
-                  Ξ ($
-                  {space &&
-                    space.amount &&
-                    library &&
-                    library.utils.fromWei(space.amount.toString(), 'ether') * 3000}
-                  )
+                  {space.amount}Ξ ($
+                  {space.amount * 3000})
                 </StyledText>
                 <StyledText $size='20px' $color='#8D8D8D'>
                   {dayjs(space.createdAt).format('MMM DD, YYYY')}

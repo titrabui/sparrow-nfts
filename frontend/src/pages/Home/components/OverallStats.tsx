@@ -95,17 +95,8 @@ const OverallStats: React.FC = () => {
         <Col span={8}>
           <StatsNameText>Total Value of All Sales (Lifetime)</StatsNameText>
           <StatsValueText>
-            {' '}
-            {data &&
-              data.totalLifeTimeValueOfAllSales &&
-              library &&
-              library.utils.fromWei(data?.totalLifeTimeValueOfAllSales?.toString(), 'ether')}
-            Ξ ($
-            {data &&
-              data.totalLifeTimeValueOfAllSales &&
-              library &&
-              library.utils.fromWei(data?.totalLifeTimeValueOfAllSales?.toString(), 'ether') * 3000}
-            )
+            {data.totalLifeTimeValueOfAllSales}Ξ ($
+            {data.totalLifeTimeValueOfAllSales * 3000})
           </StatsValueText>
         </Col>
         <ButtonContainer>

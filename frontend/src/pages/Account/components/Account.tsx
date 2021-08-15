@@ -26,7 +26,7 @@ const Account: React.FC = (props: any) => {
       if (result && result.status === 200) setData(result.data);
     };
     getData();
-  }, []);
+  }, [id]);
   useEffect(() => {
     let mounted = true;
     const getBlockchainBidData = async () => {
@@ -151,6 +151,7 @@ const Account: React.FC = (props: any) => {
       const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
       return { ...item, img: spacesData.img };
     });
+
   return (
     <MainContainer>
       <BreadCrumb crumbs={['Accounts', id.slice(0, 10)]} />
@@ -206,17 +207,8 @@ const Account: React.FC = (props: any) => {
           <Col span={8}>
             <Title>Total Amount Earned Selling Spaces</Title>
             <Value>
-              {' '}
-              {data &&
-                data.soldETHTotal &&
-                library &&
-                library.utils.fromWei(data.soldETHTotal.toString(), 'ether')}
-              Ξ ($
-              {data &&
-                data.soldETHTotal &&
-                library &&
-                library.utils.fromWei(data.soldETHTotal.toString(), 'ether') * 3000}
-              )
+              {data.soldETHTotal}Ξ ($
+              {data.soldETHTotal * 3000})
             </Value>
           </Col>
           <Col span={8}>
@@ -370,20 +362,15 @@ const Account: React.FC = (props: any) => {
         <StyledSpace>
           <SpaceTitle>
             {' '}
-            {data.boughtETHTotal &&
-              library &&
-              library.utils.fromWei(data.boughtETHTotal.toString(), 'ether')}{' '}
-            ETH ($
-            {data.boughtETHTotal &&
-              library &&
-              library.utils.fromWei(data.boughtETHTotal.toString(), 'ether') * 3000}
-            ) in {spacesBoughtDetail && spacesBoughtDetail.length} Space Bought by This Account
+            {data.boughtETHTotal} ETH ($
+            {data.boughtETHTotal * 3000}) in {spacesBoughtDetail && spacesBoughtDetail.length} Space
+            Bought by This Account
           </SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {spacesBoughtDetail &&
                 spacesBoughtDetail.map((space: any) => (
-                  <Col span={2} key={space.id}>
+                  <Col span={2} key={space.txn}>
                     <ImageContainer>
                       <ImageWrapper>
                         <Link to={`/detail/${space.id}`}>
@@ -392,16 +379,10 @@ const Account: React.FC = (props: any) => {
                       </ImageWrapper>
                     </ImageContainer>
                     <StyledText $size='14px' $color='#4B4B4B'>
-                      {space.amount &&
-                        library &&
-                        library.utils.fromWei(space.amount.toString(), 'ether')}{' '}
-                      ETH
+                      {space.amount} ETH
                     </StyledText>
                     <StyledText $size='14px' $color='#4B4B4B'>
-                      $
-                      {space.amount &&
-                        library &&
-                        library.utils.fromWei(space.amount.toString(), 'ether') * 3000}
+                      ${space.amount * 3000}
                     </StyledText>
                   </Col>
                 ))}
@@ -425,7 +406,7 @@ const Account: React.FC = (props: any) => {
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {spacesSoldDetail &&
                 spacesSoldDetail.map((space: any) => (
-                  <Col span={2} key={space.id}>
+                  <Col span={2} key={space.txn}>
                     <ImageContainer>
                       <ImageWrapper>
                         <Link to={`/detail/${space.id}`}>
@@ -434,16 +415,10 @@ const Account: React.FC = (props: any) => {
                       </ImageWrapper>
                     </ImageContainer>
                     <StyledText $size='14px' $color='#4B4B4B'>
-                      {space.amount &&
-                        library &&
-                        library.utils.fromWei(space.amount.toString(), 'ether')}{' '}
-                      ETH
+                      {space.amount} ETH
                     </StyledText>
                     <StyledText $size='14px' $color='#4B4B4B'>
-                      $
-                      {space.amount &&
-                        library &&
-                        library.utils.fromWei(space.amount.toString(), 'ether') * 3000}
+                      ${space.amount * 3000}
                     </StyledText>
                   </Col>
                 ))}

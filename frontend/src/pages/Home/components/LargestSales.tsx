@@ -6,14 +6,12 @@ import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
 import request from 'utils/request';
-import useWallet from 'hooks/useWallet';
 import dayjs from 'dayjs';
 
 const LargestSales: React.FC = () => {
   const [data, setData] = useState({
     largestSales: []
   } as any);
-  const { library } = useWallet();
 
   useEffect(() => {
     const getData = async () => {
@@ -57,15 +55,11 @@ const LargestSales: React.FC = () => {
                 #{space.spaceIndex}
               </StyledText>
               <StyledText $size='20px' $color='#4B4B4B'>
-                {space &&
-                  space.amount &&
-                  library &&
-                  library.utils.fromWei(space.amount.toString(), 'ether')}
+                {
+                  space.amount }
                 Ξ ($
-                {space &&
-                  space.amount &&
-                  library &&
-                  library.utils.fromWei(space.amount.toString(), 'ether') * 3000}
+                {
+                  space.amount  * 3000}
                 )
               </StyledText>
               <StyledText $size='20px' $color='#8D8D8D'>

@@ -15,15 +15,17 @@ import { ISpaceProps } from 'types/SpaceProps';
 const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
   const { data } = props;
   const [tableData, setTableData] = useState([] as any);
+  const { account } = useWallet();
+
   useEffect(() => {
     const getData = async () => {
       const result = await request.getData(`/transactions/space/${data.id}`, {});
       if (result && result.status === 200) setTableData(result.data);
     };
     getData();
-  }, [data.id]);
+  }, [data.id, account]);
   useSocket('transactions', '', async (socketData) => {
-    setTableData([socketData, ...tableData.slice(0, tableData.length - 1)]);
+    setTableData([socketData, ...tableData]);
   });
   const columns = [
     {

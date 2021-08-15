@@ -52,7 +52,7 @@ const ForSales: React.FC = () => {
     spacesForSalesWithPrice.length > 0 &&
     spacesForSalesWithPrice.reduce((prev: any, curr: any) =>
       prev.price < curr.price ? prev : curr
-    );
+    )|| 0;
 
   const countSales = spacesForSales.length;
 

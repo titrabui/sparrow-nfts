@@ -47,9 +47,9 @@ const Bids: React.FC = () => {
 
   const totalBidValue =
     spacesBidsWithPrice.length > 0 &&
-    spacesBidsWithPrice.reduce((prev: any, curr: any) => prev + Number(curr.price), 0);
+    spacesBidsWithPrice.reduce((prev: any, curr: any) => prev + Number(curr.price), 0) || 0;
 
-  const averageBidValue = totalBidValue / spacesBidsWithPrice.length;
+  const averageBidValue = totalBidValue / spacesBidsWithPrice.length || 0;
 
   const countBids = spacesBids.length;
 
@@ -116,7 +116,7 @@ const Bids: React.FC = () => {
           </ItemsRow>
         </ItemsContainer>
       ) : (
-        <Text $size='18px'>There is no spaces is for sale currently.</Text>
+        <Text $size='18px'>There is no bid for spaces currently.</Text>
       )}
     </Box>
   );

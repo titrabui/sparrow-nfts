@@ -1,46 +1,124 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
 
-const ForSales: React.FC = () => (
-  <Box w='1050px' m='auto'>
-    <Row justify='center' gutter={[0, 24]}>
-      <Box w='100%' mt='100px' mb='40px'>
-        <Title>For Sales</Title>
-        <StyledText>
-          The lowest price space currently for sale is
-          <HightlightText>19.9 ETH ($37,303.75 USD).</HightlightText>
-        </StyledText>
-        <StyledText>
-          Showing most recent offers
-          <LinkText>
-            <Link to='/forSale'>click here to see all 1,510</Link>
-          </LinkText>
-        </StyledText>
-      </Box>
-    </Row>
-    <ItemsContainer>
-      <Items />
-    </ItemsContainer>
-  </Box>
-);
+const ForSales: React.FC = () => {
+  const { connector, library } = useWallet();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    let mounted = true;
+    const getBlockchainData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOfferedForSale = await contract.methods
+          .returnSpacesOfferedForSaleArray()
+          .call();
+        if (mounted) {
+          const filteredData =
+            spacesOfferedForSale &&
+            spacesOfferedForSale.length > 0 &&
+            spacesOfferedForSale
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.minValue
+              }));
+          setData(filteredData);
+        }
+      }
+    };
+    getBlockchainData();
+    return () => {
+      mounted = false;
+    };
+  }, [connector]);
 
-const ItemsContainer = styled.div`
-  width: 100%;
-  height: 360px;
-  background-color: #dfdbe8;
-  padding: 30px 50px;
-`;
+  const spacesForSales = Spaces.filter((space: any) =>
+    data.some((item: any) => item.index === space.id)
+  );
+
+  const spacesForSalesWithPrice = spacesForSales.map((space: any) => {
+    const blockchainData: any = data.find((item: any) => item.index === space.id);
+    return { ...space, price: blockchainData.price };
+  });
+
+  const lowestPrice =
+    (spacesForSalesWithPrice.length > 0 &&
+      spacesForSalesWithPrice.reduce((prev: any, curr: any) =>
+        prev.price < curr.price ? prev : curr
+      )) ||
+    0;
+
+  const countSales = spacesForSales.length;
+
+  return (
+    <Box w='1050px' m='auto'>
+      <Row justify='center' gutter={[0, 24]}>
+        <Box w='100%' mt='100px' mb='40px'>
+          <Title>For Sales</Title>
+          {spacesForSalesWithPrice.length > 0 ? (
+            <>
+              <StyledText>
+                The lowest price space currently for sale is
+                <HightlightText>
+                  {lowestPrice &&
+                    library &&
+                    library.utils.fromWei(lowestPrice?.price?.toString(), 'ether')}{' '}
+                  ETH ($
+                  {lowestPrice &&
+                    library &&
+                    library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000}
+                  ).
+                </HightlightText>
+              </StyledText>
+              <StyledText>
+                Showing most recent offers
+                <LinkText>
+                  <Link to='/forSale'>click here to see all {countSales}</Link>
+                </LinkText>
+              </StyledText>
+            </>
+          ) : null}
+        </Box>
+      </Row>
+      {spacesForSalesWithPrice.length > 0 ? (
+        <ItemsContainer>
+          <ItemsRow gutter={[0, 10]}>
+            {spacesForSales.map((space) => (
+              <Col key={space.id}>
+                <Link to={`/detail/${space.id}`}>
+                  <img src={space.img} alt={space.name} width='60px' height='60px' />
+                </Link>
+              </Col>
+            ))}
+          </ItemsRow>
+        </ItemsContainer>
+      ) : (
+        <Text $size='18px'>There is no spaces is for sale currently.</Text>
+      )}
+    </Box>
+  );
+};
+
+const ItemsContainer = styled.div``;
 
 const ItemsRow = styled(Row)`
   margin: 15px 0;
   text-align: center;
+
   .ant-col {
     width: 100px;
+    background-color: #95554f;
+    padding: 20px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
     img {
       margin: 0 auto;
       cursor: pointer;
@@ -73,19 +151,3 @@ const LinkText = styled(Text)`
 `;
 
 export default ForSales;
-
-const Items = () => (
-  <>
-    {[0, 1, 2, 3].map((item) => (
-      <ItemsRow gutter={[0, 10]} key={item}>
-        {Spaces.map((space) => (
-          <Col span={2} key={space.id}>
-            <Link to={`/detail/${space.id}`}>
-              <img src={space.img} alt={space.name} width='60px' height='60px' />
-            </Link>
-          </Col>
-        ))}
-      </ItemsRow>
-    ))}
-  </>
-);

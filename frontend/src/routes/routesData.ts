@@ -1,7 +1,11 @@
 /* eslint-disable no-unused-vars */
+import Bids from 'pages/Bids';
 import DetailsPage from 'pages/DetailsPage';
+import ForSale from 'pages/ForSale';
 import HomePage from 'pages/Home';
 import TopOwners from 'pages/TopOwners';
+import TopSale from 'pages/TopSale';
+import Account from 'pages/Account';
 import { FunctionComponent } from 'react';
 
 type RouteType = {
@@ -19,7 +23,11 @@ export enum routesEnum {
   topOwners = '/topOwners',
   detail = '/detail/:id',
   notFoundPage = '/*',
-  default = '/'
+  default = '/',
+  forSale='/forSale',
+  bids='/bids',
+  topSale='/topSale',
+  account='/account/:id',
 }
 
 const privateRoutes: RouteType[] = [];
@@ -42,6 +50,26 @@ const publicRoutes: RouteType[] = [
   {
     path: routesEnum.detail,
     component: DetailsPage,
+    exact: false
+  },
+  {
+    path: routesEnum.forSale,
+    component: ForSale,
+    exact: false
+  },
+  {
+    path: routesEnum.topSale,
+    component: TopSale,
+    exact: false
+  },
+  {
+    path: routesEnum.bids,
+    component: Bids,
+    exact: false
+  },
+  {
+    path: routesEnum.account,
+    component: Account,
     exact: false
   },
 ];

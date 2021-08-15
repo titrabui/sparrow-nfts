@@ -1,34 +1,29 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/destructuring-assignment */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useWallet from 'hooks/useWallet';
 import { Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
-import { ISpaceProps } from 'types/SpaceProps';
-import { useSocket, useEmit } from 'socketio-hooks';
+import { useSocket } from 'socketio-hooks';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
+import request from 'utils/request';
+import { ISpaceProps } from 'types/SpaceProps';
 
-const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
-  const { account, library } = useWallet();
+const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
   const { data } = props;
-
-  const [tableData, setTableData] = useState([]);
-  useEmit(
-    'sync_client_info',
-    ''
-  )({
-    walletAddress: account,
-    isWatchingSpaceDetail: true,
-    spaceId: data ? data.id : null
-  });
-  useSocket('transaction_history', '', async (socketData) => {
-    const sortData = socketData
-      ? socketData.sort((a: any, b: any) => b.createdAt - a.createdAt)
-      : [];
-    if (JSON.stringify(sortData) !== JSON.stringify(tableData))
-      setTableData(sortData);
+  const [tableData, setTableData] = useState([] as any);
+  useEffect(() => {
+    const getData = async () => {
+      const result = await request.getData(`/transactions/space/${data.id}`, {});
+      if (result && result.status === 200) setTableData(result.data);
+    };
+    getData();
+  }, []);
+  useSocket('transactions', '', async (socketData) => {
+    setTableData([socketData, ...tableData.slice(0, tableData.length - 1)]);
   });
   const columns = [
     {
@@ -45,7 +40,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       key: 'from',
       render(from: string, record: any) {
         return (
-          <Link to='/'>
+          <Link to={`/account/${record.from}`}>
             <LinkText>
               {from && record.type !== 'Offered' && record.type !== 'Claimed' && from.slice(0, 10)}
             </LinkText>
@@ -59,7 +54,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       key: 'to',
       render(to: string, record: any) {
         return (
-          <Link to='/'>
+          <Link to={`/account/${record.to}`}>
             <LinkText>{to && record.type !== 'Offered' && to.slice(0, 10)}</LinkText>
           </Link>
         );
@@ -70,15 +65,11 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       dataIndex: 'amount',
       key: 'amount',
       render(amount: string) {
-        return (
+        return amount ? (
           <Text $size='18px'>
-            {amount && library
-              ? `${library?.utils?.fromWei(amount.toString(), 'ether')}Ξ ($${
-                  library?.utils?.fromWei(amount.toString(), 'ether') * 3000
-                })`
-              : ''}
+            {amount}Ξ (${Number(amount) * 3000})
           </Text>
-        );
+        ) : null;
       }
     },
 
@@ -89,7 +80,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props) => {
       render(createdAt: string, record: any) {
         return (
           <LinkText $size='18px'>
-            <a href={`https://etherscan.io/tx/${record.txn}`}>
+            <a href={`https://etherscan.io/tx/${record.txn}`} target='blank'>
               {dayjs(createdAt).format('MMM DD, YYYY')}
             </a>
           </LinkText>

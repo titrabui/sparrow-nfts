@@ -4,12 +4,14 @@ import Spaces from 'utils/spaces';
 import { Redirect } from 'react-router-dom';
 import { MAX_SPACE_SUPPLY_TOTAL } from 'environment';
 import BreadCrumb from 'ui/Breadcrumb';
+import request from 'utils/request';
 import Avatar from './Avatar';
 import Information from './Information';
 import TransactionsHistory from './TransactionsHistory';
 
 const DetailsPage: React.FC = (props: any) => {
   const id = (props as any)?.match?.params?.id;
+  request.getData(`/transactions/space/${id}`, {});
   const space = Spaces.find((item) => item.id === Number(id));
   return id > MAX_SPACE_SUPPLY_TOTAL ? (
     <Redirect to='/detail/1' />

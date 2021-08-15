@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MainContainer from 'ui/MainContainer';
 import styled from 'styled-components';
 import { Col, Row } from 'antd';
@@ -7,18 +7,75 @@ import { Link } from 'react-router-dom';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
+import request from 'utils/request';
+import useWallet from 'hooks/useWallet';
+import dayjs from 'dayjs';
 
-const TopSale: React.FC = () => (
-  <MainContainer>
-    <BreadCrumb crumbs={['Top Sales by ETH']} />
-    <Box w='1050px' m='35px auto 0'>
-      <BigTitle>Top Sales by Ether Value</BigTitle>
-      <ItemsContainer justify='center' gutter={[0, 24]}>
-        <ItemsLargestSales />
-      </ItemsContainer>
-    </Box>
-  </MainContainer>
-);
+const TopSale: React.FC = () => {
+  const [data, setData] = useState([] as any);
+  const { library } = useWallet();
+
+  useEffect(() => {
+    const getData = async () => {
+      const result = await request.getData('/transactions/topSales', {});
+      console.log(result)
+      if (result && result.status === 200) setData(result.data);
+    };
+    getData();
+  }, []);
+
+  const mappedSpaces = data && data.map((item: any) => {
+    const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
+    return { ...item, img: spacesData.img };
+  });
+
+  return (
+    <MainContainer>
+      <BreadCrumb crumbs={['Top Sales by ETH']} />
+      <Box w='1050px' m='35px auto 0'>
+        <BigTitle>Top Sales by Ether Value</BigTitle>
+        {mappedSpaces && mappedSpaces.length > 0 ? (
+          <ItemsContainer justify='start' gutter={[0, 24]}>
+            {mappedSpaces.map((space: any, index: any) => (
+              <Col span={4} key={Math.random()}>
+                <ImageContainer>
+                  <ImageNumber $size='30px' $color='white' strong>
+                    {index > 8 ? index + 1 : `0${index + 1}`}
+                  </ImageNumber>
+                  <ImageWrapper>
+                    <Link to={`/detail/${space.spaceIndex}`}>
+                      <img src={space.img} alt={`img${space.id}`} />
+                    </Link>
+                  </ImageWrapper>
+                </ImageContainer>
+                <StyledText $size='24px' strong $color='#0C264D'>
+                  #{space.spaceIndex}
+                </StyledText>
+                <StyledText $size='20px' $color='#4B4B4B'>
+                  {space &&
+                    space.amount &&
+                    library &&
+                    library.utils.fromWei(space.amount.toString(), 'ether')}
+                  Ξ ($
+                  {space &&
+                    space.amount &&
+                    library &&
+                    library.utils.fromWei(space.amount.toString(), 'ether') * 3000}
+                  )
+                </StyledText>
+                <StyledText $size='20px' $color='#8D8D8D'>
+                  {dayjs(space.createdAt).format('MMM DD, YYYY')}
+                </StyledText>
+              </Col>
+            ))}
+          </ItemsContainer>
+        ) : (
+          <Text $size='18px'>There is no sales currently.</Text>
+        )}{' '}
+      </Box>
+    </MainContainer>
+  );
+};
 
 const ItemsContainer = styled(Row)`
   margin-top: 30px;
@@ -65,31 +122,3 @@ const StyledText = styled(Text)`
 `;
 
 export default TopSale;
-
-const ItemsLargestSales = () => (
-  <>
-    {Spaces.map((space) => (
-      <Col span={4} key={space.id}>
-        <ImageContainer>
-          <ImageNumber $size='30px' $color='white' strong>
-            {space.id > 9 ? space.id : `0${space.id}`}
-          </ImageNumber>
-          <ImageWrapper>
-            <Link to={`/detail/${space.id}`}>
-              <img src={space.img} alt={`img${space.id}`} />
-            </Link>
-          </ImageWrapper>
-        </ImageContainer>
-        <StyledText $size='20px' strong $color='#0C264D'>
-          #028
-        </StyledText>
-        <StyledText $size='18px' $color='#4B4B4B'>
-          4.2KΞ ($7.57M)
-        </StyledText>
-        <StyledText $size='18px ' $color='#8D8D8D'>
-          Mar 11, 2021
-        </StyledText>
-      </Col>
-    ))}
-  </>
-);

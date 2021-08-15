@@ -18,4 +18,9 @@ export class TransactionsController {
   async getRecentTransactions(): Promise<ITransaction[]> {
     return this.transactionService.getRecentTransactions();
   }
+
+  @Get('top_sales')
+  async getTopSales(): Promise<ITransaction[]> {
+    return this.transactionService.getTopSales();
+  }
 }

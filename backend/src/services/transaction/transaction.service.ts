@@ -3,6 +3,7 @@ import { ITransaction } from 'src/models/transaction/transaction.interface';
 import { TransactionReposity } from 'src/models/transaction/transaction.reposity';
 
 const LIMIT_RECENTS_NUMBER = 12;
+const LIMIT_SOLD_NUMBER = 60;
 
 @Injectable()
 export class TransactionService {
@@ -33,4 +34,22 @@ export class TransactionService {
 
     return sortedTransactions;
   }
+
+  async getTopSales(): Promise<Array<ITransaction>> {
+    const transactions = await this.transactionRepo.getAll();
+
+    const soldTransactions = transactions.filter(item => {
+      return item.type === 'Sold';
+    });
+
+    // Sort transaction newest to oldest
+    const sortedTransactions = soldTransactions.sort((a, b) => b.createdAt - a.createdAt);
+
+    if (sortedTransactions.length > LIMIT_SOLD_NUMBER) {
+      return sortedTransactions.slice(0, LIMIT_SOLD_NUMBER);
+    }
+
+    return sortedTransactions;
+  }
+
 }

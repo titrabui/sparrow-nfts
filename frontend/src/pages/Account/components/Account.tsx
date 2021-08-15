@@ -393,14 +393,9 @@ const Account: React.FC = (props: any) => {
         <StyledSpace>
           <SpaceTitle>
             {' '}
-            {data.soldETHTotal &&
-              library &&
-              library.utils.fromWei(data.soldETHTotal.toString(), 'ether')}{' '}
-            ETH ($
-            {data.soldETHTotal &&
-              library &&
-              library.utils.fromWei(data.soldETHTotal.toString(), 'ether') * 3000}
-            ) in {spacesSoldDetail && spacesSoldDetail.length} Space Sold by This Account
+            {data.soldETHTotal} ETH ($
+            {data.soldETHTotal * 3000}) in {spacesSoldDetail && spacesSoldDetail.length} Space Sold
+            by This Account
           </SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>

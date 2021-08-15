@@ -344,6 +344,4 @@ contract NapaCryptoSpaceMarket is Ownable {
      function returnSpaceIndexToAddressArray() public view returns( address[12] memory) {
         return spaceIndexToAddressArray;
     }
-
-
 }

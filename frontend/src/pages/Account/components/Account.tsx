@@ -130,7 +130,7 @@ const Account: React.FC = (props: any) => {
           </Col>
           <Col span={8}>
             <Title>Total Amount Spent Buying Spaces</Title>
-            <Value>0.00ETH ($0.00)</Value>
+            <Value>0.00Ξ ($0.00)</Value>
           </Col>
           <Col span={8}>
             <Title>Bids On Owned Spaces</Title>
@@ -138,11 +138,11 @@ const Account: React.FC = (props: any) => {
           </Col>
           <Col span={8}>
             <Title>Value of Bids On Owned Spaces</Title>
-            <Value>0.00ETH ($0.00)</Value>
+            <Value>0.00Ξ ($0.00)</Value>
           </Col>
           <Col span={8}>
             <Title>Total Amount Earned Selling Spaces</Title>
-            <Value>0.00ETH ($0.00)</Value>
+            <Value>0.00Ξ ($0.00)</Value>
           </Col>
           <Col span={8}>
             <Title>Current Bids Placed By This Account</Title>
@@ -151,8 +151,8 @@ const Account: React.FC = (props: any) => {
           <Col span={8}>
             <Title>Value of Current Bids Placed</Title>
             <Value>
-              {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
-              ETH ($
+              {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}
+              Ξ ($
               {totalBidValue &&
                 library &&
                 library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}

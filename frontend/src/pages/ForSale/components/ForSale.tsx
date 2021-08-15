@@ -66,10 +66,10 @@ const ForSale: React.FC = () => {
                   </ImageWrapper>
                 </ImageContainer>
                 <StyledText $size='14px' $color='#4B4B4B'>
-                  {library && library.utils.fromWei(space.price.toString(), 'ether')} ETH
+                  {library && library.utils.fromWei(space.price.toString(), 'ether')}Ξ
                 </StyledText>
                 <StyledText $size='14px' $color='#4B4B4B'>
-                  (${library && library.utils.fromWei(space.price.toString(), 'ether') * 3000})
+                  ${library && library.utils.fromWei(space.price.toString(), 'ether') * 3000}
                 </StyledText>
               </Col>
             ))

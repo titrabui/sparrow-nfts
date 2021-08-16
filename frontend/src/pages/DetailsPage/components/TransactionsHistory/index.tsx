@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import request from 'utils/request';
 import { ISpaceProps } from 'types/SpaceProps';
+import { ETH_USD_PRICE } from 'environment';
 
 const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
   const { data } = props;
@@ -70,7 +71,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
       render(amount: number) {
         return amount ? (
           <Text $size='18px'>
-            {amount}Ξ (${amount && formatNumber((amount * 3000).toString(), 2)})
+            {amount}Ξ (${amount && formatNumber((amount * ETH_USD_PRICE).toString(), 2)})
           </Text>
         ) : null;
       }

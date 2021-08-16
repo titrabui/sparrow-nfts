@@ -11,6 +11,7 @@ import { useSocket } from 'socketio-hooks';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
+import { ETH_USD_PRICE } from 'environment';
 
 dayjs.extend(updateLocale);
 dayjs.extend(relativeTime);
@@ -81,7 +82,7 @@ const RecentTransactions: React.FC = () => {
               </StyledText>
               {transaction.amount && (
                 <StyledText $size='20px' $color='#4B4B4B'>
-                  {transaction.amount}Ξ (${formatNumber((transaction.amount * 3000).toString(), 2)})
+                  {transaction.amount}Ξ (${formatNumber((transaction.amount * ETH_USD_PRICE).toString(), 2)})
                 </StyledText>
               )}
             </Col>

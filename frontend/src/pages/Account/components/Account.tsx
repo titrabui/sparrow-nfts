@@ -14,6 +14,7 @@ import BreadCrumb from 'ui/Breadcrumb';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
+import { ETH_USD_PRICE } from 'environment';
 
 const Account: React.FC = (props: any) => {
   const { connector, library, account } = useWallet();
@@ -234,7 +235,7 @@ const Account: React.FC = (props: any) => {
             <Title>Total Amount Spent Buying Spaces</Title>
             <Value>
               {data.boughtETHTotal}Ξ ($
-              {formatNumber((data.boughtETHTotal * 3000) as any, 2)})
+              {formatNumber((data.boughtETHTotal * ETH_USD_PRICE).toString(), 2)})
             </Value>
           </Col>
           <Col span={8}>
@@ -252,7 +253,7 @@ const Account: React.FC = (props: any) => {
               {formatNumber(
                 totalBidOwnedSpaceValue &&
                   library &&
-                  library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000,
+                  library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * ETH_USD_PRICE,
                 2
               )}
               )
@@ -262,7 +263,7 @@ const Account: React.FC = (props: any) => {
             <Title>Total Amount Earned Selling Spaces</Title>
             <Value>
               {data.soldETHTotal}Ξ ($
-              {formatNumber((data.soldETHTotal * 3000) as any, 2)})
+              {formatNumber((data.soldETHTotal * ETH_USD_PRICE).toString(), 2)})
             </Value>
           </Col>
           <Col span={8}>
@@ -277,7 +278,7 @@ const Account: React.FC = (props: any) => {
               {formatNumber(
                 totalBidValue &&
                   library &&
-                  library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000,
+                  library.utils.fromWei(totalBidValue.toString(), 'ether') * ETH_USD_PRICE,
                 2
               )}
               ).
@@ -330,7 +331,7 @@ const Account: React.FC = (props: any) => {
                     {formatNumber(
                       space.price &&
                         library &&
-                        library.utils.fromWei(space.price.toString(), 'ether') * 3000,
+                        library.utils.fromWei(space.price.toString(), 'ether') * ETH_USD_PRICE,
                       2
                     )}
                   </StyledText>
@@ -344,7 +345,7 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {totalBidOwnedSpaceValue && library
               ? `${library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')} ETH
-                ($${formatNumber((library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000) as any, 2)}) `
+                ($${formatNumber((library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * ETH_USD_PRICE).toString(), 2)}) `
               : '0 '}
             in {spacesBidsOwnedSpaceDetail && spacesBidsOwnedSpaceDetail.length} Bids For Spaces
             Owned by this Account
@@ -371,7 +372,7 @@ const Account: React.FC = (props: any) => {
                     {formatNumber(
                       space.value &&
                         library &&
-                        library.utils.fromWei(space.value.toString(), 'ether') * 3000,
+                        library.utils.fromWei(space.value.toString(), 'ether') * ETH_USD_PRICE,
                       2
                     )}
                   </StyledText>
@@ -385,7 +386,7 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {totalBidValue && library
               ? `${library.utils.fromWei(totalBidValue.toString(), 'ether')} ETH
-                ($${formatNumber((library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000) as any, 2)}) `
+                ($${formatNumber((library.utils.fromWei(totalBidValue.toString(), 'ether') * ETH_USD_PRICE).toString(), 2)}) `
               : '0 '}
             in {accountBids && accountBids.length} Bids Placed by This Account
           </SpaceTitle>
@@ -411,7 +412,7 @@ const Account: React.FC = (props: any) => {
                     {formatNumber(
                       space.price &&
                         library &&
-                        library.utils.fromWei(space.price.toString(), 'ether') * 3000,
+                        library.utils.fromWei(space.price.toString(), 'ether') * ETH_USD_PRICE,
                       2
                     )}
                   </StyledText>
@@ -425,7 +426,7 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {' '}
             {data.boughtETHTotal
-              ? `${data.boughtETHTotal} ETH ($${formatNumber((data.boughtETHTotal * 3000) as any, 2)}) `
+              ? `${data.boughtETHTotal} ETH ($${formatNumber((data.boughtETHTotal * ETH_USD_PRICE).toString(), 2)}) `
               : `0 `}
             in {spacesBoughtDetail ? spacesBoughtDetail.length : 0} Spaces Bought by This Account
           </SpaceTitle>
@@ -445,7 +446,7 @@ const Account: React.FC = (props: any) => {
                       {space.amount} ETH
                     </StyledText>
                     <StyledText $size='14px' $color='#4B4B4B'>
-                      ${space.amount * 3000}
+                      ${space.amount * ETH_USD_PRICE}
                     </StyledText>
                   </Col>
                 ))}
@@ -457,7 +458,7 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {' '}
             {data.soldETHTotal
-              ? `${data.soldETHTotal} ETH ($${formatNumber((data.soldETHTotal * 3000) as any, 2)}) `
+              ? `${data.soldETHTotal} ETH ($${formatNumber((data.soldETHTotal * ETH_USD_PRICE).toString(), 2)}) `
               : `0 `}
             in {spacesSoldDetail && spacesSoldDetail.length} Spaces Sold by This Account
           </SpaceTitle>
@@ -477,7 +478,7 @@ const Account: React.FC = (props: any) => {
                       {space.amount} ETH
                     </StyledText>
                     <StyledText $size='14px' $color='#4B4B4B'>
-                      ${space.amount * 3000}
+                      ${space.amount * ETH_USD_PRICE}
                     </StyledText>
                   </Col>
                 ))}

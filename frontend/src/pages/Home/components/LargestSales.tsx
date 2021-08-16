@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import request from 'utils/request';
 import dayjs from 'dayjs';
 import formatNumber from 'utils/format';
+import { ETH_USD_PRICE } from 'environment';
 
 const LargestSales: React.FC = () => {
   const [data, setData] = useState({
@@ -59,7 +60,7 @@ const LargestSales: React.FC = () => {
               </StyledText>
               <StyledText $size='20px' $color='#4B4B4B'>
                 {space.amount}Ξ ($
-                {formatNumber((space.amount * 3000).toString(), 2)})
+                {formatNumber((space.amount * ETH_USD_PRICE).toString(), 2)})
               </StyledText>
               <StyledText $size='20px' $color='#8D8D8D'>
                 {dayjs(space.createdAt).format('MMM DD, YYYY')}

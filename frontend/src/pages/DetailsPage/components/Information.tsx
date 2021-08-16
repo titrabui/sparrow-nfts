@@ -17,6 +17,7 @@ import { ISpaceProps } from 'types/SpaceProps';
 import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
 import { Link } from 'react-router-dom';
+import { ETH_USD_PRICE } from 'environment';
 import formatNumber from 'utils/format';
 import SaleModal from '../SaleModal';
 import BidModal from '../BidModal';
@@ -251,7 +252,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
         <StyledText>
           This space is currently for sale by owner for{' '}
           {library && library.utils.fromWei(price.toString(), 'ether')} ETH ($
-          {formatNumber(library && library.utils.fromWei(price.toString(), 'ether') * 3000, 2)}).
+          {formatNumber(library && library.utils.fromWei(price.toString(), 'ether') * ETH_USD_PRICE, 2)}).
         </StyledText>
       ) : (
         <StyledText>This space has not been listed for sale by its owner.</StyledText>
@@ -259,7 +260,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       {hasBid ? (
         <StyledText>
           There is a bid of {library && library.utils.fromWei(bidValue.toString(), 'ether')} ETH ($
-          {formatNumber(library && library.utils.fromWei(bidValue.toString(), 'ether') * 3000, 2)})
+          {formatNumber(library && library.utils.fromWei(bidValue.toString(), 'ether') * ETH_USD_PRICE, 2)})
           for this space from{' '}
           <Link to='/'>
             <LinkText>{bidder && bidder.slice(0, 8)}</LinkText>

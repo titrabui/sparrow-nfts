@@ -10,6 +10,7 @@ import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import Spaces from 'utils/spaces';
 import formatNumber from 'utils/format';
+import { ETH_USD_PRICE } from 'environment';
 
 const OverallStats: React.FC = () => {
   const [data, setData] = useState([] as any);
@@ -86,7 +87,7 @@ const OverallStats: React.FC = () => {
               lowestPrice &&
                 lowestPrice.price &&
                 library &&
-                library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000,
+                library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * ETH_USD_PRICE,
               2
             )}
             )
@@ -100,7 +101,7 @@ const OverallStats: React.FC = () => {
           <StatsNameText>Total Value of All Sales (Lifetime)</StatsNameText>
           <StatsValueText>
             {data.totalLifeTimeValueOfAllSales || 0}Ξ ($
-            {formatNumber(((data.totalLifeTimeValueOfAllSales || 0) * 3000).toString(), 2)})
+            {formatNumber(((data.totalLifeTimeValueOfAllSales || 0) * ETH_USD_PRICE).toString(), 2)})
           </StatsValueText>
         </Col>
         <ButtonContainer>

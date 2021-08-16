@@ -9,6 +9,7 @@ import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
+import { ETH_USD_PRICE } from 'environment';
 
 const ForSale: React.FC = () => {
   const { connector, library } = useWallet();
@@ -69,7 +70,7 @@ const ForSale: React.FC = () => {
                   {library && library.utils.fromWei(space.price.toString(), 'ether')}Ξ
                 </StyledText>
                 <StyledText $size='14px' $color='#4B4B4B'>
-                  ${library && library.utils.fromWei(space.price.toString(), 'ether') * 3000}
+                  ${library && library.utils.fromWei(space.price.toString(), 'ether') * ETH_USD_PRICE}
                 </StyledText>
               </Col>
             ))

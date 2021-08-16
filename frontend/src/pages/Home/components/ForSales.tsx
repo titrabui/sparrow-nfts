@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import formatNumber from 'utils/format';
+import { ETH_USD_PRICE } from 'environment';
 
 const ForSales: React.FC = () => {
   const { connector, library } = useWallet();
@@ -75,7 +76,7 @@ const ForSales: React.FC = () => {
                   {formatNumber(
                     lowestPrice &&
                       library &&
-                      library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000,
+                      library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * ETH_USD_PRICE,
                     2
                   )}
                   ).

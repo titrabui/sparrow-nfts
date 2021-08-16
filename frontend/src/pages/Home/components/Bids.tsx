@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import formatNumber from 'utils/format';
+import { ETH_USD_PRICE } from 'environment';
 
 const Bids: React.FC = () => {
   const { connector, library } = useWallet();
@@ -72,7 +73,7 @@ const Bids: React.FC = () => {
                   {formatNumber(
                     averageBidValue &&
                       library &&
-                      library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000,
+                      library.utils.fromWei(averageBidValue.toString(), 'ether') * ETH_USD_PRICE,
                     2
                   )}
                   ).
@@ -88,7 +89,7 @@ const Bids: React.FC = () => {
                   {formatNumber(
                     averageBidValue &&
                       library &&
-                      library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000,
+                      library.utils.fromWei(averageBidValue.toString(), 'ether') * ETH_USD_PRICE,
                     2
                   )}
                   ).
@@ -104,7 +105,7 @@ const Bids: React.FC = () => {
                   {formatNumber(
                     totalBidValue &&
                       library &&
-                      library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000,
+                      library.utils.fromWei(totalBidValue.toString(), 'ether') * ETH_USD_PRICE,
                     2
                   )}
                   ).

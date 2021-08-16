@@ -1,14 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import MainContainer from 'ui/MainContainer';
-import { Title, Text } from 'ui/Typography';
-import StyledTable from 'ui/Table';
-import Box from 'ui/Box';
 import useWallet from 'hooks/useWallet';
-import { getContract } from 'utils/getContract';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
+import MainContainer from 'ui/MainContainer';
+import StyledTable from 'ui/Table';
+import { Text, Title } from 'ui/Typography';
+import { getContract } from 'utils/getContract';
 
 const TopOwners: React.FC = () => {
   const { connector } = useWallet();

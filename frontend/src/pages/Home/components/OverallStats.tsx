@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { DeploymentUnitOutlined, OrderedListOutlined } from '@ant-design/icons';
 import { Col, Row, Space } from 'antd';
-import styled from 'styled-components';
-import { Text } from 'ui/Typography';
-import Button from 'ui/Button';
-import Box from 'ui/Box';
-import { OrderedListOutlined, DeploymentUnitOutlined } from '@ant-design/icons';
-import request from 'utils/request';
 import useWallet from 'hooks/useWallet';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Box from 'ui/Box';
+import Button from 'ui/Button';
+import { Text } from 'ui/Typography';
 import { getContract } from 'utils/getContract';
+import request from 'utils/request';
 import Spaces from 'utils/spaces';
 
 const OverallStats: React.FC = () => {
@@ -104,7 +104,7 @@ const OverallStats: React.FC = () => {
             <OrderedListOutlined />
             Top Owners
           </StyledButton>
-          <StyledButton $bgType='primary'>
+          <StyledButton $bgType='primary' onClick={() => window.open("/attributes", "_blank")}>
             <DeploymentUnitOutlined />
             All Types and Attributes
           </StyledButton>

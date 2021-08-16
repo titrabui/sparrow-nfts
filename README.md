@@ -6,7 +6,7 @@ From a command line terminal :
 
 1. Install all dependencies
 ```
-yarn
+ yarn
 ```
 2. Compile smart contracts
 ```
@@ -20,9 +20,9 @@ yarn
 ```
  yarn sc-deploy
 ```
-5. Run task to get accounts list 
+5. Run docker of Redis database
 ```
- cd sc && npx hardhat accounts
+ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 6. Start backend
 ```

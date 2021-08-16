@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IAccountStats, IOverallStats, ITransaction } from 'src/models/transaction/transaction.interface';
 import { TransactionReposity } from 'src/models/transaction/transaction.reposity';
+import { DecimalUtils } from 'src/utils/decimal.utils';
 
 const LIMIT_RECENTS_NUMBER = 12;
 const LIMIT_SOLD_NUMBER = 60;
@@ -46,7 +47,10 @@ export class TransactionService {
       return item.type === 'Sold';
     });
     const numberOfSales = soldTransactions.length;
-    const totalLifeTimeValueOfAllSales = soldTransactions.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0);
+    const totalLifeTimeValueOfAllSales = DecimalUtils.round10(
+      soldTransactions.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0),
+      -2
+    );
     const largestSales = this.getLargestSales(soldTransactions);
     const recentTransactions = this.getRecentTransactions(transactions);
 
@@ -68,13 +72,18 @@ export class TransactionService {
     const boughtsByAccount = soldTransactions.filter(item => {
       return item.to === address;
     });
-    const boughtsByAccountTotal = boughtsByAccount.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0);
+    const boughtsByAccountTotal = DecimalUtils.round10(
+      boughtsByAccount.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0),
+      -2
+    );
 
     const soldsByAccount = soldTransactions.filter(item => {
       return item.from === address;
     });
-    const soldsByAccountTotal = soldsByAccount.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0);
-
+    const soldsByAccountTotal = DecimalUtils.round10(
+      soldsByAccount.reduce((a, b) => a + (b.amount ? Number(b.amount) : 0), 0),
+      -2
+    );
 
     return {
       bought: boughtsByAccount,

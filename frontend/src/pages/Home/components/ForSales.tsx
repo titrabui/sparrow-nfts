@@ -61,7 +61,7 @@ const ForSales: React.FC = () => {
   return (
     <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        <Box w='100%' mt='70px' mb='40px'>
+        <Box w='100%' mt='50px'>
           <Title>For Sales</Title>
           {spacesForSalesWithPrice.length > 0 ? (
             <>

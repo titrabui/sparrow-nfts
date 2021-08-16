@@ -214,7 +214,7 @@ const Account: React.FC = (props: any) => {
               handleWithdraw();
             }}
           >
-            <CreditCardOutlined /> Withdraw
+            <CreditCardOutlined /> Withdraw {library && library.utils.fromWei(withDraw.toString(), 'ether')} ETH
           </StyledButton>
         )}
 
@@ -229,24 +229,12 @@ const Account: React.FC = (props: any) => {
             <Title>Total Spaces Owned</Title>
             <Value>{spacesOwned.length}</Value>
           </Col>
-          <Col span={8}>
-            <Title>Last Active</Title>
-            <Value>3 days ago</Value>
-          </Col>
+          <Col span={8}></Col>
           <Col span={8}>
             <Title>Total Amount Spent Buying Spaces</Title>
             <Value>
-              {totalBidOwnedSpaceValue &&
-                library &&
-                library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')}
-              Ξ ($
-              {formatNumber(
-                totalBidOwnedSpaceValue &&
-                  library &&
-                  library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000,
-                2
-              )}
-              )
+              {data.boughtETHTotal}Ξ ($
+              {formatNumber((data.boughtETHTotal * 3000) as any, 2)})
             </Value>
           </Col>
           <Col span={8}>
@@ -274,7 +262,7 @@ const Account: React.FC = (props: any) => {
             <Title>Total Amount Earned Selling Spaces</Title>
             <Value>
               {data.soldETHTotal}Ξ ($
-              {data.soldETHTotal * 3000})
+              {formatNumber((data.soldETHTotal * 3000) as any, 2)})
             </Value>
           </Col>
           <Col span={8}>
@@ -354,17 +342,11 @@ const Account: React.FC = (props: any) => {
 
         <StyledSpace>
           <SpaceTitle>
-            {totalBidOwnedSpaceValue &&
-              library &&
-              library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')}{' '}
-            ETH ($
-            {formatNumber(
-              totalBidOwnedSpaceValue &&
-                library &&
-                library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000,
-              2
-            )}
-            ) in {spacesBidsOwnedSpaceDetail && spacesBidsOwnedSpaceDetail.length} Bids For Spaces
+            {totalBidOwnedSpaceValue && library
+              ? `${library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')} ETH
+                ($${formatNumber((library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000) as any, 2)}) `
+              : '0 '}
+            in {spacesBidsOwnedSpaceDetail && spacesBidsOwnedSpaceDetail.length} Bids For Spaces
             Owned by this Account
           </SpaceTitle>
           <Content>
@@ -401,15 +383,11 @@ const Account: React.FC = (props: any) => {
 
         <StyledSpace>
           <SpaceTitle>
-            {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
-            ETH ($
-            {formatNumber(
-              totalBidValue &&
-                library &&
-                library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000,
-              2
-            )}
-            ) in {accountBids && accountBids.length} Bid Placed by This Account
+            {totalBidValue && library
+              ? `${library.utils.fromWei(totalBidValue.toString(), 'ether')} ETH
+                ($${formatNumber((library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000) as any, 2)}) `
+              : '0 '}
+            in {accountBids && accountBids.length} Bids Placed by This Account
           </SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
@@ -447,15 +425,15 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {' '}
             {data.boughtETHTotal
-              ? `${data.boughtETHTotal} ETH ($${data.boughtETHTotal * 3000})`
-              : `0 `}{' '}
-            in {spacesBoughtDetail ? spacesBoughtDetail.length : 0} Space Bought by This Account
+              ? `${data.boughtETHTotal} ETH ($${formatNumber((data.boughtETHTotal * 3000) as any, 2)}) `
+              : `0 `}
+            in {spacesBoughtDetail ? spacesBoughtDetail.length : 0} Spaces Bought by This Account
           </SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {spacesBoughtDetail &&
                 spacesBoughtDetail.map((space: any) => (
-                  <Col span={2} key={space.txn}>
+                  <Col span={2} key={space.createdAt}>
                     <ImageContainer>
                       <ImageWrapper>
                         <Link to={`/detail/${space.spaceIndex}`}>
@@ -478,17 +456,16 @@ const Account: React.FC = (props: any) => {
         <StyledSpace>
           <SpaceTitle>
             {' '}
-            {data.soldsETHTotal
-              ? `${data.soldsETHTotal} ETH ($
-            ${data.soldsETHTotal * 3000})`
-              : `0 `}{' '}
-            in {spacesSoldDetail && spacesSoldDetail.length} Space Sold by This Account
+            {data.soldETHTotal
+              ? `${data.soldETHTotal} ETH ($${formatNumber((data.soldETHTotal * 3000) as any, 2)}) `
+              : `0 `}
+            in {spacesSoldDetail && spacesSoldDetail.length} Spaces Sold by This Account
           </SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {spacesSoldDetail &&
                 spacesSoldDetail.map((space: any) => (
-                  <Col span={2} key={space.txn}>
+                  <Col span={2} key={space.createdAt}>
                     <ImageContainer>
                       <ImageWrapper>
                         <Link to={`/detail/${space.spaceIndex}`}>
@@ -604,9 +581,3 @@ const StyledText = styled(Text)`
 `;
 
 export default Account;
-
-// const ItemsLargestSales = () => (
-//   <>
-
-//   </>
-// );

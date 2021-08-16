@@ -32,9 +32,11 @@ const LargestSales: React.FC = () => {
         <StyledSpace>
           <Title>
             Largest Sales
-            <LinkText>
-              <Link to='/topSale'>See all top sales</Link>
-            </LinkText>
+            {mappedSpaces && mappedSpaces.length > 0 && (
+              <LinkText>
+                <Link to='/topSale'>See all top sales</Link>
+              </LinkText>
+            )}
           </Title>
         </StyledSpace>
       </Row>
@@ -125,7 +127,6 @@ const StyledSpace = styled(Space)`
 
 const ItemsContainer = styled(Row)`
   margin-top: 20px;
-  margin-bottom: 50px;
 `;
 
 const StyledText = styled(Text)`

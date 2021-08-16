@@ -94,13 +94,13 @@ const OverallStats: React.FC = () => {
         </Col>
         <Col span={8}>
           <StatsNameText>Number of Sales (Last 12 Months)</StatsNameText>
-          <StatsValueText>{data.numberOfSales}</StatsValueText>
+          <StatsValueText>{data.numberOfSales || 0}</StatsValueText>
         </Col>
         <Col span={8}>
           <StatsNameText>Total Value of All Sales (Lifetime)</StatsNameText>
           <StatsValueText>
-            {data.totalLifeTimeValueOfAllSales}Ξ ($
-            {formatNumber((data.totalLifeTimeValueOfAllSales * 3000).toString(), 2)})
+            {data.totalLifeTimeValueOfAllSales || 0}Ξ ($
+            {formatNumber(((data.totalLifeTimeValueOfAllSales || 0) * 3000).toString(), 2)})
           </StatsValueText>
         </Col>
         <ButtonContainer>

@@ -57,42 +57,39 @@ const RecentTransactions: React.FC = () => {
   return (
     <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        <Box w='100%' mt='10px'>
+        <Box w='100%' mt='50px'>
           <Title>Recent Transactions</Title>
-          <UpdateTime>{data && data.length > 0 && dayjs(data[0].createdAt).fromNow()}</UpdateTime>
+          {data && data.length > 0 && <UpdateTime>{dayjs(data[0].createdAt).fromNow()}</UpdateTime>}
         </Box>
       </Row>
-      <Box w='100%' mt='30px'>
-        <Row justify='start' gutter={[0, 24]}>
-          {mappedTransactions &&
-            mappedTransactions.length > 0 &&
-            mappedTransactions.map((transaction: any, index: any) => (
-              <Col span={4} key={transaction.createdAt}>
-                <ImageContainer>
-                  <ImageNumber $size='30px' $color='white' strong>
-                    0{index}
-                  </ImageNumber>
-                  <ImageWrapper>
-                    <Link to={`/detail/${transaction.spaceIndex}`}>
-                      <img src={transaction.img} alt={`img${transaction.spaceIndex}`} />
-                    </Link>
-                  </ImageWrapper>
-                </ImageContainer>
-                <StyledText $size='24px' strong $color='#0C264D'>
-                  #{transaction.spaceIndex}
+      {mappedTransactions && mappedTransactions.length > 0 ? (
+        <ItemsContainer justify='start' gutter={[0, 24]}>
+          {mappedTransactions.map((transaction: any) => (
+            <Col span={4} key={transaction.createdAt}>
+              <ImageContainer>
+                <ImageWrapper>
+                  <Link to={`/detail/${transaction.spaceIndex}`}>
+                    <img src={transaction.img} alt={`img${transaction.spaceIndex}`} />
+                  </Link>
+                </ImageWrapper>
+              </ImageContainer>
+              <StyledText $size='24px' strong $color='#0C264D'>
+                #{transaction.spaceIndex}
+              </StyledText>
+              <StyledText $size='20px' $color='#8D8D8D'>
+                {transaction.type}
+              </StyledText>
+              {transaction.amount && (
+                <StyledText $size='20px' $color='#4B4B4B'>
+                  {transaction.amount}Ξ (${formatNumber((transaction.amount * 3000).toString(), 2)})
                 </StyledText>
-                <StyledText $size='20px' $color='#8D8D8D'>
-                  {transaction.type}
-                </StyledText>
-                {transaction.amount && (
-                  <StyledText $size='20px' $color='#4B4B4B'>
-                    {transaction.amount}Ξ ${formatNumber((transaction.amount * 3000).toString(), 2)}
-                  </StyledText>
-                )}
-              </Col>
-            ))}
-        </Row>
-      </Box>
+              )}
+            </Col>
+          ))}
+        </ItemsContainer>
+      ) : (
+        <Text $size='18px'>There is no transaction currently.</Text>
+      )}{' '}
     </Box>
   );
 };
@@ -114,15 +111,10 @@ const UpdateTime = styled(Text)`
 
 const ImageContainer = styled.div`
   width: 90%;
-  height: 180px;
+  height: 160px;
   background-color: #dfdbe8;
   position: relative;
   margin-bottom: 20px;
-`;
-const ImageNumber = styled(Text)`
-  position: absolute;
-  left: 8px;
-  top: 2px;
 `;
 
 const ImageWrapper = styled.div`
@@ -136,8 +128,12 @@ const ImageWrapper = styled.div`
   bottom: 3px;
   img {
     width: 140px;
-    height: 130px;
+    height: 140px;
   }
+`;
+
+const ItemsContainer = styled(Row)`
+  margin-top: 20px;
 `;
 
 export default RecentTransactions;

@@ -106,7 +106,7 @@ const OverallStats: React.FC = () => {
           </StyledButton>
           <StyledButton $bgType='primary' onClick={() => window.open("/attributes", "_blank")}>
             <DeploymentUnitOutlined />
-            All Types and Attributes
+            All Types
           </StyledButton>
         </ButtonContainer>
       </Row>

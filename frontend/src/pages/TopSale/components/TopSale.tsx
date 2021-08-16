@@ -3,6 +3,7 @@ import MainContainer from 'ui/MainContainer';
 import styled from 'styled-components';
 import { Col, Row } from 'antd';
 import Spaces from 'utils/spaces';
+import formatNumber from 'utils/format';
 import { Link } from 'react-router-dom';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
@@ -52,7 +53,7 @@ const TopSale: React.FC = () => {
                 </StyledText>
                 <StyledText $size='20px' $color='#4B4B4B'>
                   {space.amount}Ξ ($
-                  {space.amount * 3000})
+                  {formatNumber((space.amount * 3000).toString(), 2)})
                 </StyledText>
                 <StyledText $size='20px' $color='#8D8D8D'>
                   {dayjs(space.createdAt).format('MMM DD, YYYY')}

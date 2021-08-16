@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Col, Row } from 'antd';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
+import formatNumber from 'utils/format';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
@@ -67,7 +68,11 @@ const Bids: React.FC = () => {
                   {library && library.utils.fromWei(space.price.toString(), 'ether')}Ξ
                 </StyledText>
                 <StyledText $size='14px' $color='#4B4B4B'>
-                  ${library && library.utils.fromWei(space.price.toString(), 'ether') * 3000}
+                  $
+                  {formatNumber(
+                    library && library.utils.fromWei(space.price.toString(), 'ether') * 3000,
+                    2
+                  )}
                 </StyledText>
               </Col>
             ))

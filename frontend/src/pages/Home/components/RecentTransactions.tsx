@@ -6,15 +6,37 @@ import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
 import request from 'utils/request';
-import { useSocket} from 'socketio-hooks';
+import formatNumber from 'utils/format';
+import { useSocket } from 'socketio-hooks';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import updateLocale from 'dayjs/plugin/updateLocale';
 
-
+dayjs.extend(updateLocale);
+dayjs.extend(relativeTime);
+dayjs.updateLocale('en', {
+  relativeTime: {
+    future: 'in %s',
+    past: '%s ago',
+    s: '%d seconds ',
+    m: 'A minute',
+    mm: '%d minutes',
+    h: 'An hour',
+    hh: '%d hours',
+    d: 'A day',
+    dd: '%d days',
+    M: 'A month',
+    MM: '%d months',
+    y: 'A year',
+    yy: '%d years'
+  }
+});
 const RecentTransactions: React.FC = () => {
   const [data, setData] = useState([] as any);
 
   useSocket('transactions', '', async (socketData) => {
-    if(socketData) {
-      setData([socketData,...data.slice(0,11)])
+    if (socketData) {
+      setData([socketData, ...data.slice(0, 11)]);
     }
   });
 
@@ -32,19 +54,16 @@ const RecentTransactions: React.FC = () => {
       const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
       return { ...item, img: spacesData.img };
     });
-
   return (
     <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        <Box w='100%' mt='50px'>
+        <Box w='100%' mt='10px'>
           <Title>Recent Transactions</Title>
-          <UpdateTime>
-            32 seconds ago
-          </UpdateTime>
+          <UpdateTime>{data && data.length > 0 && dayjs(data[0].createdAt).fromNow()}</UpdateTime>
         </Box>
       </Row>
       <Box w='100%' mt='30px'>
-        <Row justify='center' gutter={[0, 24]}>
+        <Row justify='start' gutter={[0, 24]}>
           {mappedTransactions &&
             mappedTransactions.length > 0 &&
             mappedTransactions.map((transaction: any, index: any) => (
@@ -67,7 +86,7 @@ const RecentTransactions: React.FC = () => {
                 </StyledText>
                 {transaction.amount && (
                   <StyledText $size='20px' $color='#4B4B4B'>
-                    {transaction.amount}Ξ ${transaction.amount * 3000}
+                    {transaction.amount}Ξ ${formatNumber((transaction.amount * 3000).toString(), 2)}
                   </StyledText>
                 )}
               </Col>

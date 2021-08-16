@@ -1,23 +1,28 @@
+/* eslint-disable no-useless-escape */
 import React, { useEffect, useState } from 'react';
 import MainContainer from 'ui/MainContainer';
 import styled from 'styled-components';
-import { Col, Row } from 'antd';
+import { Col, Row, notification } from 'antd';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
+import formatNumber from 'utils/format';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
+import Button from 'ui/Button';
+import { CreditCardOutlined } from '@ant-design/icons';
 import BreadCrumb from 'ui/Breadcrumb';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 
 const Account: React.FC = (props: any) => {
-  const { connector, library } = useWallet();
+  const { connector, library, account } = useWallet();
   const [bidData, setBidData] = useState([]);
   const [saleData, setSaleData] = useState([]);
   const [spacesOwned, setSpacesOwned] = useState([]);
   const [data, setData] = useState([] as any);
   const [allBids, setAllBids] = useState([]);
+  const [withDraw, setWithDraw] = useState('0');
 
   const id = (props as any)?.match?.params?.id;
   useEffect(() => {
@@ -29,6 +34,15 @@ const Account: React.FC = (props: any) => {
   }, [id]);
   useEffect(() => {
     let mounted = true;
+    const getBlockchainWithDrawData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const pendingWithDraw = await contract.methods.pendingWithdrawals(id).call();
+        if (mounted) {
+          setWithDraw(pendingWithDraw);
+        }
+      }
+    };
     const getBlockchainBidData = async () => {
       if (connector) {
         const contract = await getContract(connector);
@@ -82,13 +96,14 @@ const Account: React.FC = (props: any) => {
       }
     };
     getBlockchainOwnedData();
-
+    getBlockchainWithDrawData();
     getBlockchainBidData();
     getBlockchainSaleData();
     return () => {
       mounted = false;
     };
-  }, [connector]);
+  }, [connector, id]);
+
   const spacesBids = Spaces.filter((space: any) =>
     bidData.some((item: any) => item.index === space.id)
   );
@@ -152,16 +167,61 @@ const Account: React.FC = (props: any) => {
       return { ...item, img: spacesData.img };
     });
 
+  const handleError = (err: any) => {
+    const ERROR_REGEX = /reason string \'(.+?)\'\",\"data/g;
+    const results = ERROR_REGEX.exec(err.message);
+    if (results && results.length >= 2) {
+      const errorMessage = results[1];
+      notification.error({
+        message: 'Error',
+        description: errorMessage
+      });
+    } else
+      notification.error({
+        message: 'Error',
+        description: 'Transaction faileds'
+      });
+  };
+
+  const handleWithdraw = async () => {
+    const contract = await getContract(connector);
+    try {
+      await contract.methods
+        .withdraw()
+        .send({ from: account })
+        .on('receipt', async () => {
+          notification.success({
+            message: 'Withdraw ',
+            description: 'Withdraw Success'
+          });
+          setWithDraw('0');
+        });
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   return (
     <MainContainer>
       <BreadCrumb crumbs={['Accounts', id.slice(0, 10)]} />
       <Box w='1050px' m='40px auto 0'>
         <BigTitle>Account Details</BigTitle>
         <SmallTitle>{id}</SmallTitle>
+        {id === account && withDraw !== '0' && (
+          <StyledButton
+            $bgType='primary'
+            onClick={() => {
+              handleWithdraw();
+            }}
+          >
+            <CreditCardOutlined /> Withdraw
+          </StyledButton>
+        )}
+
         <Row justify='center' gutter={[0, 15]}>
           <Col span={8}>
             <Title>Etherscan</Title>
-            <a href={`https://etherscan.io/tx/${id}`} target='blank'>
+            <a href={`https://etherscan.io/address/${id}`} target='blank'>
               <LinkText>{id.slice(0, 20)}</LinkText>
             </a>
           </Col>
@@ -180,9 +240,12 @@ const Account: React.FC = (props: any) => {
                 library &&
                 library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')}
               Ξ ($
-              {totalBidOwnedSpaceValue &&
-                library &&
-                library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000}
+              {formatNumber(
+                totalBidOwnedSpaceValue &&
+                  library &&
+                  library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000,
+                2
+              )}
               )
             </Value>
           </Col>
@@ -198,9 +261,12 @@ const Account: React.FC = (props: any) => {
                 library &&
                 library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')}
               Ξ ($
-              {totalBidOwnedSpaceValue &&
-                library &&
-                library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000}
+              {formatNumber(
+                totalBidOwnedSpaceValue &&
+                  library &&
+                  library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000,
+                2
+              )}
               )
             </Value>
           </Col>
@@ -220,9 +286,12 @@ const Account: React.FC = (props: any) => {
             <Value>
               {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}
               Ξ ($
-              {totalBidValue &&
-                library &&
-                library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
+              {formatNumber(
+                totalBidValue &&
+                  library &&
+                  library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000,
+                2
+              )}
               ).
             </Value>
           </Col>
@@ -270,9 +339,12 @@ const Account: React.FC = (props: any) => {
                   </StyledText>
                   <StyledText $size='14px' $color='#4B4B4B'>
                     $
-                    {space.price &&
-                      library &&
-                      library.utils.fromWei(space.price.toString(), 'ether') * 3000}
+                    {formatNumber(
+                      space.price &&
+                        library &&
+                        library.utils.fromWei(space.price.toString(), 'ether') * 3000,
+                      2
+                    )}
                   </StyledText>
                 </Col>
               ))}
@@ -286,9 +358,12 @@ const Account: React.FC = (props: any) => {
               library &&
               library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')}{' '}
             ETH ($
-            {totalBidOwnedSpaceValue &&
-              library &&
-              library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000}
+            {formatNumber(
+              totalBidOwnedSpaceValue &&
+                library &&
+                library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * 3000,
+              2
+            )}
             ) in {spacesBidsOwnedSpaceDetail && spacesBidsOwnedSpaceDetail.length} Bids For Spaces
             Owned by this Account
           </SpaceTitle>
@@ -298,7 +373,7 @@ const Account: React.FC = (props: any) => {
                 <Col span={2} key={space.id}>
                   <ImageContainer>
                     <ImageWrapper>
-                      <Link to={`/detail/${space.id}`}>
+                      <Link to={`/detail/${space.spaceIndex}`}>
                         <img src={space.img} alt={`img${space.id}`} />
                       </Link>
                     </ImageWrapper>
@@ -311,9 +386,12 @@ const Account: React.FC = (props: any) => {
                   </StyledText>
                   <StyledText $size='14px' $color='#4B4B4B'>
                     $
-                    {space.value &&
-                      library &&
-                      library.utils.fromWei(space.value.toString(), 'ether') * 3000}
+                    {formatNumber(
+                      space.value &&
+                        library &&
+                        library.utils.fromWei(space.value.toString(), 'ether') * 3000,
+                      2
+                    )}
                   </StyledText>
                 </Col>
               ))}
@@ -325,9 +403,12 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {totalBidValue && library && library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
             ETH ($
-            {totalBidValue &&
-              library &&
-              library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
+            {formatNumber(
+              totalBidValue &&
+                library &&
+                library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000,
+              2
+            )}
             ) in {accountBids && accountBids.length} Bid Placed by This Account
           </SpaceTitle>
           <Content>
@@ -349,9 +430,12 @@ const Account: React.FC = (props: any) => {
                   </StyledText>
                   <StyledText $size='14px' $color='#4B4B4B'>
                     $
-                    {space.price &&
-                      library &&
-                      library.utils.fromWei(space.price.toString(), 'ether') * 3000}
+                    {formatNumber(
+                      space.price &&
+                        library &&
+                        library.utils.fromWei(space.price.toString(), 'ether') * 3000,
+                      2
+                    )}
                   </StyledText>
                 </Col>
               ))}
@@ -362,9 +446,10 @@ const Account: React.FC = (props: any) => {
         <StyledSpace>
           <SpaceTitle>
             {' '}
-            {data.boughtETHTotal} ETH ($
-            {data.boughtETHTotal * 3000}) in {spacesBoughtDetail && spacesBoughtDetail.length} Space
-            Bought by This Account
+            {data.boughtETHTotal
+              ? `${data.boughtETHTotal} ETH ($${data.boughtETHTotal * 3000})`
+              : `0 `}{' '}
+            in {spacesBoughtDetail ? spacesBoughtDetail.length : 0} Space Bought by This Account
           </SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
@@ -373,7 +458,7 @@ const Account: React.FC = (props: any) => {
                   <Col span={2} key={space.txn}>
                     <ImageContainer>
                       <ImageWrapper>
-                        <Link to={`/detail/${space.id}`}>
+                        <Link to={`/detail/${space.spaceIndex}`}>
                           <img src={space.img} alt={`img${space.id}`} />
                         </Link>
                       </ImageWrapper>
@@ -393,9 +478,11 @@ const Account: React.FC = (props: any) => {
         <StyledSpace>
           <SpaceTitle>
             {' '}
-            {data.soldETHTotal} ETH ($
-            {data.soldETHTotal * 3000}) in {spacesSoldDetail && spacesSoldDetail.length} Space Sold
-            by This Account
+            {data.soldsETHTotal
+              ? `${data.soldsETHTotal} ETH ($
+            ${data.soldsETHTotal * 3000})`
+              : `0 `}{' '}
+            in {spacesSoldDetail && spacesSoldDetail.length} Space Sold by This Account
           </SpaceTitle>
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
@@ -404,7 +491,7 @@ const Account: React.FC = (props: any) => {
                   <Col span={2} key={space.txn}>
                     <ImageContainer>
                       <ImageWrapper>
-                        <Link to={`/detail/${space.id}`}>
+                        <Link to={`/detail/${space.spaceIndex}`}>
                           <img src={space.img} alt={`img${space.id}`} />
                         </Link>
                       </ImageWrapper>
@@ -424,6 +511,20 @@ const Account: React.FC = (props: any) => {
     </MainContainer>
   );
 };
+
+const StyledButton = styled(Button)`
+  color: ${(p) => p.theme.surface};
+  width: 500px;
+  height: 40px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: left;
+  margin-bottom: 30px;
+  .anticon {
+    font-size: 18px;
+    margin-right: 5px;
+  }
+`;
 
 const Content = styled.div`
   min-height: 70px;
@@ -466,7 +567,7 @@ const SmallTitle = styled(Text)`
   font-size: 22px;
   font-weight: bold;
   display: block;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `;
 
 const LinkText = styled(Text)`

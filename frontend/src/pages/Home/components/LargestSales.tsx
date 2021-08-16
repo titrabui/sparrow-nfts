@@ -7,6 +7,7 @@ import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
 import request from 'utils/request';
 import dayjs from 'dayjs';
+import formatNumber from 'utils/format';
 
 const LargestSales: React.FC = () => {
   const [data, setData] = useState({
@@ -55,12 +56,8 @@ const LargestSales: React.FC = () => {
                 #{space.spaceIndex}
               </StyledText>
               <StyledText $size='20px' $color='#4B4B4B'>
-                {
-                  space.amount }
-                Ξ ($
-                {
-                  space.amount  * 3000}
-                )
+                {space.amount}Ξ ($
+                {formatNumber((space.amount * 3000).toString(), 2)})
               </StyledText>
               <StyledText $size='20px' $color='#8D8D8D'>
                 {dayjs(space.createdAt).format('MMM DD, YYYY')}
@@ -123,7 +120,7 @@ const StyledSpace = styled(Space)`
     height: 100%;
     vertical-align: middle;
   }
-  margin-top: 60px;
+  margin-top: 20px;
 `;
 
 const ItemsContainer = styled(Row)`

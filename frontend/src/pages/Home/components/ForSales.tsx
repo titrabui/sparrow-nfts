@@ -7,6 +7,7 @@ import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
+import formatNumber from 'utils/format';
 
 const ForSales: React.FC = () => {
   const { connector, library } = useWallet();
@@ -60,7 +61,7 @@ const ForSales: React.FC = () => {
   return (
     <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        <Box w='100%' mt='100px' mb='40px'>
+        <Box w='100%' mt='70px' mb='40px'>
           <Title>For Sales</Title>
           {spacesForSalesWithPrice.length > 0 ? (
             <>
@@ -71,9 +72,12 @@ const ForSales: React.FC = () => {
                     library &&
                     library.utils.fromWei(lowestPrice?.price?.toString(), 'ether')}{' '}
                   ETH ($
-                  {lowestPrice &&
-                    library &&
-                    library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000}
+                  {formatNumber(
+                    lowestPrice &&
+                      library &&
+                      library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000,
+                    2
+                  )}
                   ).
                 </HightlightText>
               </StyledText>
@@ -116,8 +120,8 @@ const ItemsRow = styled(Row)`
     width: 100px;
     background-color: #95554f;
     padding: 20px;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
     justify-content: center;
     img {
       margin: 0 auto;

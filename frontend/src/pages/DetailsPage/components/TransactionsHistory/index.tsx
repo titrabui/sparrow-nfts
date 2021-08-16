@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useWallet from 'hooks/useWallet';
+import formatNumber from 'utils/format';
 import { Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
@@ -66,10 +67,10 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      render(amount: string) {
+      render(amount: number) {
         return amount ? (
           <Text $size='18px'>
-            {amount}Ξ (${Number(amount) * 3000})
+            {amount}Ξ (${amount && formatNumber((amount * 3000).toString(), 2)})
           </Text>
         ) : null;
       }

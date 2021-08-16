@@ -1,15 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TransactionHistoryServiceModule } from './transactionHistory/transaction.history.service.module';
-import { WsClientServiceModule } from './wsClient/ws.client.service.module';
+import { TransactionServiceModule } from './transaction/transaction.service.module';
 
 @Module({
   imports: [
-    WsClientServiceModule,
-    TransactionHistoryServiceModule
+    TransactionServiceModule
   ],
   exports: [
-    WsClientServiceModule,
-    TransactionHistoryServiceModule
+    TransactionServiceModule
   ]
 })
 export class ServicesModule { }

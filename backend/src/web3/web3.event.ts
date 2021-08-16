@@ -1,10 +1,12 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
 import { SC_EVENT_MAPPER } from 'src/constants';
-import { TransactionHistoryService } from 'src/services/transactionHistory/transaction.history.service';
+import { TransactionMap } from 'src/models/transaction/transaction.map';
+import { TransactionService } from 'src/services/transaction/transaction.service';
+import { SocketGateway } from 'src/socket-gateways/socket.gateway';
 import { Web3Config } from './web3.config';
 
 @Injectable()
-export class Web3Event implements OnModuleInit {
+export class Web3Event implements OnApplicationBootstrap {
   private readonly logger: Logger = new Logger(Web3Event.name);
   private web3;
   private contract;
@@ -12,10 +14,11 @@ export class Web3Event implements OnModuleInit {
 
   constructor(
     private readonly wed3Config: Web3Config,
-    private readonly transactionHistoryService: TransactionHistoryService
+    private readonly transactionService: TransactionService,
+    private readonly socketGateway: SocketGateway
   ) { }
 
-  async onModuleInit() {
+  async onApplicationBootstrap() {
     const { web3, contract, latestBlock } = await this.wed3Config.init();
     this.web3 = web3;
     this.contract = contract;
@@ -44,10 +47,14 @@ export class Web3Event implements OnModuleInit {
           event.transactionHash
         );
 
-        await this.transactionHistoryService.createTransactionHistory(
+        const transactionDto = TransactionMap.createDTO(
+          this.web3.utils,
           event,
           transactionData
         );
+
+        await this.transactionService.createTransaction(transactionDto);
+        await this.socketGateway.emitMessage(transactionDto);
       }
 
     } catch (error) {

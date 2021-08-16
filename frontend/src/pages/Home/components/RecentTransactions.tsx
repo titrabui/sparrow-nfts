@@ -1,52 +1,86 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
+import request from 'utils/request';
+import { useSocket} from 'socketio-hooks';
 
-const RecentTransactions: React.FC = () => (
-  <Box w='1050px' m='auto'>
-    <Row justify='center' gutter={[0, 24]}>
-      <Box w='100%' mt='50px'>
-        <Title>Recent Transactions</Title>
-        <UpdateTime>Updated 32 seconds ago</UpdateTime>
-      </Box>
-    </Row>
-    <Box w='100%' mt='30px'>
+
+const RecentTransactions: React.FC = () => {
+  const [data, setData] = useState([] as any);
+
+  useSocket('transactions', '', async (socketData) => {
+    if(socketData) {
+      setData([socketData,...data.slice(0,11)])
+    }
+  });
+
+  useEffect(() => {
+    const getData = async () => {
+      const result = await request.getData('/transactions/stats/overall', {});
+      if (result && result.status === 200) setData(result.data.recentTransactions);
+    };
+    getData();
+  }, []);
+
+  const mappedTransactions =
+    data &&
+    data.map((item: any) => {
+      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
+      return { ...item, img: spacesData.img };
+    });
+
+  return (
+    <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        {Spaces.slice(0, 6).map((space) => (
-          <Col span={4} key={space.id}>
-            <ImageContainer>
-              <ImageNumber $size='30px' $color='white' strong>
-                0{space.id}
-              </ImageNumber>
-              <ImageWrapper>
-                <Link to={`/detail/${space.id}`}>
-                  <img src={space.img} alt={`img${space.id}`} />
-                </Link>
-              </ImageWrapper>
-            </ImageContainer>
-            <StyledText $size='24px' strong $color='#0C264D' >
-              #028
-            </StyledText>
-            <StyledText $size='20px' $color='#8D8D8D' >
-              Offered for
-            </StyledText>
-            <StyledText $size='20px' $color='#4B4B4B' >
-              4.2KΞ ($7.57M)
-            </StyledText>
-          </Col>
-        ))}
+        <Box w='100%' mt='50px'>
+          <Title>Recent Transactions</Title>
+          <UpdateTime>
+            32 seconds ago
+          </UpdateTime>
+        </Box>
       </Row>
+      <Box w='100%' mt='30px'>
+        <Row justify='center' gutter={[0, 24]}>
+          {mappedTransactions &&
+            mappedTransactions.length > 0 &&
+            mappedTransactions.map((transaction: any, index: any) => (
+              <Col span={4} key={transaction.createdAt}>
+                <ImageContainer>
+                  <ImageNumber $size='30px' $color='white' strong>
+                    0{index}
+                  </ImageNumber>
+                  <ImageWrapper>
+                    <Link to={`/detail/${transaction.spaceIndex}`}>
+                      <img src={transaction.img} alt={`img${transaction.spaceIndex}`} />
+                    </Link>
+                  </ImageWrapper>
+                </ImageContainer>
+                <StyledText $size='24px' strong $color='#0C264D'>
+                  #{transaction.spaceIndex}
+                </StyledText>
+                <StyledText $size='20px' $color='#8D8D8D'>
+                  {transaction.type}
+                </StyledText>
+                {transaction.amount && (
+                  <StyledText $size='20px' $color='#4B4B4B'>
+                    {transaction.amount}Ξ ${transaction.amount * 3000}
+                  </StyledText>
+                )}
+              </Col>
+            ))}
+        </Row>
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 const StyledText = styled(Text)`
-  display:block;
-`
+  display: block;
+`;
 
 const Title = styled(Text)`
   font-size: 36px;

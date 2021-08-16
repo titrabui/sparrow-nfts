@@ -1,19 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConnectionsModule } from 'src/connections/connections.module';
-import { TransactionHistoryReposity } from './transactionHistory/transaction.history.reposity';
-import { WsClientReposity } from './wsClient/ws.client.reposity';
+import { TransactionReposity } from './transaction/transaction.reposity';
 
 @Module({
   imports: [
     ConnectionsModule
   ],
   providers: [
-    WsClientReposity,
-    TransactionHistoryReposity
+    TransactionReposity
   ],
   exports: [
-    WsClientReposity,
-    TransactionHistoryReposity
+    TransactionReposity
   ]
 })
 export class ModelsModule { }

@@ -1,44 +1,118 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Space } from 'antd';
 import styled from 'styled-components';
 import { Text } from 'ui/Typography';
 import Button from 'ui/Button';
 import Box from 'ui/Box';
 import { OrderedListOutlined, DeploymentUnitOutlined } from '@ant-design/icons';
+import request from 'utils/request';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
+import Spaces from 'utils/spaces';
 
-const OverallStats: React.FC = () => (
-  <Box w='1050px' m='auto'>
-    <Row justify='center' gutter={[0, 24]}>
-      <TitleContainer>
-        <Title>Overall Stats</Title>
-      </TitleContainer>
-    </Row>
-    <Row justify='center' gutter={[0, 24]}>
-      <Col span={8}>
-        <StatsNameText>Current Lowest Price Available</StatsNameText>
-        <StatsValueText>19.75 ETH ($35,183.64)</StatsValueText>
-      </Col>
-      <Col span={8}>
-        <StatsNameText>Number of Sales (Last 12 Months)</StatsNameText>
-        <StatsValueText>10,088</StatsValueText>
-      </Col>
-      <Col span={8}>
-        <StatsNameText>Total Value of All Sales (Lifetime)</StatsNameText>
-        <StatsValueText>210.9KΞ ($375.7M)</StatsValueText>
-      </Col>
-      <ButtonContainer>
-        <StyledButton $bgType='primary' onClick={() => window.open('/topOwners', '_blank')}>
-          <OrderedListOutlined />
-          Top Owners
-        </StyledButton>
-        <StyledButton $bgType='primary'>
-          <DeploymentUnitOutlined />
-          All Types and Attributes
-        </StyledButton>
-      </ButtonContainer>
-    </Row>
-  </Box>
-);
+const OverallStats: React.FC = () => {
+  const [data, setData] = useState([] as any);
+  const { connector, library } = useWallet();
+  const [saleData, setSaleData] = useState([] as any);
+  useEffect(() => {
+    let mounted = true;
+    const getBlockchainData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOfferedForSale = await contract.methods
+          .returnSpacesOfferedForSaleArray()
+          .call();
+        if (mounted) {
+          const filteredData =
+            spacesOfferedForSale &&
+            spacesOfferedForSale.length > 0 &&
+            spacesOfferedForSale
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.minValue
+              }));
+          setSaleData(filteredData);
+        }
+      }
+    };
+    getBlockchainData();
+    return () => {
+      mounted = false;
+    };
+  }, [connector]);
+
+  const spacesForSales = Spaces.filter((space: any) =>
+    saleData.some((item: any) => item.index === space.id)
+  );
+
+  const spacesForSalesWithPrice = spacesForSales.map((space: any) => {
+    const blockchainData: any = saleData.find((item: any) => item.index === space.id);
+    return { ...space, price: blockchainData?.price };
+  });
+
+  const lowestPrice =
+    (spacesForSalesWithPrice.length > 0 &&
+      spacesForSalesWithPrice.reduce((prev: any, curr: any) =>
+        prev.price < curr.price ? prev : curr
+      )) ||
+    0;
+
+  useEffect(() => {
+    const getData = async () => {
+      const result = await request.getData('/transactions/stats/overall', {});
+      if (result && result.status === 200) setData(result.data);
+    };
+    getData();
+  }, []);
+  return (
+    <Box w='1050px' m='auto'>
+      <Row justify='center' gutter={[0, 24]}>
+        <TitleContainer>
+          <Title>Overall Stats</Title>
+        </TitleContainer>
+      </Row>
+      <Row justify='center' gutter={[0, 24]}>
+        <Col span={8}>
+          <StatsNameText>Current Lowest Price Available</StatsNameText>
+          <StatsValueText>
+            {lowestPrice &&
+              lowestPrice.price &&
+              library &&
+              library.utils.fromWei(lowestPrice?.price?.toString(), 'ether')}
+            Ξ ($
+            {lowestPrice &&
+              lowestPrice.price &&
+              library &&
+              library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000}
+            )
+          </StatsValueText>
+        </Col>
+        <Col span={8}>
+          <StatsNameText>Number of Sales (Last 12 Months)</StatsNameText>
+          <StatsValueText>{data.numberOfSales}</StatsValueText>
+        </Col>
+        <Col span={8}>
+          <StatsNameText>Total Value of All Sales (Lifetime)</StatsNameText>
+          <StatsValueText>
+            {data.totalLifeTimeValueOfAllSales}Ξ ($
+            {data.totalLifeTimeValueOfAllSales * 3000})
+          </StatsValueText>
+        </Col>
+        <ButtonContainer>
+          <StyledButton $bgType='primary' onClick={() => window.open('/topOwners', '_blank')}>
+            <OrderedListOutlined />
+            Top Owners
+          </StyledButton>
+          <StyledButton $bgType='primary'>
+            <DeploymentUnitOutlined />
+            All Types and Attributes
+          </StyledButton>
+        </ButtonContainer>
+      </Row>
+    </Box>
+  );
+};
 
 const Title = styled(Text)`
   font-size: 36px;

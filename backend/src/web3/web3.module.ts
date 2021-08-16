@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TransactionHistoryServiceModule } from 'src/services/transactionHistory/transaction.history.service.module';
+import { ServicesModule } from 'src/services/services.module';
+import { SocketGatewaysModule } from 'src/socket-gateways/socket.gateways.module';
 import { Web3Config } from './web3.config';
 import { Web3Event } from './web3.event';
 
 @Module({
   imports: [
-    TransactionHistoryServiceModule
+    ServicesModule,
+    SocketGatewaysModule
   ],
   providers: [
     Web3Config,

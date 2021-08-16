@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Box from 'ui/Box';
 import Button from 'ui/Button';
-import { Link, Text } from 'ui/Typography';
+import { Text } from 'ui/Typography';
 import styled from 'styled-components';
 import {
   ShoppingCartOutlined,
@@ -16,6 +16,7 @@ import useWallet from 'hooks/useWallet';
 import { ISpaceProps } from 'types/SpaceProps';
 import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
+import { Link } from 'react-router-dom';
 import SaleModal from '../SaleModal';
 import BidModal from '../BidModal';
 import AcceptBidModal from '../AcceptBidModal';
@@ -24,14 +25,14 @@ import TransferModal from '../TransferModal';
 const Information: React.FC<ISpaceProps> = (props: any) => {
   const { active, connector, account, library } = useWallet();
   const { data } = props;
-  const emptyAddress = '0x0000000000000000000000000000000000000000';
+  const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
   const [spaceInfo, setSpaceInfo] = useState({
-    owner: emptyAddress,
+    owner: NULL_ADDRESS,
     isForSale: false,
     price: 0,
-    onlySellTo: emptyAddress,
+    onlySellTo: NULL_ADDRESS,
     hasBid: false,
-    bidder: emptyAddress,
+    bidder: NULL_ADDRESS,
     bidValue: 0
   });
   const [isSale, setIsSale] = useState(false);
@@ -225,7 +226,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       <BigTitle>{data.name}</BigTitle>
       <Type>
         One of {data.type === 'Device' ? 5 : 7}
-        <Link href='/'>
+        <Link to='/'>
           <LinkText> {data.type} </LinkText>
         </Link>
         space.
@@ -233,10 +234,10 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       <SmallTitle>Current Market Status</SmallTitle>
       <StyledText>
         This space is currently owned by{' '}
-        {owner !== emptyAddress ? (
+        {owner !== NULL_ADDRESS ? (
           <>
             address{' '}
-            <Link href='/'>
+            <Link to={`/account/${owner}`}>
               <LinkText>{owner.slice(0, 8)}</LinkText>
             </Link>
           </>
@@ -259,7 +260,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           There is a bid of {library && library.utils.fromWei(bidValue.toString(), 'ether')} ETH ($
           {library && library.utils.fromWei(bidValue.toString(), 'ether') * 3000}) for this space
           from{' '}
-          <Link href='/'>
+          <Link to='/'>
             <LinkText>{bidder && bidder.slice(0, 8)}</LinkText>
           </Link>
           .
@@ -294,7 +295,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
 
       {active && (
         <>
-          {owner === emptyAddress && (
+          {owner === NULL_ADDRESS && (
             <StyledButton $bgType='primary' onClick={handleClaim}>
               <PlusSquareOutlined /> Claim
             </StyledButton>
@@ -323,7 +324,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
             </StyledButton>
           )}
 
-          {account !== owner && owner !== emptyAddress && (
+          {account !== owner && owner !== NULL_ADDRESS && (
             <StyledButton $bgType='primary' onClick={() => setIsBid(true)}>
               <TagOutlined /> Bid
             </StyledButton>

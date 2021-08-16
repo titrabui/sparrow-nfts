@@ -1,36 +1,68 @@
-import React from 'react';
+/* eslint-disable react/destructuring-assignment */
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MainContainer from 'ui/MainContainer';
-import { Title, Link, Text } from 'ui/Typography';
+import { Title, Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
+import useWallet from 'hooks/useWallet';
+import { getContract } from 'utils/getContract';
+import { Link } from 'react-router-dom';
+import BreadCrumb from 'ui/Breadcrumb';
 
 const TopOwners: React.FC = () => {
-  const dataSource = [...Array(10).keys()].map(() => ({
-    number: '1',
-    account: 32,
-    numberOwned: 20,
-    last: '1 month ago'
-  }));
+  const { connector } = useWallet();
+  const [spacesOwned, setSpacesOwned] = useState([]);
+  const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+  useEffect(() => {
+    let mounted = true;
+
+    const getBlockchainOwnedData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spaceIndexToAddress = await contract.methods.returnSpaceIndexToAddressArray().call();
+        const addressGroup = spaceIndexToAddress
+          .filter((space: any) => space !== NULL_ADDRESS)
+          .reduce(
+            (acc: any, value: any) => ({
+              ...acc,
+              [value]: (acc[value] || 0) + 1
+            }),
+            []
+          );
+        const addressArray = [] as any;
+        Object.keys(addressGroup).forEach((key) => {
+          addressArray.push({ address: key, numberOwned: addressGroup[key] });
+        });
+        if (mounted) setSpacesOwned(addressArray);
+      }
+    };
+    getBlockchainOwnedData();
+
+    return () => {
+      mounted = false;
+    };
+  }, [connector]);
 
   const columns = [
     {
       title: '#',
       dataIndex: 'number',
       key: 'name',
-      render(last: string) {
-        return <Text $size='18px'>{last}</Text>;
+      render(last: string, record: any) {
+        return <Text $size='18px'>{(spacesOwned as any).indexOf(record) + 1}</Text>;
       }
     },
     {
       title: 'Account',
-      dataIndex: 'account',
-      key: 'account',
-      render(accountInfo: string) {
+      dataIndex: 'address',
+      key: 'address',
+      render(address: string) {
         return (
-          <Link $color='#0080FF' $size='18px' href='/cryptospace/accountinfo'>
-            {accountInfo}
-          </Link>
+          <Text $color='#0080FF' $size='18px' strong>
+            <Link to={`/account/${address}`}>{address && address.slice(0, 16)}</Link>
+          </Text>
         );
       }
     },
@@ -41,28 +73,27 @@ const TopOwners: React.FC = () => {
       render(numberOwner: string) {
         return <Text $size='18px'>{numberOwner}</Text>;
       }
-    },
-    {
-      title: 'Last',
-      dataIndex: 'last',
-      key: 'last',
-      render(last: string) {
-        return <Text $size='18px'>{last}</Text>;
-      }
     }
   ];
+
   return (
     <MainContainer mt='100px'>
-      <Box m='100px'>
+      <BreadCrumb crumbs={['All Owners']} />
+      <Box w='1050px' m='35px auto 0'>
         <Title $size='48px'>All CryptoSpace Owners</Title>
-        <OwnersTable columns={columns} dataSource={dataSource} rowKey='id' pagination={false} />
+        <OwnersTable
+          columns={columns}
+          dataSource={spacesOwned}
+          rowKey='address'
+          pagination={false}
+        />
       </Box>
     </MainContainer>
   );
 };
 
 const OwnersTable = styled(StyledTable)`
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 
 export default TopOwners;

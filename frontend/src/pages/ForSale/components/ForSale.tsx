@@ -18,20 +18,20 @@ const ForSale: React.FC = () => {
     let mounted = true;
     const getBlockchainData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedForSale = await contract.methods
+        const { marketContract } = await getContract(connector);
+        const spacesOfferedForSale = await marketContract.methods
           .returnSpacesOfferedForSaleArray()
           .call();
         if (mounted) {
-          const filteredData =
-            spacesOfferedForSale &&
-            spacesOfferedForSale.length > 0 &&
-            spacesOfferedForSale
+          let filteredData = [];
+          if (spacesOfferedForSale && spacesOfferedForSale.length > 0) {
+            filteredData = spacesOfferedForSale
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.minValue
               }));
+          }
           setData(filteredData);
         }
       }

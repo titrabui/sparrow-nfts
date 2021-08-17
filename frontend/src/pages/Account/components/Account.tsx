@@ -37,69 +37,87 @@ const Account: React.FC = (props: any) => {
     let mounted = true;
     const getBlockchainWithDrawData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const pendingWithDraw = await contract.methods.pendingWithdrawals(id).call();
-        if (mounted) {
-          setWithDraw(pendingWithDraw);
+        try {
+          const { marketContract } = await getContract(connector);
+          const pendingWithDraw = await marketContract.methods.pendingWithdrawals(id).call();
+          if (mounted) {
+            setWithDraw(pendingWithDraw);
+          }
+        } catch (error) {
+          // continue regardless of error
         }
       }
     };
     const getBlockchainBidData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
-        if (mounted) {
-          const filteredBidData =
-            spacesOfferedBids &&
-            spacesOfferedBids.length > 0 &&
-            spacesOfferedBids
-              .filter((item: any) => item && item[0])
-              .map((item: any) => ({
-                index: Number(item.spaceIndex),
-                price: item.value,
-                bidder: item.bidder
-              }));
-          setAllBids(spacesOfferedBids);
-          setBidData(filteredBidData);
+        try {
+          const { marketContract } = await getContract(connector);
+          const spacesOfferedBids = await marketContract.methods.returnSpacesBidsArray().call();
+          if (mounted) {
+            let filteredBidData = [];
+            if (spacesOfferedBids && spacesOfferedBids.length > 0) {
+              filteredBidData = spacesOfferedBids
+                .filter((item: any) => item && item[0])
+                .map((item: any) => ({
+                  index: Number(item.spaceIndex),
+                  price: item.value,
+                  bidder: item.bidder
+                }));
+            }
+            setAllBids(spacesOfferedBids);
+            setBidData(filteredBidData);
+          }
+        } catch (error) {
+          // continue regardless of error
         }
       }
     };
     const getBlockchainSaleData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOffereds = await contract.methods.returnSpacesOfferedForSaleArray().call();
-        if (mounted) {
-          const filteredData =
-            spacesOffereds &&
-            spacesOffereds.length > 0 &&
-            spacesOffereds
-              .filter((item: any) => item && item[0])
-              .map((item: any) => ({
-                index: Number(item.spaceIndex),
-                price: item.minValue,
-                owner: item[2]
-              }));
-          setSaleData(filteredData);
+        try {
+          const { marketContract } = await getContract(connector);
+          const spacesOffereds = await marketContract.methods.returnSpacesOfferedForSaleArray().call();
+          if (mounted) {
+            let filteredData = [];
+            if (spacesOffereds && spacesOffereds.length > 0) {
+              filteredData = spacesOffereds
+                .filter((item: any) => item && item[0])
+                .map((item: any) => ({
+                  index: Number(item.spaceIndex),
+                  price: item.minValue,
+                  owner: item[2]
+                }));
+            }
+            setSaleData(filteredData);
+          }
+        } catch (error) {
+          // continue regardless of error
         }
       }
     };
     const getBlockchainOwnedData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spaceIndexToAddress = await contract.methods.returnSpaceIndexToAddressArray().call();
-        if (mounted) {
-          let spacesOwnedArray = [] as any;
-          spaceIndexToAddress.forEach((item: any, index: any) => {
-            if (item === id) spacesOwnedArray = [...spacesOwnedArray, index];
-          });
-          setSpacesOwned(spacesOwnedArray);
+        try {
+          const { marketContract } = await getContract(connector);
+          const spaceIndexToAddress = await marketContract.methods.returnSpaceIndexToAddressArray().call();
+          if (mounted) {
+            let spacesOwnedArray = [] as any;
+            spaceIndexToAddress.forEach((item: any, index: any) => {
+              if (item === id) spacesOwnedArray = [...spacesOwnedArray, index];
+            });
+            setSpacesOwned(spacesOwnedArray);
+          }
+        } catch (error) {
+          // continue regardless of error
         }
       }
     };
+
     getBlockchainOwnedData();
     getBlockchainWithDrawData();
     getBlockchainBidData();
     getBlockchainSaleData();
+
     return () => {
       mounted = false;
     };
@@ -108,6 +126,7 @@ const Account: React.FC = (props: any) => {
   const spacesBids = Spaces.filter((space: any) =>
     bidData.some((item: any) => item.index === space.id)
   );
+
   const spacesBidsWithPriceAndOwner = spacesBids.map((space: any) => {
     const blockchainBidData: any = bidData.find((item: any) => item.index === space.id);
     return { ...space, price: blockchainBidData.price, bidder: blockchainBidData.bidder };
@@ -115,6 +134,7 @@ const Account: React.FC = (props: any) => {
 
   const accountBids =
     spacesBidsWithPriceAndOwner && spacesBidsWithPriceAndOwner.filter((item) => item.bidder === id);
+
   const totalBidValue =
     (accountBids.length > 0 &&
       accountBids.reduce((prev: any, curr: any) => prev + Number(curr.price), 0)) ||
@@ -123,6 +143,7 @@ const Account: React.FC = (props: any) => {
   const spacesForSales = Spaces.filter((space: any) =>
     saleData.some((item: any) => item.index === space.id)
   );
+
   const spacesForSalesWithPrice = spacesForSales.map((space: any) => {
     const blockchainData: any = saleData.find((item: any) => item.index === space.id);
     return { ...space, price: blockchainData.price, owner: blockchainData.owner };
@@ -138,7 +159,7 @@ const Account: React.FC = (props: any) => {
     data &&
     data.bought &&
     data.bought.map((item: any) => {
-      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
+      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceId));
       return { ...item, img: spacesData.img };
     });
 
@@ -146,7 +167,7 @@ const Account: React.FC = (props: any) => {
     data &&
     data.sold &&
     data.sold.map((item: any) => {
-      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
+      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceId));
       return { ...item, img: spacesData.img };
     });
 
@@ -185,9 +206,9 @@ const Account: React.FC = (props: any) => {
   };
 
   const handleWithdraw = async () => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .withdraw()
         .send({ from: account })
         .on('receipt', async () => {
@@ -212,8 +233,8 @@ const Account: React.FC = (props: any) => {
     return { isForSale, isBid, id: space.id };
   });
 
-  const getBackground = (id: any) => {
-    const spaceFound = spacesWithColor.find((space: any) => space.id === id);
+  const getBackground = (spaceId: any) => {
+    const spaceFound = spacesWithColor.find((space: any) => space.id === spaceId);
     if (spaceFound?.isBid) return '#8e6fb6';
     if (spaceFound?.isForSale) return '#95554f';
     return '#dfdbe8';
@@ -247,7 +268,7 @@ const Account: React.FC = (props: any) => {
             <Title>Total Spaces Owned</Title>
             <Value>{spacesOwned.length}</Value>
           </Col>
-          <Col span={8}></Col>
+          <Col span={8}>{' '}</Col>
           <Col span={8}>
             <Title>Total Amount Spent Buying Spaces</Title>
             <Value>
@@ -470,10 +491,10 @@ const Account: React.FC = (props: any) => {
                 spacesBoughtDetail.map((space: any) => (
                   <Col span={2} key={space.createdAt}>
                     <ImageContainer
-                      style={{ backgroundColor: getBackground(Number(space.spaceIndex)) }}
+                      style={{ backgroundColor: getBackground(Number(space.spaceId)) }}
                     >
                       <ImageWrapper>
-                        <Link to={`/detail/${space.spaceIndex}`}>
+                        <Link to={`/detail/${space.spaceId}`}>
                           <img src={space.img} alt={`img${space.id}`} />
                         </Link>
                       </ImageWrapper>
@@ -507,10 +528,10 @@ const Account: React.FC = (props: any) => {
                 spacesSoldDetail.map((space: any) => (
                   <Col span={2} key={space.createdAt}>
                     <ImageContainer
-                      style={{ backgroundColor: getBackground(Number(space.spaceIndex)) }}
+                      style={{ backgroundColor: getBackground(Number(space.spaceId)) }}
                     >
                       <ImageWrapper>
-                        <Link to={`/detail/${space.spaceIndex}`}>
+                        <Link to={`/detail/${space.spaceId}`}>
                           <img src={space.img} alt={`img${space.id}`} />
                         </Link>
                       </ImageWrapper>

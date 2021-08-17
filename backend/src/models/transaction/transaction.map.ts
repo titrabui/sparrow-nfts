@@ -6,7 +6,7 @@ export class TransactionMap {
     const eventValues = event.returnValues;
     const transactionDto = {
       type: SC_EVENT_MAPPER[event.event],
-      spaceIndex: eventValues.spaceIndex,
+      spaceId: eventValues.spaceId,
       from: transactionData.from,
       txn: event.transactionHash
     } as ITransaction;

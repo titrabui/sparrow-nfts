@@ -24,7 +24,7 @@ const LargestSales: React.FC = () => {
   }, []);
 
   const mappedSpaces = data.largestSales.map((item: any) => {
-    const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
+    const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceId));
     return { ...item, img: spacesData.img };
   });
   return (
@@ -50,13 +50,13 @@ const LargestSales: React.FC = () => {
                   {index > 8 ? index + 1 : `0${index + 1}`}
                 </ImageNumber>
                 <ImageWrapper>
-                  <Link to={`/detail/${space.spaceIndex}`}>
+                  <Link to={`/detail/${space.spaceId}`}>
                     <img src={space.img} alt={`img${space.id}`} />
                   </Link>
                 </ImageWrapper>
               </ImageContainer>
               <StyledText $size='24px' strong $color='#0C264D'>
-                #{space.spaceIndex}
+                #{space.spaceId}
               </StyledText>
               <StyledText $size='20px' $color='#4B4B4B'>
                 {space.amount}Ξ ($

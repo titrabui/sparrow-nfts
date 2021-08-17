@@ -17,19 +17,20 @@ import { ISpaceProps } from 'types/SpaceProps';
 import { getContract } from 'utils/getContract';
 import { notification } from 'antd';
 import { Link } from 'react-router-dom';
-import { ETH_USD_PRICE } from 'environment';
+import { ETH_USD_PRICE, SC_INIT_OWNER_ADDRESS } from 'environment';
 import formatNumber from 'utils/format';
 import SaleModal from '../SaleModal';
 import BidModal from '../BidModal';
 import AcceptBidModal from '../AcceptBidModal';
 import TransferModal from '../TransferModal';
 
+const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 const Information: React.FC<ISpaceProps> = (props: any) => {
   const { active, connector, account, library } = useWallet();
   const { data } = props;
-  const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
   const [spaceInfo, setSpaceInfo] = useState({
-    owner: NULL_ADDRESS,
+    owner: SC_INIT_OWNER_ADDRESS,
     isForSale: false,
     price: 0,
     onlySellTo: NULL_ADDRESS,
@@ -61,10 +62,11 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
     let mounted = true;
     const getBlockchainData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const owner = await contract.methods.spaceIndexToAddress(data.id).call();
-        const spacesOfferedForSale = await contract.methods.spacesOfferedForSale(data.id).call();
-        const spaceBids = await contract.methods.spaceBids(data.id).call();
+        const { marketContract, tokenContract } = await getContract(connector);
+        const owner = await tokenContract.methods.ownerOf(data.id).call();
+
+        const spacesOfferedForSale = await marketContract.methods.spacesOfferedForSale(data.id).call();
+        const spaceBids = await marketContract.methods.spaceBids(data.id).call();
         const { isForSale, minValue, onlySellTo } = spacesOfferedForSale;
         const { hasBid, bidder, value } = spaceBids;
         if (mounted)
@@ -83,15 +85,33 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
     return () => {
       mounted = false;
     };
-  });
+  }, [data.id, connector, account]);
 
   const handleClaim = async () => {
-    const contract = await getContract(connector);
+    const { marketContract, tokenContract } = await getContract(connector);
+
     try {
-      await contract.methods
+      const isApprovedForAll = await tokenContract.methods.isApprovedForAll(
+        account,
+        marketContract.options.address
+      ).call();
+
+      if (!isApprovedForAll) {
+        await tokenContract.methods
+        .setApprovalForAll(
+          marketContract.options.address,
+          true
+        ).send({ from: account });
+      }
+
+      await marketContract.methods
         .getSpace(data.id)
         .send({ from: account })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            owner: account || SC_INIT_OWNER_ADDRESS
+          });
           notification.success({
             message: 'Claim Space',
             description: 'Claim Space Success'
@@ -103,12 +123,17 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
   };
 
   const handleOfferForSale = async (value: any) => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .offerSpaceForSale(data.id, library.utils.toWei(value, 'ether'))
         .send({ from: account })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            price: library.utils.toWei(value, 'ether'),
+            onlySellTo: NULL_ADDRESS
+          });
           notification.success({
             message: 'Offer For Sale',
             description: 'Offer For Sale Success'
@@ -120,12 +145,17 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
   };
 
   const handleOfferForSaleToAddress = async (value: string, toAddress: string) => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .offerSpaceForSaleToAddress(data.id, library.utils.toWei(value, 'ether'), toAddress)
         .send({ from: account })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            price: library.utils.toWei(value, 'ether'),
+            onlySellTo: toAddress
+          });
           notification.success({
             message: 'Offer For Sale',
             description: 'Offer For Sale Success'
@@ -137,12 +167,18 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
   };
 
   const handleBid = async (value: any) => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .enterBidForSpace(data.id)
         .send({ from: account, value: library.utils.toWei(value, 'ether') })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            bidValue: library.utils.toWei(value, 'ether'),
+            bidder: account || NULL_ADDRESS,
+            hasBid: true
+          });
           notification.success({
             message: 'Bid Space',
             description: 'Bid Space Success'
@@ -154,12 +190,19 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
   };
 
   const handleAcceptBid = async (value: any) => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .acceptBidForSpace(data.id, library.utils.toWei(value, 'ether'))
         .send({ from: account })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            hasBid: false,
+            bidValue: 0,
+            bidder: NULL_ADDRESS,
+            owner: spaceInfo.bidder
+          });
           notification.success({
             message: 'Accept Bid',
             description: 'Accept Bid Success'
@@ -171,12 +214,18 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
   };
 
   const handleWithdrawBid = async () => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .withdrawBidForSpace(data.id)
         .send({ from: account })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            hasBid: false,
+            bidValue: 0,
+            bidder: NULL_ADDRESS
+          });
           notification.success({
             message: 'Withdraw Bid',
             description: 'Withdraw Bid Success'
@@ -188,12 +237,21 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
   };
 
   const handleBuySpace = async () => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .buySpace(data.id)
         .send({ from: account, value: price })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            owner: account || SC_INIT_OWNER_ADDRESS,
+            isForSale: false,
+            price: 0,
+            onlySellTo: NULL_ADDRESS,
+            hasBid: false,
+            bidder: NULL_ADDRESS
+          });
           notification.success({
             message: 'Buy Space',
             description: 'Buy Space Success'
@@ -205,12 +263,19 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
   };
 
   const handleTransferSpace = async (to: string) => {
-    const contract = await getContract(connector);
+    const { marketContract } = await getContract(connector);
     try {
-      await contract.methods
+      await marketContract.methods
         .transferSpace(to, data.id)
         .send({ from: account })
         .on('receipt', async () => {
+          setSpaceInfo({
+            ...spaceInfo,
+            owner: to || SC_INIT_OWNER_ADDRESS,
+            isForSale: false,
+            price: 0,
+            onlySellTo: NULL_ADDRESS
+          });
           notification.success({
             message: 'Transfer Space',
             description: 'Transfer Space Success'
@@ -236,7 +301,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
       <SmallTitle>Current Market Status</SmallTitle>
       <StyledText>
         This space is currently owned by{' '}
-        {owner !== NULL_ADDRESS ? (
+        {owner !== SC_INIT_OWNER_ADDRESS ? (
           <>
             address{' '}
             <Link to={`/account/${owner}`}>
@@ -262,7 +327,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
           There is a bid of {library && library.utils.fromWei(bidValue.toString(), 'ether')} ETH ($
           {formatNumber(library && library.utils.fromWei(bidValue.toString(), 'ether') * ETH_USD_PRICE, 2)})
           for this space from{' '}
-          <Link to='/'>
+          <Link to={`/account/${bidder}`}>
             <LinkText>{bidder && bidder.slice(0, 8)}</LinkText>
           </Link>
           .
@@ -297,7 +362,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
 
       {active && (
         <>
-          {owner === NULL_ADDRESS && (
+          {owner === SC_INIT_OWNER_ADDRESS && (
             <StyledButton $bgType='primary' onClick={handleClaim}>
               <PlusSquareOutlined /> Claim
             </StyledButton>
@@ -326,7 +391,7 @@ const Information: React.FC<ISpaceProps> = (props: any) => {
             </StyledButton>
           )}
 
-          {account !== owner && owner !== NULL_ADDRESS && (
+          {account !== owner && owner !== SC_INIT_OWNER_ADDRESS && (
             <StyledButton $bgType='primary' onClick={() => setIsBid(true)}>
               <TagOutlined /> Bid
             </StyledButton>

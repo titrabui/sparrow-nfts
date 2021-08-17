@@ -20,7 +20,7 @@ export class TransactionReposity extends BaseModel {
 
     try {
       await this.redisService.hset(
-        `${DATABASE_NAME}:${data.spaceIndex}`,
+        `${DATABASE_NAME}:${data.spaceId}`,
         this.generateUniqueId(),
         this.convertToJSON(data)
       );

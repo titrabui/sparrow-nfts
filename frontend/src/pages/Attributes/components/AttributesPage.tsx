@@ -22,58 +22,58 @@ const AttributesPage: React.FC = () => {
     let mounted = true;
     const getBlockchainData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedForSale = await contract.methods
+        const { marketContract } = await getContract(connector);
+        const spacesOfferedForSale = await marketContract.methods
           .returnSpacesOfferedForSaleArray()
           .call();
         if (mounted) {
-          const filteredData =
-            spacesOfferedForSale &&
-            spacesOfferedForSale.length > 0 &&
-            spacesOfferedForSale
+          let filteredData = [];
+          if (spacesOfferedForSale && spacesOfferedForSale.length > 0) {
+            filteredData = spacesOfferedForSale
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.minValue
               }));
+          }
           setData(filteredData);
         }
       }
     };
     const getBlockchainSaleData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOffereds = await contract.methods.returnSpacesOfferedForSaleArray().call();
+        const { marketContract } = await getContract(connector);
+        const spacesOffereds = await marketContract.methods.returnSpacesOfferedForSaleArray().call();
         if (mounted) {
-          const filteredData =
-            spacesOffereds &&
-            spacesOffereds.length > 0 &&
-            spacesOffereds
+          let filteredData = [];
+          if (spacesOffereds && spacesOffereds.length > 0) {
+            filteredData = spacesOffereds
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.minValue,
                 owner: item[2]
               }));
+          }
           setSaleData(filteredData);
         }
       }
     };
     const getBlockchainBidData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
+        const { marketContract } = await getContract(connector);
+        const spacesOfferedBids = await marketContract.methods.returnSpacesBidsArray().call();
         if (mounted) {
-          const filteredBidData =
-            spacesOfferedBids &&
-            spacesOfferedBids.length > 0 &&
-            spacesOfferedBids
+          let filteredBidData = [];
+          if (spacesOfferedBids && spacesOfferedBids.length > 0) {
+            filteredBidData = spacesOfferedBids
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.value,
                 bidder: item.bidder
               }));
+          }
           setBidData(filteredBidData);
         }
       }

@@ -7,31 +7,76 @@ import StyledTable from 'ui/Table';
 import { Text } from 'ui/Typography';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
+import formartNumber from 'utils/format';
 
 const TableAttributes: React.FC = (props: any) => {
   const { data } = props;
   const tooltipContentAvgSale = 'Average sale price over past 90 days with this attributes';
   const tooltipContentCheapest = 'Cheapest punk currently for sale with this attribute';
 
-  const renderCheapest = (space, price) => (
-    <div>
-      <Link to={`/detail/${space.id}`}>
-        <img src={space.img} alt='' width={42} height={42} />
-      </Link>
-      <Text $size='18px' ml='10px'>
-        {price}Ξ
-      </Text>
-    </div>
-  );
+  const renderCheapest = (space, price) => {
+    const isBid =
+      data.bidData && data.bidData.length > 0 && data.bidData.some((bid) => bid.index === space.id);
+    const isSale =
+      data.saleData &&
+      data.saleData.length > 0 &&
+      data.saleData.some((bid) => bid.index === space.id);
+    return space ? (
+      <div>
+        <Link to={`/detail/${space.id}`}>
+          <img
+            src={space.img}
+            alt=''
+            width={50}
+            height={50}
+            style={{ background: '#95554f', padding: 4 }}
+          />
+        </Link>
+        <Text $size='18px' ml='10px'>
+          {formartNumber(price, 2)}Ξ
+        </Text>
+      </div>
+    ) : (
+      <Text $size='18px'>No space for sale</Text>
+    );
+  };
 
   const renderMoreExamples = (moreExample: Array<any>) =>
-    moreExample.map((image) => (
-      <SpaceContainer key={Math.random()}>
-        <Link to={`/detail/${image.id}`}>
-          <img src={image.img} alt='' width={42} height={42} />
-        </Link>
-      </SpaceContainer>
-    ));
+    moreExample.map((image) => {
+      const isBid =
+        data.bidData &&
+        data.bidData.length > 0 &&
+        data.bidData.some((bid) => bid.index === image.id);
+      const isSale =
+        data.saleData &&
+        data.saleData.length > 0 &&
+        data.saleData.some((bid) => bid.index === image.id);
+      if (isBid)
+        return (
+          <SpaceContainer key={Math.random()} style={{ backgroundColor: '#8e6fb6' }}>
+            <Link to={`/detail/${image.id}`}>
+              <img src={image.img} alt='' width={42} height={42} />
+            </Link>
+          </SpaceContainer>
+        );
+      if (isSale)
+        return (
+          <SpaceContainer key={Math.random()} style={{ backgroundColor: '#95554f' }}>
+            <Link to={`/detail/${image.id}`}>
+              <img src={image.img} alt='' width={42} height={42} />
+            </Link>
+          </SpaceContainer>
+        );
+      return (
+        <SpaceContainer key={Math.random()}>
+          <Link to={`/detail/${image.id}`}>
+            <img src={image.img} alt='' width={42} height={42} />
+          </Link>
+        </SpaceContainer>
+      );
+    });
+
+  const renderAvgSale = (avgSale) => (avgSale ? formartNumber(avgSale, 2) : 0);
 
   const renderTitleTooltip = (title: string, text: string) => (
     <AvgSaleWrapper>
@@ -69,7 +114,7 @@ const TableAttributes: React.FC = (props: any) => {
       render(attribute: string) {
         return (
           <Link to='/'>
-            <Text $color='#0080FF' $size='18px'>
+            <Text $color='#0080FF' $size='18px' strong>
               {attribute}
             </Text>
           </Link>
@@ -80,8 +125,13 @@ const TableAttributes: React.FC = (props: any) => {
       title: '#',
       dataIndex: 'number',
       key: 'number',
-      render(number: string) {
-        return <Text $size='18px'>{number}</Text>;
+      render(avail: string, record: any) {
+        return (
+          <Text $size='18px'>
+            {' '}
+            {record.attribute === 'Device' ? data.deviceCount : data.natureCount}
+          </Text>
+        );
       }
     },
     {
@@ -101,11 +151,15 @@ const TableAttributes: React.FC = (props: any) => {
       title: renderTitleTooltip('Avg Sale', tooltipContentAvgSale),
       dataIndex: 'avgSale',
       key: 'avgSale',
+      width: 120,
       render(avgSale: string, record: any) {
         return (
           <Text $size='18px'>
             {' '}
-            {record.attribute === 'Device' ? data.avgDeviceEther : data.avgNatureEther}Ξ
+            {record.attribute === 'Device'
+              ? renderAvgSale(data.avgDeviceEther)
+              : renderAvgSale(data.avgNatureEther)}
+            Ξ
           </Text>
         );
       }
@@ -114,6 +168,7 @@ const TableAttributes: React.FC = (props: any) => {
       title: renderTitleTooltip('Cheapest', tooltipContentCheapest),
       dataIndex: 'cheapest',
       key: 'cheapest',
+      width: 130,
       render(cheapest: any, record: any) {
         return record.attribute === 'Device'
           ? renderCheapest(data.cheapestDevice, data.cheapestDeviceEther)
@@ -130,7 +185,14 @@ const TableAttributes: React.FC = (props: any) => {
     }
   ];
 
-  return <StyledTable columns={columns} dataSource={dataSource} rowKey='number' pagination={false} />;
+  return (
+    <CustomStyledTable
+      columns={columns}
+      dataSource={dataSource}
+      rowKey='number'
+      pagination={false}
+    />
+  );
 };
 
 const SpaceContainer = styled.div`
@@ -146,6 +208,16 @@ const AvgSaleWrapper = styled.div`
     font-size: 14px;
     right: -4px;
     text-align: center;
+  }
+`;
+
+const CustomStyledTable = styled(StyledTable)`
+  td {
+    padding: 5px 8px !important;
+    text-align: left !important;
+  }
+  th {
+    text-align: left !important;
   }
 `;
 export default TableAttributes;

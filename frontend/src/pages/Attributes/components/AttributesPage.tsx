@@ -14,6 +14,8 @@ import TableAttributes from './TableAttributes';
 const AttributesPage: React.FC = () => {
   const { connector, library } = useWallet();
   const [data, setData] = useState([]);
+  const [bidData, setBidData] = useState([]);
+  const [saleData, setSaleData] = useState([]);
   const natureSpaces = Spaces.filter((space) => space.type === 'Nature');
   const deviceSpaces = Spaces.filter((space) => space.type === 'Device');
   useEffect(() => {
@@ -38,6 +40,47 @@ const AttributesPage: React.FC = () => {
         }
       }
     };
+    const getBlockchainSaleData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOffereds = await contract.methods.returnSpacesOfferedForSaleArray().call();
+        if (mounted) {
+          const filteredData =
+            spacesOffereds &&
+            spacesOffereds.length > 0 &&
+            spacesOffereds
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.minValue,
+                owner: item[2]
+              }));
+          setSaleData(filteredData);
+        }
+      }
+    };
+    const getBlockchainBidData = async () => {
+      if (connector) {
+        const contract = await getContract(connector);
+        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
+        if (mounted) {
+          const filteredBidData =
+            spacesOfferedBids &&
+            spacesOfferedBids.length > 0 &&
+            spacesOfferedBids
+              .filter((item: any) => item && item[0])
+              .map((item: any) => ({
+                index: Number(item.spaceIndex),
+                price: item.value,
+                bidder: item.bidder
+              }));
+          setBidData(filteredBidData);
+        }
+      }
+    };
+
+    getBlockchainBidData();
+    getBlockchainSaleData();
     getBlockchainData();
     return () => {
       mounted = false;
@@ -53,8 +96,10 @@ const AttributesPage: React.FC = () => {
     const blockchainData: any = data.find((item: any) => item.index === space.id);
     return { ...space, price: blockchainData.price };
   });
-  const natureAvail = natureSpaces.length;
-  const deviceAvail = deviceSpaces.length;
+  const natureCount = natureSpaces.length;
+  const deviceCount = deviceSpaces.length;
+  const natureAvail = natureSales.length;
+  const deviceAvail = deviceSales.length;
   const cheapestNature =
     (natureSalesMap.length > 0 &&
       natureSalesMap.reduce((prev: any, curr: any) => (prev.price < curr.price ? prev : curr))) ||
@@ -90,19 +135,23 @@ const AttributesPage: React.FC = () => {
           All Types
         </Title>
         <ContentContainer>
-          <Title $color='#4B4B4B' $size='24px'>
+          <Title $color='#4B4B4B' $size='24px' >
             Space Types
           </Title>
           <TableAttributes
             data={{
-              natureAvail,
-              deviceAvail,
+              natureCount,
+              deviceCount,
               cheapestNatureEther,
               cheapestDeviceEther,
               avgNatureEther,
               avgDeviceEther,
               cheapestDevice,
-              cheapestNature
+              cheapestNature,
+              bidData,
+              saleData,
+              natureAvail,
+              deviceAvail
             }}
           />
         </ContentContainer>

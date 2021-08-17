@@ -11,8 +11,8 @@ async function main() {
     console.log("CryptoSpace deployed to:", CryptoSpace.address);
 
     await SP.mintBatch721Token(12);
-
-
+    const accounts = await web3.eth.getAccounts();
+    await SP.setApprovalForAll(CryptoSpace.address, true, { from: accounts[0] });
   }
   
   main()

@@ -20,8 +20,8 @@ const TopOwners: React.FC = () => {
 
     const getBlockchainOwnedData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spaceIndexToAddress = await contract.methods.returnSpaceIndexToAddressArray().call();
+        const { marketContract } = await getContract(connector);
+        const spaceIndexToAddress = await marketContract.methods.returnSpaceIndexToAddressArray().call();
         const addressGroup = spaceIndexToAddress
           .filter((space: any) => space !== NULL_ADDRESS)
           .reduce(

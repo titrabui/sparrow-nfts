@@ -17,8 +17,8 @@ const Bids: React.FC = () => {
     let mounted = true;
     const getBlockchainData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
+        const { marketContract } = await getContract(connector);
+        const spacesOfferedBids = await marketContract.methods.returnSpacesBidsArray().call();
         if (mounted) {
           let filteredData = [];
           if (spacesOfferedBids && spacesOfferedBids.length > 0) {

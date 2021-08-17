@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import useWallet from 'hooks/useWallet';
+import { Link } from 'react-router-dom';
 import Button from './Button';
 import { Text } from './Typography';
 
@@ -18,7 +19,9 @@ const ConnectMetamask: React.FC = () => {
         </StyledText>
         <StyledButton onClick={handleConnectWallet}>
           <Text $size='18px' $color='#0080FF' strong>
-            {active ? account?.slice(0, 10) : 'Allow access to MetaMask'}
+            {active && account
+              ? (<Link to={`/account/${account}`}>{account?.slice(0, 10)}</Link>)
+              : 'Allow access to MetaMask'}
           </Text>
         </StyledButton>
       </div>

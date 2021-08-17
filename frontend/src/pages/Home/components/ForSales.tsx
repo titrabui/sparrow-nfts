@@ -17,8 +17,8 @@ const ForSales: React.FC = () => {
     let mounted = true;
     const getBlockchainData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedForSale = await contract.methods
+        const { marketContract } = await getContract(connector);
+        const spacesOfferedForSale = await marketContract.methods
           .returnSpacesOfferedForSaleArray()
           .call();
         if (mounted) {

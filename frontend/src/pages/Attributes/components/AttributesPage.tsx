@@ -22,8 +22,8 @@ const AttributesPage: React.FC = () => {
     let mounted = true;
     const getBlockchainData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedForSale = await contract.methods
+        const { marketContract } = await getContract(connector);
+        const spacesOfferedForSale = await marketContract.methods
           .returnSpacesOfferedForSaleArray()
           .call();
         if (mounted) {
@@ -42,8 +42,8 @@ const AttributesPage: React.FC = () => {
     };
     const getBlockchainSaleData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOffereds = await contract.methods.returnSpacesOfferedForSaleArray().call();
+        const { marketContract } = await getContract(connector);
+        const spacesOffereds = await marketContract.methods.returnSpacesOfferedForSaleArray().call();
         if (mounted) {
           let filteredData = [];
           if (spacesOffereds && spacesOffereds.length > 0) {
@@ -61,8 +61,8 @@ const AttributesPage: React.FC = () => {
     };
     const getBlockchainBidData = async () => {
       if (connector) {
-        const contract = await getContract(connector);
-        const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
+        const { marketContract } = await getContract(connector);
+        const spacesOfferedBids = await marketContract.methods.returnSpacesBidsArray().call();
         if (mounted) {
           let filteredBidData = [];
           if (spacesOfferedBids && spacesOfferedBids.length > 0) {

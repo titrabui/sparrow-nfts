@@ -13,7 +13,7 @@ import img12 from 'assets/images/013-space-capsule-3.svg';
 
 const Spaces = [
   {
-    id: 1,
+    id: 0,
     name: 'Cloud',
     type: 'Nature',
     price: 1500,
@@ -23,7 +23,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 2,
+    id: 1,
     name: 'Satellite Dish',
     type: 'Device',
     price: 2500,
@@ -33,7 +33,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 3,
+    id: 2,
     name: 'Galaxy',
     type: 'Nature',
     price: 3500,
@@ -43,7 +43,7 @@ const Spaces = [
     status: 1
   },
   {
-    id: 4,
+    id: 3,
     name: 'Astrounaut',
     type: 'Device',
     price: 5500,
@@ -53,7 +53,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 5,
+    id: 4,
     name: 'Stars',
     type: 'Nature',
     price: 1500,
@@ -63,7 +63,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 6,
+    id: 5,
     name: 'Comet 1',
     type: 'Nature',
     price: 1500,
@@ -73,7 +73,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 7,
+    id: 6,
     name: 'Gamma Ray',
     type: 'Nature',
     price: 1500,
@@ -83,7 +83,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 8,
+    id: 7,
     name: 'Space Shuttle',
     type: 'Device',
     price: 1500,
@@ -93,7 +93,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 9,
+    id: 8,
     name: 'Super Nova',
     type: 'Nature',
     price: 1500,
@@ -103,7 +103,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 10,
+    id: 9,
     name: 'Comet 2',
     type: 'Nature',
     price: 1500,
@@ -113,7 +113,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 11,
+    id: 10,
     name: 'Eath Globe',
     type: 'Device',
     price: 1500,
@@ -123,7 +123,7 @@ const Spaces = [
     status: 0
   },
   {
-    id: 12,
+    id: 11,
     name: 'Space Capsule',
     type: 'Device',
     price: 1500,

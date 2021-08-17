@@ -68,7 +68,7 @@ const RecentTransactions: React.FC = () => {
   const mappedTransactions =
     data &&
     data.map((item: any) => {
-      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceIndex));
+      const spacesData: any = Spaces.find((space: any) => space.id === Number(item.spaceId));
       return { ...item, img: spacesData.img };
     });
   return (
@@ -85,13 +85,13 @@ const RecentTransactions: React.FC = () => {
             <Col span={4} key={transaction.createdAt}>
               <ImageContainer style={{ backgroundColor: getBackground(transaction.type) }}>
                 <ImageWrapper>
-                  <Link to={`/detail/${transaction.spaceIndex}`}>
-                    <img src={transaction.img} alt={`img${transaction.spaceIndex}`} />
+                  <Link to={`/detail/${transaction.spaceId}`}>
+                    <img src={transaction.img} alt={`img${transaction.spaceId}`} />
                   </Link>
                 </ImageWrapper>
               </ImageContainer>
               <StyledText $size='24px' strong $color='#0C264D'>
-                #{transaction.spaceIndex}
+                #{transaction.spaceId}
               </StyledText>
               <StyledText $size='20px' $color='#8D8D8D'>
                 {transaction.type}

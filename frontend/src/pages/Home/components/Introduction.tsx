@@ -44,8 +44,7 @@ const Introduction: React.FC = () => (
         <ThirdParagraph>
           <Text $size='16px'>
             The demo of CryptoSpace are 12 unique generated characters. There are no alike NFTs on
-            the Ethereum Blockchain. The CryptoSpace collection will be listed on OpenSea, Rarible,
-            and other marketplaces when it is launched. Via the marketplaces, you can buy, bid on,
+            the Ethereum Blockchain. Via the marketplaces, you can buy, bid on,
             and offer Spacy subjects for sale.
           </Text>
         </ThirdParagraph>
@@ -100,12 +99,14 @@ const FirstParagraph = styled(StyledSpace)`
   width: 690px;
   display: block;
   margin: 5px auto 0 0;
+  font-size: 16px;
 `;
 
 const SecondParagraph = styled(StyledSpace)`
   width: 690px;
   display: block;
   margin: 5px  auto 0 0;
+  font-size: 16px;
 `;
 
 const ThirdParagraph = styled(StyledSpace)`

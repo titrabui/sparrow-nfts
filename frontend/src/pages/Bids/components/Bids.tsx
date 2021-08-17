@@ -4,11 +4,13 @@ import styled from 'styled-components';
 import { Col, Row } from 'antd';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
+import formatNumber from 'utils/format';
 import { Text } from 'ui/Typography';
 import Box from 'ui/Box';
 import BreadCrumb from 'ui/Breadcrumb';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
+import { ETH_USD_PRICE } from 'environment';
 
 const Bids: React.FC = () => {
   const { connector, library } = useWallet();
@@ -67,7 +69,11 @@ const Bids: React.FC = () => {
                   {library && library.utils.fromWei(space.price.toString(), 'ether')}Ξ
                 </StyledText>
                 <StyledText $size='14px' $color='#4B4B4B'>
-                  ${library && library.utils.fromWei(space.price.toString(), 'ether') * 3000}
+                  $
+                  {formatNumber(
+                    library && library.utils.fromWei(space.price.toString(), 'ether') * ETH_USD_PRICE,
+                    2
+                  )}
                 </StyledText>
               </Col>
             ))

@@ -8,35 +8,35 @@ import { Text } from 'ui/Typography';
 import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
 import formartNumber from 'utils/format';
+import { ISpace } from 'types/SpaceProps';
 
-const TableAttributes: React.FC = (props: any) => {
+const TOOL_TIP_CONTENT_AVG_SALE = 'Average sale price over past 90 days with this attributes';
+const TOOL_TIP_CONTENT_CHEAPEST = 'Cheapest space currently for sale with this attribute';
+
+const TableAttributes: React.FC<any> = (props: any) => {
   const { data } = props;
-  const tooltipContentAvgSale = 'Average sale price over past 90 days with this attributes';
-  const tooltipContentCheapest = 'Cheapest punk currently for sale with this attribute';
 
-  const renderCheapest = (space, price) => {
-    const isBid =
-      data.bidData && data.bidData.length > 0 && data.bidData.some((bid) => bid.index === space.id);
-    const isSale =
-      data.saleData &&
-      data.saleData.length > 0 &&
-      data.saleData.some((bid) => bid.index === space.id);
-    return space ? (
-      <div>
-        <Link to={`/detail/${space.id}`}>
-          <img
-            src={space.img}
-            alt=''
-            width={50}
-            height={50}
-            style={{ background: '#95554f', padding: 4 }}
-          />
-        </Link>
-        <Text $size='18px' ml='10px'>
-          {formartNumber(price, 2)}Ξ
-        </Text>
-      </div>
-    ) : (
+  const renderCheapest = (space: ISpace, price: string) => {
+    if (space) {
+      return (
+        <div>
+          <Link to={`/detail/${space.id}`}>
+            <img
+              src={space.img}
+              alt=''
+              width={50}
+              height={50}
+              style={{ background: '#95554f', padding: 4 }}
+            />
+          </Link>
+          <Text $size='18px' ml='10px'>
+            {formartNumber(price, 2)}Ξ
+          </Text>
+        </div>
+      )
+    }
+
+    return (
       <Text $size='18px'>No space for sale</Text>
     );
   };
@@ -46,11 +46,11 @@ const TableAttributes: React.FC = (props: any) => {
       const isBid =
         data.bidData &&
         data.bidData.length > 0 &&
-        data.bidData.some((bid) => bid.index === image.id);
+        data.bidData.some((bid: any) => bid.index === image.id);
       const isSale =
         data.saleData &&
         data.saleData.length > 0 &&
-        data.saleData.some((bid) => bid.index === image.id);
+        data.saleData.some((bid: any) => bid.index === image.id);
       if (isBid)
         return (
           <SpaceContainer key={Math.random()} style={{ backgroundColor: '#8e6fb6' }}>
@@ -76,7 +76,7 @@ const TableAttributes: React.FC = (props: any) => {
       );
     });
 
-  const renderAvgSale = (avgSale) => (avgSale ? formartNumber(avgSale, 2) : 0);
+  const renderAvgSale = (avgSale: string) => (avgSale ? formartNumber(avgSale, 2) : 0);
 
   const renderTitleTooltip = (title: string, text: string) => (
     <AvgSaleWrapper>
@@ -146,9 +146,8 @@ const TableAttributes: React.FC = (props: any) => {
         );
       }
     },
-
     {
-      title: renderTitleTooltip('Avg Sale', tooltipContentAvgSale),
+      title: renderTitleTooltip('Avg Sale', TOOL_TIP_CONTENT_AVG_SALE),
       dataIndex: 'avgSale',
       key: 'avgSale',
       width: 120,
@@ -165,7 +164,7 @@ const TableAttributes: React.FC = (props: any) => {
       }
     },
     {
-      title: renderTitleTooltip('Cheapest', tooltipContentCheapest),
+      title: renderTitleTooltip('Cheapest', TOOL_TIP_CONTENT_CHEAPEST),
       dataIndex: 'cheapest',
       key: 'cheapest',
       width: 130,

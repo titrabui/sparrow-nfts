@@ -86,8 +86,8 @@ const AttributesPage: React.FC = () => {
       mounted = false;
     };
   }, [connector]);
-  const natureSales = natureSpaces.filter((space) => data.some((item) => item.index === space.id));
-  const deviceSales = deviceSpaces.filter((space) => data.some((item) => item.index === space.id));
+  const natureSales = natureSpaces.filter((space) => data.some((item: any) => item.index === space.id));
+  const deviceSales = deviceSpaces.filter((space) => data.some((item: any) => item.index === space.id));
   const natureSalesMap = natureSales.map((space) => {
     const blockchainData: any = data.find((item: any) => item.index === space.id);
     return { ...space, price: blockchainData.price };
@@ -102,7 +102,7 @@ const AttributesPage: React.FC = () => {
   const deviceAvail = deviceSales.length;
   const cheapestNature =
     (natureSalesMap.length > 0 &&
-      natureSalesMap.reduce((prev: any, curr: any) => (prev.price < curr.price ? prev : curr))) ||
+      natureSalesMap.reduce((prev: any, curr: any) => (Number(prev.price) < Number(curr.price) ? prev : curr))) ||
     0;
   const cheapestNatureEther =
     library &&
@@ -111,7 +111,7 @@ const AttributesPage: React.FC = () => {
     library.utils.fromWei(cheapestNature.price.toString(), 'ether');
   const cheapestDevice =
     (deviceSalesMap.length > 0 &&
-      deviceSalesMap.reduce((prev: any, curr: any) => (prev.price < curr.price ? prev : curr))) ||
+      deviceSalesMap.reduce((prev: any, curr: any) => (Number(prev.price) < Number(curr.price) ? prev : curr))) ||
     0;
   const cheapestDeviceEther =
     library &&

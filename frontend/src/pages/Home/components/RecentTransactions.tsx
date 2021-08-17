@@ -49,6 +49,22 @@ const RecentTransactions: React.FC = () => {
     getData();
   }, []);
 
+  const getBackground = (type: string) => {
+    switch (type) {
+      case 'Offered':
+        return '#95554f';
+      case 'Bid':
+        return '#8e6fb6';
+      case 'Sold':
+        return '#638596';
+      case 'Claimed':
+      case 'Transfer':
+        return '#add6b8';
+      default:
+        return '#dfdbe8';
+    }
+  };
+
   const mappedTransactions =
     data &&
     data.map((item: any) => {
@@ -67,7 +83,7 @@ const RecentTransactions: React.FC = () => {
         <ItemsContainer justify='start' gutter={[0, 24]}>
           {mappedTransactions.map((transaction: any) => (
             <Col span={4} key={transaction.createdAt}>
-              <ImageContainer>
+              <ImageContainer style={{ backgroundColor: getBackground(transaction.type) }}>
                 <ImageWrapper>
                   <Link to={`/detail/${transaction.spaceIndex}`}>
                     <img src={transaction.img} alt={`img${transaction.spaceIndex}`} />
@@ -82,7 +98,8 @@ const RecentTransactions: React.FC = () => {
               </StyledText>
               {transaction.amount && (
                 <StyledText $size='20px' $color='#4B4B4B'>
-                  {transaction.amount}Ξ (${formatNumber((transaction.amount * ETH_USD_PRICE).toString(), 2)})
+                  {transaction.amount}Ξ ($
+                  {formatNumber((transaction.amount * ETH_USD_PRICE).toString(), 2)})
                 </StyledText>
               )}
             </Col>
@@ -113,7 +130,6 @@ const UpdateTime = styled(Text)`
 const ImageContainer = styled.div`
   width: 90%;
   height: 160px;
-  background-color: #dfdbe8;
   position: relative;
   margin-bottom: 20px;
 `;
@@ -126,7 +142,7 @@ const ImageWrapper = styled.div`
   margin-right: 0;
   width: 100%;
   text-align: center;
-  bottom: 3px;
+  bottom: 10px;
   img {
     width: 140px;
     height: 140px;

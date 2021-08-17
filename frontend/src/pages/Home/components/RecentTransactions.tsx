@@ -57,6 +57,9 @@ const RecentTransactions: React.FC = () => {
         return '#8e6fb6';
       case 'Sold':
         return '#638596';
+      case 'Claimed':
+      case 'Transfer':
+        return '#add6b8';
       default:
         return '#dfdbe8';
     }

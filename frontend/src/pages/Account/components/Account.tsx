@@ -331,7 +331,7 @@ const Account: React.FC = (props: any) => {
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {accountOffers.map((space) => (
                 <Col span={2} key={space.id}>
-                  <ImageContainer style={{ backgroundColor: getBackground(space.id) }}>
+                  <ImageContainer style={{ backgroundColor: '#95554f' }}>
                     <ImageWrapper>
                       <Link to={`/detail/${space.id}`}>
                         <img src={space.img} alt={`img${space.id}`} />
@@ -379,7 +379,7 @@ const Account: React.FC = (props: any) => {
               {spacesBidsOwnedSpaceDetail.map((space) => (
                 <Col span={2} key={space.spaceIndex}>
                   <ImageContainer
-                    style={{ backgroundColor: getBackground(Number(space.spaceIndex)) }}
+                    style={{ backgroundColor: '#8e6fb6' }}
                   >
                     <ImageWrapper>
                       <Link to={`/detail/${space.spaceIndex}`}>
@@ -425,7 +425,7 @@ const Account: React.FC = (props: any) => {
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {accountBids.map((space) => (
                 <Col span={2} key={space.id}>
-                  <ImageContainer style={{ backgroundColor: getBackground(space.id) }}>
+                  <ImageContainer style={{ backgroundColor: '#8e6fb6' }}>
                     <ImageWrapper>
                       <Link to={`/detail/${space.id}`}>
                         <img src={space.img} alt={`img${space.id}`} />

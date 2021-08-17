@@ -66,9 +66,12 @@ const Bids: React.FC = () => {
               <StyledText>
                 The average bid over the last year was
                 <HightlightText>
-                  {averageBidValue &&
-                    library &&
-                    library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
+                  {formatNumber(
+                    averageBidValue &&
+                      library &&
+                      library.utils.fromWei(averageBidValue.toString(), 'ether'),
+                    2
+                  )}{' '}
                   ETH ($
                   {formatNumber(
                     averageBidValue &&
@@ -82,9 +85,12 @@ const Bids: React.FC = () => {
               <StyledText>
                 The average currently open bid is
                 <HightlightText>
-                  {averageBidValue &&
-                    library &&
-                    library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
+                  {formatNumber(
+                    averageBidValue &&
+                      library &&
+                      library.utils.fromWei(averageBidValue.toString(), 'ether'),
+                    2
+                  )}{' '}
                   ETH ($
                   {formatNumber(
                     averageBidValue &&
@@ -98,9 +104,12 @@ const Bids: React.FC = () => {
               <StyledText>
                 Total value of all current bids is
                 <HightlightText>
-                  {totalBidValue &&
-                    library &&
-                    library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
+                  {formatNumber(
+                    totalBidValue &&
+                      library &&
+                      library.utils.fromWei(totalBidValue.toString(), 'ether'),
+                    2
+                  )}{' '}
                   ETH ($
                   {formatNumber(
                     totalBidValue &&

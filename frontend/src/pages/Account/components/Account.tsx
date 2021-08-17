@@ -202,6 +202,22 @@ const Account: React.FC = (props: any) => {
     }
   };
 
+  const spacesWithColor = Spaces.map((space: any) => {
+    const isForSale =
+      spacesForSales &&
+      spacesForSales.length > 0 &&
+      spacesForSales.some((item: any) => item.id === space.id);
+    const isBid =
+      spacesBids && spacesBids.length > 0 && spacesBids.some((item: any) => item.id === space.id);
+    return { isForSale, isBid, id: space.id };
+  });
+
+  const getBackground = (id: any) => {
+    const spaceFound = spacesWithColor.find((space: any) => space.id === id);
+    if (spaceFound?.isBid) return '#8e6fb6';
+    if (spaceFound?.isForSale) return '#95554f';
+    return '#dfdbe8';
+  };
   return (
     <MainContainer>
       <BreadCrumb crumbs={['Accounts', id.slice(0, 10)]} />
@@ -215,7 +231,8 @@ const Account: React.FC = (props: any) => {
               handleWithdraw();
             }}
           >
-            <CreditCardOutlined /> Withdraw {library && library.utils.fromWei(withDraw.toString(), 'ether')} ETH
+            <CreditCardOutlined /> Withdraw{' '}
+            {library && library.utils.fromWei(withDraw.toString(), 'ether')} ETH
           </StyledButton>
         )}
 
@@ -253,7 +270,8 @@ const Account: React.FC = (props: any) => {
               {formatNumber(
                 totalBidOwnedSpaceValue &&
                   library &&
-                  library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * ETH_USD_PRICE,
+                  library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') *
+                    ETH_USD_PRICE,
                 2
               )}
               )
@@ -292,7 +310,7 @@ const Account: React.FC = (props: any) => {
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {spacesOwnedDetail.map((space) => (
                 <Col span={2} key={space.id}>
-                  <ImageContainer>
+                  <ImageContainer style={{ backgroundColor: getBackground(space.id) }}>
                     <ImageWrapper>
                       <Link to={`/detail/${space.id}`}>
                         <img src={space.img} alt={`img${space.id}`} />
@@ -313,7 +331,7 @@ const Account: React.FC = (props: any) => {
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {accountOffers.map((space) => (
                 <Col span={2} key={space.id}>
-                  <ImageContainer>
+                  <ImageContainer style={{ backgroundColor: getBackground(space.id) }}>
                     <ImageWrapper>
                       <Link to={`/detail/${space.id}`}>
                         <img src={space.img} alt={`img${space.id}`} />
@@ -345,7 +363,13 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {totalBidOwnedSpaceValue && library
               ? `${library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether')} ETH
-                ($${formatNumber((library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') * ETH_USD_PRICE).toString(), 2)}) `
+                ($${formatNumber(
+                  (
+                    library.utils.fromWei(totalBidOwnedSpaceValue.toString(), 'ether') *
+                    ETH_USD_PRICE
+                  ).toString(),
+                  2
+                )}) `
               : '0 '}
             in {spacesBidsOwnedSpaceDetail && spacesBidsOwnedSpaceDetail.length} Bids For Spaces
             Owned by this Account
@@ -353,8 +377,10 @@ const Account: React.FC = (props: any) => {
           <Content>
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {spacesBidsOwnedSpaceDetail.map((space) => (
-                <Col span={2} key={space.id}>
-                  <ImageContainer>
+                <Col span={2} key={space.spaceIndex}>
+                  <ImageContainer
+                    style={{ backgroundColor: getBackground(Number(space.spaceIndex)) }}
+                  >
                     <ImageWrapper>
                       <Link to={`/detail/${space.spaceIndex}`}>
                         <img src={space.img} alt={`img${space.id}`} />
@@ -386,7 +412,12 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {totalBidValue && library
               ? `${library.utils.fromWei(totalBidValue.toString(), 'ether')} ETH
-                ($${formatNumber((library.utils.fromWei(totalBidValue.toString(), 'ether') * ETH_USD_PRICE).toString(), 2)}) `
+                ($${formatNumber(
+                  (
+                    library.utils.fromWei(totalBidValue.toString(), 'ether') * ETH_USD_PRICE
+                  ).toString(),
+                  2
+                )}) `
               : '0 '}
             in {accountBids && accountBids.length} Bids Placed by This Account
           </SpaceTitle>
@@ -394,7 +425,7 @@ const Account: React.FC = (props: any) => {
             <ItemsContainer justify='start' gutter={[0, 10]}>
               {accountBids.map((space) => (
                 <Col span={2} key={space.id}>
-                  <ImageContainer>
+                  <ImageContainer style={{ backgroundColor: getBackground(space.id) }}>
                     <ImageWrapper>
                       <Link to={`/detail/${space.id}`}>
                         <img src={space.img} alt={`img${space.id}`} />
@@ -426,7 +457,10 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {' '}
             {data.boughtETHTotal
-              ? `${data.boughtETHTotal} ETH ($${formatNumber((data.boughtETHTotal * ETH_USD_PRICE).toString(), 2)}) `
+              ? `${data.boughtETHTotal} ETH ($${formatNumber(
+                  (data.boughtETHTotal * ETH_USD_PRICE).toString(),
+                  2
+                )}) `
               : `0 `}
             in {spacesBoughtDetail ? spacesBoughtDetail.length : 0} Spaces Bought by This Account
           </SpaceTitle>
@@ -435,7 +469,9 @@ const Account: React.FC = (props: any) => {
               {spacesBoughtDetail &&
                 spacesBoughtDetail.map((space: any) => (
                   <Col span={2} key={space.createdAt}>
-                    <ImageContainer>
+                    <ImageContainer
+                      style={{ backgroundColor: getBackground(Number(space.spaceIndex)) }}
+                    >
                       <ImageWrapper>
                         <Link to={`/detail/${space.spaceIndex}`}>
                           <img src={space.img} alt={`img${space.id}`} />
@@ -458,7 +494,10 @@ const Account: React.FC = (props: any) => {
           <SpaceTitle>
             {' '}
             {data.soldETHTotal
-              ? `${data.soldETHTotal} ETH ($${formatNumber((data.soldETHTotal * ETH_USD_PRICE).toString(), 2)}) `
+              ? `${data.soldETHTotal} ETH ($${formatNumber(
+                  (data.soldETHTotal * ETH_USD_PRICE).toString(),
+                  2
+                )}) `
               : `0 `}
             in {spacesSoldDetail && spacesSoldDetail.length} Spaces Sold by This Account
           </SpaceTitle>
@@ -467,7 +506,9 @@ const Account: React.FC = (props: any) => {
               {spacesSoldDetail &&
                 spacesSoldDetail.map((space: any) => (
                   <Col span={2} key={space.createdAt}>
-                    <ImageContainer>
+                    <ImageContainer
+                      style={{ backgroundColor: getBackground(Number(space.spaceIndex)) }}
+                    >
                       <ImageWrapper>
                         <Link to={`/detail/${space.spaceIndex}`}>
                           <img src={space.img} alt={`img${space.id}`} />
@@ -557,19 +598,13 @@ const LinkText = styled(Text)`
 const ImageContainer = styled.div`
   width: 100%;
   height: 90px;
-  background-color: #8e6fb6;
-  position: relative;
+  display: flex;
+  align-items: center;
 `;
 
 const ImageWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: 0;
-  margin-right: 0;
   width: 100%;
   text-align: center;
-  bottom: 3px;
   img {
     width: 70px;
     height: 70px;

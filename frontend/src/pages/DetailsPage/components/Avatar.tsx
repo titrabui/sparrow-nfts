@@ -16,14 +16,13 @@ const Avatar: React.FC<ISpaceProps> = (props: any) => {
 
 const Container = styled(Box)`
   background-color: #638596;
-  position: relative;
+  display:flex;
+  align-items:center;
 `;
 
 const ImageWrapper = styled.div`
   width: 100%;
   height: 250px;
-  position: absolute;
-  bottom: 0;
   text-align: center;
 `;
 

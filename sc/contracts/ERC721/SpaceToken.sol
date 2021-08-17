@@ -7,6 +7,7 @@ import "../common/Ownable.sol";
 
 contract SpaceToken is ERC721Enumerable, Ownable {
 	string _baseTokenURI;
+    uint256 public currentTokenId ;
 	mapping(uint256 => string) private _onlyHolderSecretURI;
 
     constructor(string memory baseURI) ERC721("CRYPTOSPACE", "NCS")  {
@@ -21,14 +22,13 @@ contract SpaceToken is ERC721Enumerable, Ownable {
      */
 
     function mint721Token(address _to, string memory _tokenSecretURI) onlyOwner public {
-        uint256 currentTokenId = totalSupply();
         console.log("Mint token %s to %s", currentTokenId, _to);
         _safeMint(_to, currentTokenId);
 
         if(bytes(_tokenSecretURI).length > 0){
             setTokenOnlyHolderURI(currentTokenId, _tokenSecretURI);
         }
-
+        currentTokenId ++;
     }
 
     function mintBatch721Token(uint8 _number) onlyOwner public {

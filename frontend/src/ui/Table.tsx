@@ -84,6 +84,10 @@ const StyledTable = styled(Table)<ModifiedTableProps>`
     padding: 12px 8px;
   }
 
+  .ant-table-tbody > tr:last-child > td {
+    border-bottom: none;
+  }
+
   /* For empty data styles */
 
   .ant-table-tbody > tr.ant-table-placeholder:hover > td {

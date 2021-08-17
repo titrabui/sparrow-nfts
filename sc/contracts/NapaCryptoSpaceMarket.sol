@@ -2,75 +2,15 @@
 
 pragma solidity 0.8.4;
 
-abstract contract Context {
-    function _msgSender() internal view virtual returns (address) {
-        return msg.sender;
-    }
-
-    function _msgData() internal view virtual returns (bytes calldata) {
-        return msg.data;
-    }
-}
-
-abstract contract Ownable is Context {
-    address private _owner;
-
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
-    /**
-     * @dev Initializes the contract setting the deployer as the initial owner.
-     */
-    constructor () {
-        address msgSender = _msgSender();
-        _owner = msgSender;
-        emit OwnershipTransferred(address(0), msgSender);
-    }
-
-    /**
-     * @dev Returns the address of the current owner.
-     */
-    function owner() public view virtual returns (address) {
-        return _owner;
-    }
-
-    /**
-     * @dev Throws if called by any account other than the owner.
-     */
-    modifier onlyOwner() {
-        require(owner() == _msgSender(), "Ownable: caller is not the owner");
-        _;
-    }
-
-    /**
-     * @dev Leaves the contract without owner. It will not be possible to call
-     * onlyOwner functions anymore. Can only be called by the current owner.
-     *
-     * NOTE: Renouncing ownership will leave the contract without an owner,
-     * thereby removing any functionality that is only available to the owner.
-     */
-    function renounceOwnership() public virtual onlyOwner {
-        emit OwnershipTransferred(_owner, address(0));
-        _owner = address(0);
-    }
-
-    /**
-     * @dev Transfers ownership of the contract to a new account (newOwner).
-     * Can only be called by the current owner.
-     */
-    function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
-        emit OwnershipTransferred(_owner, newOwner);
-        _owner = newOwner;
-    }
-}
+import "./SpaceToken.sol";
+import "./common/Ownable.sol";
+import "hardhat/console.sol";
 
 contract NapaCryptoSpaceMarket is Ownable {
     string public name;
     string public symbol;
 
-    uint256 private _totalSupply = 10000;
-    uint256 public spacesRemainingToAssign;
-
+    address public spaceTokenContract;
     struct Offer {
         bool isForSale;
         uint256 spaceIndex;
@@ -86,183 +26,94 @@ contract NapaCryptoSpaceMarket is Ownable {
         uint256 value;
     }
 
-    mapping (uint256 => address) public spaceIndexToAddress;
-    address[12] public spaceIndexToAddressArray; 
-
     // This creates an array with all balances
     mapping (address => uint256) public balanceOf;
 
     // A record of spaces that are offered for sale at a specific minimum value, and perhaps to a specific person
     mapping (uint256 => Offer) public spacesOfferedForSale;
-    Offer[12] public spacesOfferedForSaleArray; 
     // A record of the highest space bid
     mapping (uint256 => Bid) public  spaceBids;
-    Bid[12] public spaceBidsArray; 
 
     mapping (address => uint256) public pendingWithdrawals;
 
-    event Assign(address indexed to, uint256 spaceIndex);
-    event SpaceTransfer(address indexed from, address indexed to, uint256 spaceIndex);
-    event SpaceOffered(uint256 indexed spaceIndex, uint256 minValue, address indexed toAddress);
-    event SpaceBidEntered(uint256 indexed spaceIndex, uint256 value);
-    event SpaceBidWithdrawn(uint256 indexed spaceIndex, uint256 value);
-    event SpaceBought(uint256 indexed spaceIndex, uint256 value, address indexed fromAddress, address indexed toAddress);
-    event SpaceNoLongerForSale(uint256 indexed spaceIndex);
+    event Assign(address indexed to, uint256 spaceId);
+    event SpaceTransfer(address indexed from, address indexed to, uint256 spaceId);
+    event SpaceOffered(uint256 indexed spaceId, uint256 minValue, address indexed toAddress);
+    event SpaceBidEntered(uint256 indexed spaceId, uint256 value);
+    event SpaceBidWithdrawn(uint256 indexed spaceId, uint256 value);
+    event SpaceBought(uint256 indexed spaceId, uint256 value, address indexed fromAddress, address indexed toAddress);
+    event SpaceNoLongerForSale(uint256 indexed spaceId);
     event ETHTransfer(address indexed from, address indexed to, uint256 value);
 
     /* Initializes contract with initial supply tokens to the creator of the contract */
-    constructor() {
-        spacesRemainingToAssign = _totalSupply;
-
-        // Display purposes
-        name = "CRYPTOSPACE";
-        symbol = "NCS";
+    constructor(address _stAddress) {
+        spaceTokenContract = _stAddress;        
     }
 
-    modifier onlySpaceOwner(uint256 spaceIndex) {
-        require(spaceIndexToAddress[spaceIndex] == _msgSender(), 'You are not owner');
-        _;
-    }
+    //owner of this token should not use owner address for owning any space
+    function getSpace(uint256 spaceId) external {
+        address _ownerOfSpace = SpaceToken(spaceTokenContract).ownerOf(spaceId);
+        require(_ownerOfSpace == owner(), "Not free space");
 
-    modifier onlyBuyer(uint256 spaceIndex) {
-        require(spaceIndexToAddress[spaceIndex] != address(0), 'Space must have owner');
-        require(spaceIndexToAddress[spaceIndex] != _msgSender(), 'Owner can not bid');
-        _;
-    }
-
-    modifier validSpace(uint256 spaceIndex) {
-        require(spaceIndex < _totalSupply, 'Invalid space index');
-        _;
-    }
-
-    modifier freeSpace(uint256 spaceIndex) {
-        require(spacesRemainingToAssign != 0, 'No space left');
-        require(spaceIndexToAddress[spaceIndex] == address(0), 'Space must be long to empty address');
-        _;
-    }
-
-    function setInitialOwner(address to, uint256 spaceIndex)
-        public
-        onlyOwner
-        validSpace(spaceIndex)
-    {
-        require(spaceIndexToAddress[spaceIndex] != to, 'Must be different address');
-             
-        if (spaceIndexToAddress[spaceIndex] != address(0)) {
-            balanceOf[spaceIndexToAddress[spaceIndex]]--;
-        }
-        spaceIndexToAddress[spaceIndex] = to;
-        balanceOf[to]++;
-        emit Assign(to, spaceIndex);
-    }
-
-    function setInitialOwners(address[] memory addresses, uint256[] memory indices)
-        public
-        onlyOwner
-    {
-        uint256 n = addresses.length;
-        for (uint256 i = 0; i < n; i++) {
-            setInitialOwner(addresses[i], indices[i]);
-        }
-    }
-
-    function getSpace(uint256 spaceIndex)
-        external
-        validSpace(spaceIndex)
-        freeSpace(spaceIndex)
-    {
-        spaceIndexToAddress[spaceIndex] = _msgSender();
-        spaceIndexToAddressArray[spaceIndex] = _msgSender();
-        balanceOf[_msgSender()]++;
-        spacesRemainingToAssign--;
-        emit Assign(_msgSender(), spaceIndex);
+        console.log("getSpace: %s to %s",address(_ownerOfSpace),  _msgSender());
+        SpaceToken(spaceTokenContract).safeTransferFrom(address(_ownerOfSpace), _msgSender(), spaceId);
+        emit Assign(_msgSender(), spaceId);
     }
 
     // Transfer ownership of a space to another user without requiring payment
-    function transferSpace(address to, uint256 spaceIndex)
-        external
-        validSpace(spaceIndex)
-        onlySpaceOwner(spaceIndex)
-    {
-        if (spacesOfferedForSale[spaceIndex].isForSale) {
-            spaceNoLongerForSale(spaceIndex);
+    function transferSpace(address to, uint256 spaceId) external {
+        if (spacesOfferedForSale[spaceId].isForSale) {
+            _spaceNoLongerForSale(spaceId);
         }
-        spaceIndexToAddress[spaceIndex] = to;
-        spaceIndexToAddressArray[spaceIndex] = to;
-        balanceOf[_msgSender()]--;
-        balanceOf[to]++;
-        emit SpaceTransfer(_msgSender(), to, spaceIndex);
+        console.log("transferSpace : %s to %s",_msgSender(), to);
+        SpaceToken(spaceTokenContract).safeTransferFrom(_msgSender(), to, spaceId);
+        emit SpaceTransfer(_msgSender(), to, spaceId);
         // Check for the case where there is a bid from the new owner and refund it.
         // Any other bid can stay in place.
-        Bid memory bid = spaceBids[spaceIndex];
+        Bid memory bid = spaceBids[spaceId];
         if (bid.bidder == to) {
             // Kill bid and refund value
             pendingWithdrawals[to] += bid.value;
-            spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
-            spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
+            spaceBids[spaceId] = Bid(false, spaceId, address(0), 0);
         }
     }
 
-    function spaceNoLongerForSale(uint256 spaceIndex)
-        private
-        validSpace(spaceIndex)
-        onlySpaceOwner(spaceIndex)
-    {
-        spacesOfferedForSale[spaceIndex] = Offer(false, spaceIndex, _msgSender(), 0, address(0));
-        spacesOfferedForSaleArray[spaceIndex] = Offer(false, spaceIndex, _msgSender(), 0, address(0));
-        emit SpaceNoLongerForSale(spaceIndex);
+    function _spaceNoLongerForSale(uint256 spaceId) private {
+        spacesOfferedForSale[spaceId] = Offer(false, spaceId, _msgSender(), 0, address(0));
+        emit SpaceNoLongerForSale(spaceId);
     }
 
-    function offerSpaceForSale(uint256 spaceIndex, uint256 minSalePriceInWei)
-        external
-        validSpace(spaceIndex)
-        onlySpaceOwner(spaceIndex)
-    {
-        spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, address(0));
-        spacesOfferedForSaleArray[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, address(0));
-        emit SpaceOffered(spaceIndex, minSalePriceInWei, address(0));
+    function offerSpaceForSale(uint256 spaceId, uint256 minSalePriceInWei) external {
+        spacesOfferedForSale[spaceId] = Offer(true, spaceId, _msgSender(), minSalePriceInWei, address(0));
+        emit SpaceOffered(spaceId, minSalePriceInWei, address(0));
     }
 
-    function offerSpaceForSaleToAddress(uint256 spaceIndex, uint256 minSalePriceInWei, address toAddress)
-        external
-        validSpace(spaceIndex)
-        onlySpaceOwner(spaceIndex)
-    {
-        spacesOfferedForSale[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, toAddress);
-        spacesOfferedForSaleArray[spaceIndex] = Offer(true, spaceIndex, _msgSender(), minSalePriceInWei, toAddress);
-        emit SpaceOffered(spaceIndex, minSalePriceInWei, toAddress);
+    function offerSpaceForSaleToAddress(uint256 spaceId, uint256 minSalePriceInWei, address toAddress) external {
+        spacesOfferedForSale[spaceId] = Offer(true, spaceId, _msgSender(), minSalePriceInWei, toAddress);
+        emit SpaceOffered(spaceId, minSalePriceInWei, toAddress);
     }
 
-    function buySpace(uint256 spaceIndex)
-        external
-        payable
-        validSpace(spaceIndex)
-    {
-        Offer memory offer = spacesOfferedForSale[spaceIndex];
+    function buySpace(uint256 spaceId) payable external {
+        Offer memory offer = spacesOfferedForSale[spaceId];
         require(offer.isForSale, 'Space is not for sale');
         require(offer.onlySellTo == address(0) || offer.onlySellTo == _msgSender(), 'This space can not be sold to you');
         require(msg.value >= offer.minValue, 'You must buy more than min value');
-        require(offer.seller == spaceIndexToAddress[spaceIndex], 'Seller no longer owner of space');
+        address _ownerOfSpace = SpaceToken(spaceTokenContract).ownerOf(spaceId);
+        require(offer.seller == _ownerOfSpace, 'Seller no longer owner of space');
 
-        address seller = offer.seller;
+        SpaceToken(spaceTokenContract).safeTransferFrom(_ownerOfSpace, _msgSender(), spaceId);
+        _spaceNoLongerForSale(spaceId);
 
-        spaceIndexToAddress[spaceIndex] = _msgSender();
-        spaceIndexToAddressArray[spaceIndex] = _msgSender();
-        balanceOf[seller]--;
-        balanceOf[_msgSender()]++;
-
-        spaceNoLongerForSale(spaceIndex);
-        pendingWithdrawals[seller] += msg.value;
-        emit SpaceBought(spaceIndex, msg.value, seller, _msgSender());
+        pendingWithdrawals[_ownerOfSpace] += msg.value;
+        emit SpaceBought(spaceId, msg.value, _ownerOfSpace, _msgSender());
 
         // Check for the case where there is a bid from the new owner and refund it.
         // Any other bid can stay in place.
-        Bid memory bid = spaceBids[spaceIndex];
+        Bid memory bid = spaceBids[spaceId];
         if (bid.bidder == _msgSender()) {
             // Kill bid and refund value
             pendingWithdrawals[_msgSender()] += bid.value;
-            spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
-            spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
+            spaceBids[spaceId] = Bid(false, spaceId, address(0), 0);
         }
     }
 
@@ -275,73 +126,73 @@ contract NapaCryptoSpaceMarket is Ownable {
         emit ETHTransfer(address(this), _msgSender(), amount);
     }
 
-    function enterBidForSpace(uint256 spaceIndex)
-        external
-        payable
-        validSpace(spaceIndex)
-        onlyBuyer(spaceIndex)
-    {
-        require(msg.value != 0, 'Value can not be 0');
-        Bid memory existing = spaceBids[spaceIndex];
+    function enterBidForSpace(uint256 spaceId) payable external {
+        require(msg.value > 0, 'Value can not be 0');
+        address _ownerOfSpace = SpaceToken(spaceTokenContract).ownerOf(spaceId);
+        require(_msgSender() != _ownerOfSpace, 'Owner can not bid');
+
+        Bid memory existing = spaceBids[spaceId];
         require(msg.value > existing.value, 'Value must be greater than the highest bid');
         if (existing.value > 0) {
             // Refund the failing bid
             pendingWithdrawals[existing.bidder] += existing.value;
         }
-        spaceBids[spaceIndex] = Bid(true, spaceIndex, _msgSender(), msg.value);
-        spaceBidsArray[spaceIndex] = Bid(true, spaceIndex, _msgSender(), msg.value);
-        emit SpaceBidEntered(spaceIndex, msg.value);
+        spaceBids[spaceId] = Bid(true, spaceId, _msgSender(), msg.value);
+        emit SpaceBidEntered(spaceId, msg.value);
     }
 
-    function acceptBidForSpace(uint256 spaceIndex, uint256 minPrice)
-        external
-        validSpace(spaceIndex)
-        onlySpaceOwner(spaceIndex)
-    {
-        address seller = _msgSender();
-        Bid memory bid = spaceBids[spaceIndex];
-        require(bid.value != 0, 'Bid value must not be 0');
+    function acceptBidForSpace(uint256 spaceId, uint256 minPrice) external {
+        Bid memory bid = spaceBids[spaceId];
+        require(bid.value > 0, 'Bid value must not be 0');
         require(bid.value >= minPrice, 'Bid value must be greater or equal min price');
 
-        spaceIndexToAddress[spaceIndex] = bid.bidder;
-        spaceIndexToAddressArray[spaceIndex] = bid.bidder;
-        balanceOf[seller]--;
-        balanceOf[bid.bidder]++;
-
-        spacesOfferedForSale[spaceIndex] = Offer(false, spaceIndex, bid.bidder, 0, address(0));
-        spacesOfferedForSaleArray[spaceIndex] = Offer(false, spaceIndex, bid.bidder, 0, address(0));    
+        SpaceToken(spaceTokenContract).safeTransferFrom(_msgSender(), bid.bidder, spaceId);
+        spacesOfferedForSale[spaceId] = Offer(false, spaceId, bid.bidder, 0, address(0));
         uint256 amount = bid.value;
-        spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
-        spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
-        pendingWithdrawals[seller] += amount;
-        emit SpaceBought(spaceIndex, bid.value, seller, bid.bidder);
+        spaceBids[spaceId] = Bid(false, spaceId, address(0), 0);
+        pendingWithdrawals[_msgSender()] += amount;
+        emit SpaceBought(spaceId, bid.value, _msgSender(), bid.bidder);
     }
 
-    function withdrawBidForSpace(uint256 spaceIndex)
-        external
-        validSpace(spaceIndex)
-        onlyBuyer(spaceIndex)
-    {
-        Bid memory bid = spaceBids[spaceIndex];
+    function withdrawBidForSpace(uint256 spaceId) external {
+        Bid memory bid = spaceBids[spaceId];
         require(bid.bidder == _msgSender(), 'You are not the bidder');
-        emit SpaceBidWithdrawn(spaceIndex, bid.value);
+
+        address _ownerOfSpace = SpaceToken(spaceTokenContract).ownerOf(spaceId);
+        require(_msgSender() != _ownerOfSpace, 'Owner can not bid');
+
         uint256 amount = bid.value;
-        spaceBids[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
-        spaceBidsArray[spaceIndex] = Bid(false, spaceIndex, address(0), 0);
+        spaceBids[spaceId] = Bid(false, spaceId, address(0), 0);
         // Refund the bid money
         payable(_msgSender()).transfer(amount);
+        emit SpaceBidWithdrawn(spaceId, bid.value);
         emit ETHTransfer(address(this), _msgSender(), amount);
     }
 
-    function returnSpacesOfferedForSaleArray() public view returns( Offer[12] memory) {
-        return spacesOfferedForSaleArray;
+    function returnSpacesOfferedForSaleArray() public view returns(Offer[] memory) {
+        uint256 _total = SpaceToken(spaceTokenContract).totalSupply();
+        Offer[] memory offerArr = new Offer[](_total);
+        for(uint256 i=0; i < _total; i++) {
+            offerArr[i] = spacesOfferedForSale[i];
+        }
+        return offerArr;
     }
 
-    function returnSpacesBidsArray() public view returns( Bid[12] memory) {
-        return spaceBidsArray;
+    function returnSpacesBidsArray() public view returns(Bid[] memory) {
+        uint256 _total = SpaceToken(spaceTokenContract).totalSupply();
+        Bid[] memory bidArr = new Bid[](_total);
+        for(uint256 i=0; i < _total; i++) {
+            bidArr[i] = spaceBids[i];
+        }
+        return bidArr;
     }
 
-     function returnSpaceIndexToAddressArray() public view returns( address[12] memory) {
-        return spaceIndexToAddressArray;
+    function returnSpaceIndexToAddressArray() public view returns(address[] memory) {
+        uint256 _total = SpaceToken(spaceTokenContract).totalSupply();
+        address[] memory ownerArr = new address[](_total);
+        for(uint256 i=0; i < _total; i++) {
+            ownerArr[i] = SpaceToken(spaceTokenContract).ownerOf(i);
+        }
+        return ownerArr;
     }
 }

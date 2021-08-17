@@ -9,6 +9,8 @@ import { Text } from 'ui/Typography';
 import { getContract } from 'utils/getContract';
 import request from 'utils/request';
 import Spaces from 'utils/spaces';
+import formatNumber from 'utils/format';
+import { ETH_USD_PRICE } from 'environment';
 
 const OverallStats: React.FC = () => {
   const [data, setData] = useState([] as any);
@@ -81,22 +83,25 @@ const OverallStats: React.FC = () => {
               library &&
               library.utils.fromWei(lowestPrice?.price?.toString(), 'ether')}
             Ξ ($
-            {lowestPrice &&
-              lowestPrice.price &&
-              library &&
-              library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * 3000}
+            {formatNumber(
+              lowestPrice &&
+                lowestPrice.price &&
+                library &&
+                library.utils.fromWei(lowestPrice?.price?.toString(), 'ether') * ETH_USD_PRICE,
+              2
+            )}
             )
           </StatsValueText>
         </Col>
         <Col span={8}>
           <StatsNameText>Number of Sales (Last 12 Months)</StatsNameText>
-          <StatsValueText>{data.numberOfSales}</StatsValueText>
+          <StatsValueText>{data.numberOfSales || 0}</StatsValueText>
         </Col>
         <Col span={8}>
           <StatsNameText>Total Value of All Sales (Lifetime)</StatsNameText>
           <StatsValueText>
-            {data.totalLifeTimeValueOfAllSales}Ξ ($
-            {data.totalLifeTimeValueOfAllSales * 3000})
+            {data.totalLifeTimeValueOfAllSales || 0}Ξ ($
+            {formatNumber(((data.totalLifeTimeValueOfAllSales || 0) * ETH_USD_PRICE).toString(), 2)})
           </StatsValueText>
         </Col>
         <ButtonContainer>

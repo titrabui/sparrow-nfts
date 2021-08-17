@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useWallet from 'hooks/useWallet';
+import formatNumber from 'utils/format';
 import { Text } from 'ui/Typography';
 import StyledTable from 'ui/Table';
 import Box from 'ui/Box';
@@ -11,6 +12,7 @@ import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import request from 'utils/request';
 import { ISpaceProps } from 'types/SpaceProps';
+import { ETH_USD_PRICE } from 'environment';
 
 const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
   const { data } = props;
@@ -66,10 +68,10 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      render(amount: string) {
+      render(amount: number) {
         return amount ? (
           <Text $size='18px'>
-            {amount}Ξ (${Number(amount) * 3000})
+            {amount}Ξ (${amount && formatNumber((amount * ETH_USD_PRICE).toString(), 2)})
           </Text>
         ) : null;
       }

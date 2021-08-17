@@ -7,6 +7,8 @@ import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
 import useWallet from 'hooks/useWallet';
 import { getContract } from 'utils/getContract';
+import formatNumber from 'utils/format';
+import { ETH_USD_PRICE } from 'environment';
 
 const Bids: React.FC = () => {
   const { connector, library } = useWallet();
@@ -57,7 +59,7 @@ const Bids: React.FC = () => {
   return (
     <Box w='1050px' m='auto'>
       <Row justify='center' gutter={[0, 24]}>
-        <Box w='100%' mt='100px' mb='40px'>
+        <Box w='100%' mt='50px'>
           <Title>Bids</Title>
           {spacesBidsWithPrice.length > 0 ? (
             <>
@@ -68,9 +70,12 @@ const Bids: React.FC = () => {
                     library &&
                     library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
                   ETH ($
-                  {averageBidValue &&
-                    library &&
-                    library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
+                  {formatNumber(
+                    averageBidValue &&
+                      library &&
+                      library.utils.fromWei(averageBidValue.toString(), 'ether') * ETH_USD_PRICE,
+                    2
+                  )}
                   ).
                 </HightlightText>
               </StyledText>
@@ -81,9 +86,12 @@ const Bids: React.FC = () => {
                     library &&
                     library.utils.fromWei(averageBidValue.toString(), 'ether')}{' '}
                   ETH ($
-                  {averageBidValue &&
-                    library &&
-                    library.utils.fromWei(averageBidValue.toString(), 'ether') * 3000}
+                  {formatNumber(
+                    averageBidValue &&
+                      library &&
+                      library.utils.fromWei(averageBidValue.toString(), 'ether') * ETH_USD_PRICE,
+                    2
+                  )}
                   ).
                 </HightlightText>
               </StyledText>
@@ -94,9 +102,12 @@ const Bids: React.FC = () => {
                     library &&
                     library.utils.fromWei(totalBidValue.toString(), 'ether')}{' '}
                   ETH ($
-                  {totalBidValue &&
-                    library &&
-                    library.utils.fromWei(totalBidValue.toString(), 'ether') * 3000}
+                  {formatNumber(
+                    totalBidValue &&
+                      library &&
+                      library.utils.fromWei(totalBidValue.toString(), 'ether') * ETH_USD_PRICE,
+                    2
+                  )}
                   ).
                 </HightlightText>
               </StyledText>
@@ -114,7 +125,7 @@ const Bids: React.FC = () => {
         <ItemsContainer>
           <ItemsRow gutter={[0, 10]}>
             {spacesBids.map((space) => (
-              <Col key={space.id} >
+              <Col key={space.id}>
                 <Link to={`/detail/${space.id}`}>
                   <img src={space.img} alt={space.name} width='60px' height='60px' />
                 </Link>

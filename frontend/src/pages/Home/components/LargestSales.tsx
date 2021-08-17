@@ -7,6 +7,8 @@ import Spaces from 'utils/spaces';
 import { Link } from 'react-router-dom';
 import request from 'utils/request';
 import dayjs from 'dayjs';
+import formatNumber from 'utils/format';
+import { ETH_USD_PRICE } from 'environment';
 
 const LargestSales: React.FC = () => {
   const [data, setData] = useState({
@@ -31,9 +33,11 @@ const LargestSales: React.FC = () => {
         <StyledSpace>
           <Title>
             Largest Sales
-            <LinkText>
-              <Link to='/topSale'>See all top sales</Link>
-            </LinkText>
+            {mappedSpaces && mappedSpaces.length > 0 && (
+              <LinkText>
+                <Link to='/topSale'>See all top sales</Link>
+              </LinkText>
+            )}
           </Title>
         </StyledSpace>
       </Row>
@@ -55,12 +59,8 @@ const LargestSales: React.FC = () => {
                 #{space.spaceIndex}
               </StyledText>
               <StyledText $size='20px' $color='#4B4B4B'>
-                {
-                  space.amount }
-                Ξ ($
-                {
-                  space.amount  * 3000}
-                )
+                {space.amount}Ξ ($
+                {formatNumber((space.amount * ETH_USD_PRICE).toString(), 2)})
               </StyledText>
               <StyledText $size='20px' $color='#8D8D8D'>
                 {dayjs(space.createdAt).format('MMM DD, YYYY')}
@@ -123,12 +123,11 @@ const StyledSpace = styled(Space)`
     height: 100%;
     vertical-align: middle;
   }
-  margin-top: 60px;
+  margin-top: 20px;
 `;
 
 const ItemsContainer = styled(Row)`
   margin-top: 20px;
-  margin-bottom: 50px;
 `;
 
 const StyledText = styled(Text)`

@@ -360,8 +360,8 @@
       ]
     },
     "/home/zohar/nhanvhq/sparrow-nfts/sc/contracts/ERC721/SpaceToken.sol": {
-      "lastModificationDate": 1629128248425,
-      "contentHash": "2eed130d0cb708dff3533cc4184d3b5e",
+      "lastModificationDate": 1629159073013,
+      "contentHash": "0b1925a6d48151701dfd56e25bebeabe",
       "sourceName": "contracts/ERC721/SpaceToken.sol",
       "solcConfig": {
         "version": "0.8.4",

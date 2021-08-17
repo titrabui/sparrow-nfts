@@ -23,15 +23,15 @@ const ForSale: React.FC = () => {
           .returnSpacesOfferedForSaleArray()
           .call();
         if (mounted) {
-          const filteredData =
-            spacesOfferedForSale &&
-            spacesOfferedForSale.length > 0 &&
-            spacesOfferedForSale
+          let filteredData = [];
+          if (spacesOfferedForSale && spacesOfferedForSale.length > 0) {
+            filteredData = spacesOfferedForSale
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.minValue
               }));
+          }
           setData(filteredData);
         }
       }

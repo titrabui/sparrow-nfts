@@ -1,6 +1,6 @@
 export interface ITransaction {
   type: string,
-  spaceIndex: string,
+  spaceId: string,
   amount?: number,
   from: string,
   to?: string,

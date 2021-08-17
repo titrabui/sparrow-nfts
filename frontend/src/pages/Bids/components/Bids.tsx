@@ -22,15 +22,15 @@ const Bids: React.FC = () => {
         const contract = await getContract(connector);
         const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
         if (mounted) {
-          const filteredData =
-            spacesOfferedBids &&
-            spacesOfferedBids.length > 0 &&
-            spacesOfferedBids
+          let filteredData = [];
+          if (spacesOfferedBids && spacesOfferedBids.length > 0) {
+            filteredData = spacesOfferedBids
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.value
               }));
+          }
           setData(filteredData);
         }
       }

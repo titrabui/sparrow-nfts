@@ -49,16 +49,16 @@ const Account: React.FC = (props: any) => {
         const contract = await getContract(connector);
         const spacesOfferedBids = await contract.methods.returnSpacesBidsArray().call();
         if (mounted) {
-          const filteredBidData =
-            spacesOfferedBids &&
-            spacesOfferedBids.length > 0 &&
-            spacesOfferedBids
+          let filteredBidData = [];
+          if (spacesOfferedBids && spacesOfferedBids.length > 0) {
+            filteredBidData = spacesOfferedBids
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.value,
                 bidder: item.bidder
               }));
+          }
           setAllBids(spacesOfferedBids);
           setBidData(filteredBidData);
         }
@@ -69,16 +69,16 @@ const Account: React.FC = (props: any) => {
         const contract = await getContract(connector);
         const spacesOffereds = await contract.methods.returnSpacesOfferedForSaleArray().call();
         if (mounted) {
-          const filteredData =
-            spacesOffereds &&
-            spacesOffereds.length > 0 &&
-            spacesOffereds
+          let filteredData = [];
+          if (spacesOffereds && spacesOffereds.length > 0) {
+            filteredData = spacesOffereds
               .filter((item: any) => item && item[0])
               .map((item: any) => ({
                 index: Number(item.spaceIndex),
                 price: item.minValue,
                 owner: item[2]
               }));
+          }
           setSaleData(filteredData);
         }
       }

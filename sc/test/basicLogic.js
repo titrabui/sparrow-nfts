@@ -13,6 +13,7 @@ describe("NapaCryptoSpaceMarket contract", function () {
         sp = await SpaceToken.new("http://hihihaha.com/", { from: accounts[0] });
         np = await NapaCryptoSpaceMarket.new(sp.address, { from: accounts[0] });
         await sp.mintBatch721Token(6, { from: accounts[0] });
+        // isApprovedForAll(accounts[0], np.address)
         await sp.setApprovalForAll(np.address, true, { from: accounts[0] });
         await sp.setApprovalForAll(np.address, true, { from: accounts[1] });
         await sp.setApprovalForAll(np.address, true, { from: accounts[2] });
@@ -98,17 +99,34 @@ describe("NapaCryptoSpaceMarket contract", function () {
 
         it("Should ok when get some data", async function () {
 
-            let data = await np.returnSpacesOfferedForSaleArray(4);
-            // console.log(data);
-            console.log("==============================");
-            data = await np.returnSpacesBidsArray(4);
-            // console.log(data);
-            console.log("==============================");
-            data = await np.returnSpaceIndexToAddressArray(4);
+            // await np.offerSpaceForSale(1, 10, {
+            //     from: accounts[9]
+            // });
+
+            // await np.offerSpaceForSale(6, 24, {
+            //     from: accounts[10]
+            // });
+
+            let data = await np.returnSpacesOfferedForSaleArray();
             console.log(data);
+            console.log("offer size : ",data.length);
+
+            console.log("==============================");
+            // data = await np.returnSpacesBidsArray();
+            // console.log(data);
+            // console.log("bid size : ",data.length);
+            console.log("==============================");
+            // data = await np.returnSpaceIndexToAddressArray();
+            // console.log(data);
             
 
         });
     });
 
 });
+
+// await truffleAssert.reverts(hk1.withdraw({
+//     from: accounts[1]
+//   }),
+//     "You are not the bidder"
+//   )

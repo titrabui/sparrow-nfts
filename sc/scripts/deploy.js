@@ -1,9 +1,18 @@
 async function main() {
     // We get the contract to deploy
+
     const NapaCryptoSpaceMarket = await ethers.getContractFactory("NapaCryptoSpaceMarket");
-    const CryptoSpace = await NapaCryptoSpaceMarket.deploy();
-  
+    const SpaceToken = await ethers.getContractFactory("SpaceToken");
+
+    const SP = await SpaceToken.deploy("http://napaglobal.com/");
+    const CryptoSpace = await NapaCryptoSpaceMarket.deploy(SP.address);
+
+    console.log("Space Token deployed to:", SP.address);
     console.log("CryptoSpace deployed to:", CryptoSpace.address);
+
+    await SP.mintBatch721Token(12);
+
+
   }
   
   main()

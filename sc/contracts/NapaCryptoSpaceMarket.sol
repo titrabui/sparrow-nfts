@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.4;
 
-import "./ERC721/SpaceToken.sol";
+import "./SpaceToken.sol";
 import "./common/Ownable.sol";
 import "hardhat/console.sol";
 
@@ -85,13 +85,11 @@ contract NapaCryptoSpaceMarket is Ownable {
 
     function offerSpaceForSale(uint256 spaceId, uint256 minSalePriceInWei) external {
         spacesOfferedForSale[spaceId] = Offer(true, spaceId, _msgSender(), minSalePriceInWei, address(0));
-        SpaceToken(spaceTokenContract).approve(address(this), spaceId);
         emit SpaceOffered(spaceId, minSalePriceInWei, address(0));
     }
 
     function offerSpaceForSaleToAddress(uint256 spaceId, uint256 minSalePriceInWei, address toAddress) external {
         spacesOfferedForSale[spaceId] = Offer(true, spaceId, _msgSender(), minSalePriceInWei, toAddress);
-        SpaceToken(spaceTokenContract).approve(address(this), spaceId);
         emit SpaceOffered(spaceId, minSalePriceInWei, toAddress);
     }
 
@@ -103,7 +101,7 @@ contract NapaCryptoSpaceMarket is Ownable {
         address _ownerOfSpace = SpaceToken(spaceTokenContract).ownerOf(spaceId);
         require(offer.seller == _ownerOfSpace, 'Seller no longer owner of space');
 
-        SpaceToken(spaceTokenContract).safeTransferFrom(_ownerOfSpace, _msgSender(), spaceId, "");
+        SpaceToken(spaceTokenContract).safeTransferFrom(_ownerOfSpace, _msgSender(), spaceId);
         _spaceNoLongerForSale(spaceId);
 
         pendingWithdrawals[_ownerOfSpace] += msg.value;
@@ -171,25 +169,28 @@ contract NapaCryptoSpaceMarket is Ownable {
         emit ETHTransfer(address(this), _msgSender(), amount);
     }
 
-    function returnSpacesOfferedForSaleArray(uint256 _n) public view returns(Offer[] memory) {
-        Offer[] memory offerArr = new Offer[](_n);
-        for(uint256 i=0; i < _n; i++) {
+    function returnSpacesOfferedForSaleArray() public view returns(Offer[] memory) {
+        uint256 _total = SpaceToken(spaceTokenContract).totalSupply();
+        Offer[] memory offerArr = new Offer[](_total);
+        for(uint256 i=0; i < _total; i++) {
             offerArr[i] = spacesOfferedForSale[i];
         }
         return offerArr;
     }
 
-    function returnSpacesBidsArray(uint256 _n) public view returns(Bid[] memory) {
-        Bid[] memory bidArr = new Bid[](_n);
-        for(uint256 i=0; i < _n; i++) {
+    function returnSpacesBidsArray() public view returns(Bid[] memory) {
+        uint256 _total = SpaceToken(spaceTokenContract).totalSupply();
+        Bid[] memory bidArr = new Bid[](_total);
+        for(uint256 i=0; i < _total; i++) {
             bidArr[i] = spaceBids[i];
         }
         return bidArr;
     }
 
-    function returnSpaceIndexToAddressArray(uint256 _n) public view returns(address[] memory) {
-        address[] memory ownerArr = new address[](_n);
-        for(uint256 i=0; i < _n; i++) {
+    function returnSpaceIndexToAddressArray() public view returns(address[] memory) {
+        uint256 _total = SpaceToken(spaceTokenContract).totalSupply();
+        address[] memory ownerArr = new address[](_total);
+        for(uint256 i=0; i < _total; i++) {
             ownerArr[i] = SpaceToken(spaceTokenContract).ownerOf(i);
         }
         return ownerArr;

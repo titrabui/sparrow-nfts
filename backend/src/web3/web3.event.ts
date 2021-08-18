@@ -27,7 +27,7 @@ export class Web3Event implements OnApplicationBootstrap {
     this.setupEventListeners();
   }
 
-  async setupEventListeners() {
+  async setupEventListenersForDevlepment() {
     try {
       const events = await this.contract.getPastEvents(
         'allEvents',
@@ -57,6 +57,46 @@ export class Web3Event implements OnApplicationBootstrap {
         await this.socketGateway.emitMessage(transactionDto);
       }
 
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  private setupEventListeners() {
+    this.setupEventListener(this.contract.events.Assign);
+    this.setupEventListener(this.contract.events.SpaceTransfer);
+    this.setupEventListener(this.contract.events.SpaceOffered);
+    this.setupEventListener(this.contract.events.SpaceBidEntered);
+    this.setupEventListener(this.contract.events.SpaceBidWithdrawn);
+    this.setupEventListener(this.contract.events.SpaceBought);
+
+  }
+
+  private async setupEventListener(contractEvent: any) {
+    try {
+      contractEvent({ fromBlock: this.latestBlock }, (_error, _event) => { })
+        .on('data', async (event) => {
+          if (!event || event.blockNumber === this.latestBlock) return;
+
+          this.latestBlock = this.latestBlock + 1;
+          if (Object.keys(event).length === 0) return;
+
+          // Executed trade market
+          if (!SC_EVENT_MAPPER[event.event]) return;
+
+          const transactionData = await this.web3.eth.getTransaction(
+            event.transactionHash
+          );
+
+          const transactionDto = TransactionMap.createDTO(
+            this.web3.utils,
+            event,
+            transactionData
+          );
+
+          await this.transactionService.createTransaction(transactionDto);
+          await this.socketGateway.emitMessage(transactionDto);
+        });
     } catch (error) {
       this.logger.error(error);
     }

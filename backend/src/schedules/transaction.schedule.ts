@@ -17,6 +17,6 @@ export class TransactionSchedule {
   @Cron(CronExpression.EVERY_SECOND)
   async getTransactions() {
     if (this.config.get('NODE_ENV') !== 'development') return;
-    this.web3Event.setupEventListeners();
+    this.web3Event.setupEventListenersForDevlepment();
   }
 }

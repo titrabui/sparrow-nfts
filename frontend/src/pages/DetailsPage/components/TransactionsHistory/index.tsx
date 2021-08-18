@@ -84,7 +84,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
       render(createdAt: string, record: any) {
         return (
           <LinkText $size='18px'>
-            <a href={`https://etherscan.io/tx/${record.txn}`} target='blank'>
+            <a href={`https://rinkeby.etherscan.io/tx/${record.txn}`} target='blank'>
               {dayjs(createdAt).format('MMM DD, YYYY')}
             </a>
           </LinkText>

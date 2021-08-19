@@ -55,7 +55,6 @@ const RecentTransactions: React.FC<IHomeComponentProps> = (props: IHomeComponent
       case 'Offered':
         return '#95554f';
       case 'Bid':
-        return '#8e6fb6';
       case 'Bid Withdrawn':
         return '#8e6fb6';
       case 'Sold':

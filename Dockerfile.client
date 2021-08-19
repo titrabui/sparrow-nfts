@@ -1,21 +1,18 @@
-FROM node:14-alpine
+FROM node:14
 
 # Copy proto
 WORKDIR /sc
 COPY /sc .
 # Install protobuf dependencies
 RUN npm i
+RUN npx hardhat compile
 
 # Copy source and install dependencies
-WORKDIR /client
+WORKDIR /frontend
 COPY frontend/package.json .
 
 RUN npm i
 COPY frontend .
-
-# Pass arguments to environment variables
-ARG REACT_APP_WS_END_POINT
-ENV REACT_APP_WS_END_POINT $REACT_APP_WS_END_POINT
 
 # Disable sourcemap
 ENV GENERATE_SOURCEMAP=false

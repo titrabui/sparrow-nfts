@@ -27,5 +27,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client
-      args:
-        - REACT_APP_WS_END_POINT=https://localhost
+    env_file:
+      - frontend/.env.prod.example

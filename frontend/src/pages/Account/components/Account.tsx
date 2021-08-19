@@ -237,7 +237,7 @@ const Account: React.FC = (props: any) => {
     const spaceFound = spacesWithColor.find((space: any) => space.id === spaceId);
     if (spaceFound?.isBid) return '#8e6fb6';
     if (spaceFound?.isForSale) return '#95554f';
-    return '#dfdbe8';
+    return '#638596';
   };
   return (
     <MainContainer>

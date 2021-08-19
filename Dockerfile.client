@@ -1,11 +1,8 @@
-FROM node:14
+FROM node:14-alpine
 
 # Copy proto
 WORKDIR /sc
 COPY /sc .
-# Install protobuf dependencies
-RUN npm i
-RUN npx hardhat compile
 
 # Copy source and install dependencies
 WORKDIR /frontend

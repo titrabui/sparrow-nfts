@@ -17,7 +17,6 @@ import { ETH_USD_PRICE } from 'environment';
 const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
   const { data } = props;
   const [tableData, setTableData] = useState([] as any);
-  const { account } = useWallet();
 
   useEffect(() => {
     const getData = async () => {
@@ -25,7 +24,7 @@ const TransactionsHistory: React.FC<ISpaceProps> = (props: any) => {
       if (result && result.status === 200) setTableData(result.data);
     };
     getData();
-  }, [data.id, account]);
+  }, [data.id]);
   useSocket('transactions', '', async (socketData) => {
     setTableData([socketData, ...tableData]);
   });
